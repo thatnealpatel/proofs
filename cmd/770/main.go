@@ -1,0 +1,22 @@
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "usage: 770 <density|counter> [args]\n")
+		os.Exit(1)
+	}
+	switch os.Args[1] {
+	case "density":
+		runDensity(os.Args[2:])
+	case "counter":
+		runCounter(os.Args[2:])
+	default:
+		fmt.Fprintf(os.Stderr, "unknown subcommand: %s\n", os.Args[1])
+		os.Exit(1)
+	}
+}
