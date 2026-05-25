@@ -17,6 +17,12 @@ func main() {
 		runConvergence(os.Args[2:])
 	case "tailbound":
 		runTailbound(os.Args[2:])
+	case "counting":
+		runCounting(os.Args[2:])
+	case "perk":
+		runPerk(os.Args[2:])
+	case "orbits":
+		runOrbits(os.Args[2:])
 	default:
 		fmt.Fprintf(os.Stderr, "unknown subcommand: %s\n", os.Args[1])
 		os.Exit(1)
