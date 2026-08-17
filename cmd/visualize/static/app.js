@@ -178,6 +178,9 @@ els["copy-workbench"].addEventListener("click",saveWorkbench);els["copy-pair"].a
 
 const importSpecs=[
   {file:"laderman.json",id:"laderman",label:"Laderman",n:3,source:"Programs/BilinearComplexity/laderman_matrices.sage"},
+  {file:"arxiv-2607.28676.json",id:"arxiv-2607-28676",label:"arXiv 2607.28676 rank-23",n:3},
+  {file:"arxiv-2601.05272.json",id:"arxiv-2601-05272",label:"arXiv 2601.05272 rank-23",n:3},
+  {file:"arxiv-2508.03857v1.json",id:"arxiv-2508-03857-v1",label:"arXiv 2508.03857v1 rank-23",n:3},
   {file:"smirnov-1.json",id:"smirnov-1",label:"Chokaev–Shumkin / Smirnov-1",n:3,source:"Programs/BilinearComplexity/smirnov2018_matrices.sage"},
   {file:"smirnov-2.json",id:"smirnov-2",label:"Chokaev–Shumkin / Smirnov-2",n:3,source:"Programs/BilinearComplexity/smirnov2018_matrices.sage"},
   {file:"strassen-squared.json",id:"strassen-squared",label:"Strassen squared",n:4},

@@ -7,17 +7,26 @@ decompositions.
 ## Constructions and exactness
 
 Selectors provide schoolbook rank 8 and Strassen rank 7 for 2×2;
-schoolbook rank 27, Laderman rank 23, and two Chokaev–Shumkin / Smirnov
-rank-25 certificates for 3×3; and schoolbook rank 64, Strassen-squared rank 49,
+schoolbook rank 27, Laderman rank 23, the exact rank-23 schemes printed in
+[arXiv:2607.28676](https://arxiv.org/abs/2607.28676),
+[arXiv:2601.05272](https://arxiv.org/abs/2601.05272), and
+[arXiv:2508.03857v1](https://arxiv.org/abs/2508.03857v1), and two
+Chokaev–Shumkin / Smirnov rank-25 certificates for 3×3; and schoolbook rank 64,
+Strassen-squared rank 49,
 and the Moran–Schwartz–Yuan rational rank-48 certificate for 4×4. Rank 48 is
 not claimed to be optimal. The known rank-47 construction in characteristic
 two is deliberately excluded: this workbench uses ordered rational arithmetic,
 so its positive/negative cancellation and reinforcement semantics do not model
 GF(2).
 
-The generated 3×3 and 4×4 JSON assets come from exact Sage sources in
+The generated 3×3 and 4×4 JSON assets come from exact sources in
 `Programs/BilinearComplexity`; Go tests independently reconstruct each target.
-For the appendix certificate, the paper's convention maps to the visualizer as
+The three arXiv rank-23 assets are generated directly from the locally obtained
+paper TeX: the generator transposes the printed `U^T`, `V^T`, `W^T` tables in
+2607.28676 and 2601.05272, and symbolically expands the printed executable
+Python algorithm in 2508.03857v1. The related 2606.13408 catalog adds no new
+3×3 construction and is intentionally not a picker entry. For the 4×4
+appendix, the paper's convention maps to the visualizer as
 `A = vec_row_major(O)`, `B = vec_row_major(P)`, and
 `C = vec_row_major(transpose(Q))`. The generator establishes this mapping by
 exact reconstruction over `QQ`, not by visual inspection.
@@ -97,6 +106,22 @@ success/failure status.
 The primary comparison canvas remains the output-routing factor `W`, padded to
 schoolbook width. Collapsible views retain full `U`, `V`, `W` factors and the
 complete 64-, 729-, or 4096-coordinate tensor audit.
+
+## Regenerate the arXiv 3×3 certificates
+
+With the three downloaded paper sources available, run:
+
+```sh
+timeout 300 python3 Programs/BilinearComplexity/export_visualize_arxiv_333.py \
+  /path/to/arXiv-2607-28676/main.tex \
+  /path/to/arXiv-2601-05272/main.tex \
+  /path/to/arXiv-2508-03857-v1/main.tex \
+  cmd/visualize/static
+```
+
+The extractor requires all printed dimensions, ternary coefficients, and 729
+Brent coordinates to verify before writing deterministic compact JSON. It
+preserves printed multiplication order and uses row-major A, B, and C factors.
 
 ## Regenerate the 4×4 certificates
 

@@ -57,7 +57,7 @@ func TestEmbeddedUIIsIndependentOfWorkingDirectory(t *testing.T) {
 	handler, _ := newTestHandler(t, t.TempDir())
 	server := httptest.NewServer(handler)
 	defer server.Close()
-	for _, path := range []string{"/", "/app.js", "/style.css", "/laderman.json", "/smirnov-1.json", "/smirnov-2.json", "/strassen-squared.json", "/rational-48.json"} {
+	for _, path := range []string{"/", "/app.js", "/style.css", "/laderman.json", "/arxiv-2607.28676.json", "/arxiv-2601.05272.json", "/arxiv-2508.03857v1.json", "/smirnov-1.json", "/smirnov-2.json", "/strassen-squared.json", "/rational-48.json"} {
 		response, err := http.Get(server.URL + path)
 		if err != nil {
 			t.Fatalf("GET %s: %v", path, err)
@@ -118,6 +118,12 @@ func TestUIContainsMachineReadableSchemasAndExactWorkbenchFeatures(t *testing.T)
 		"strassen-squared.json",
 		"rational-48.json",
 		"Moran–Schwartz–Yuan rational rank-48",
+		"arxiv-2607.28676.json",
+		"arXiv 2607.28676 rank-23",
+		"arxiv-2601.05272.json",
+		"arXiv 2601.05272 rank-23",
+		"arxiv-2508.03857v1.json",
+		"arXiv 2508.03857v1 rank-23",
 	} {
 		if !strings.Contains(javascript, phrase) {
 			t.Errorf("app.js does not contain %q", phrase)
@@ -191,6 +197,9 @@ func TestGeneratedCertificatesReconstructTarget(t *testing.T) {
 		n, rank, scale                        int
 	}{
 		{file: "laderman.json", name: "Laderman", n: 3, rank: 23, scale: 1},
+		{file: "arxiv-2607.28676.json", name: "arXiv 2607.28676 rank-23", field: "ZZ", source: "arXiv:2607.28676", convention: "row-major", n: 3, rank: 23, scale: 1},
+		{file: "arxiv-2601.05272.json", name: "arXiv 2601.05272 rank-23", field: "ZZ", source: "arXiv:2601.05272", convention: "row-major", n: 3, rank: 23, scale: 1},
+		{file: "arxiv-2508.03857v1.json", name: "arXiv 2508.03857v1 rank-23", field: "ZZ", source: "arXiv:2508.03857v1", convention: "row-major", n: 3, rank: 23, scale: 1},
 		{file: "smirnov-1.json", name: "Smirnov-1", n: 3, rank: 25, scale: 6},
 		{file: "smirnov-2.json", name: "Smirnov-2", n: 3, rank: 25, scale: 24},
 		{file: "strassen-squared.json", name: "Strassen squared", field: "QQ", source: "Programs/BilinearComplexity/q2_strassen2.sage", convention: "tensor-product rows permuted from (block,inner) to global 4x4", n: 4, rank: 49, scale: 1},
@@ -226,6 +235,9 @@ func TestGeneratedCertificatesReconstructTarget(t *testing.T) {
 			}
 			verifyScaledTerms(t, got, n)
 			verifyFactors(t, got.Factors.A, got.Factors.B, got.Factors.C, n)
+			if strings.HasPrefix(test.file, "arxiv-") {
+				verifyIntegerFactors(t, got.Factors.A, got.Factors.B, got.Factors.C)
+			}
 		})
 	}
 }
@@ -331,6 +343,40 @@ func verifyFactors(t *testing.T, a, b, c [][]string, n int) {
 					t.Fatalf("factor reconstruction at (%d,%d,%d) = %s, want %d", ai, bi, ci, got.RatString(), want)
 				}
 			}
+		}
+	}
+}
+
+func verifyIntegerFactors(t *testing.T, factors ...[][]string) {
+	t.Helper()
+	for factorIndex, factor := range factors {
+		for gate, row := range factor {
+			for coordinate, coefficient := range row {
+				value, ok := new(big.Int).SetString(coefficient, 10)
+				if !ok {
+					t.Fatalf("factor %d gate %d coordinate %d coefficient %q is not an integer", factorIndex, gate, coordinate, coefficient)
+				}
+				if value.Cmp(big.NewInt(-1)) < 0 || value.Cmp(big.NewInt(1)) > 0 {
+					t.Fatalf("factor %d gate %d coordinate %d coefficient %s is not ternary", factorIndex, gate, coordinate, value)
+				}
+			}
+		}
+	}
+}
+
+func TestArXivRank23AssetsAreReproducible(t *testing.T) {
+	root, err := filepath.Abs(filepath.Join("..", ".."))
+	if err != nil {
+		t.Fatal(err)
+	}
+	generator := filepath.Join(root, "Programs", "BilinearComplexity", "export_visualize_arxiv_333.py")
+	body, err := os.ReadFile(generator)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, phrase := range []string{"Complete ternary factor arrays", "The 59-algorithm in File Format", "fast_3x3_rank23", "Brent coordinate"} {
+		if !strings.Contains(string(body), phrase) {
+			t.Errorf("generator does not contain audit anchor %q", phrase)
 		}
 	}
 }
