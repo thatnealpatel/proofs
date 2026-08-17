@@ -30,7 +30,7 @@ function strassen(){const raw=[
   [[1,1,0,0],[0,0,0,1],[-1,1,0,0]], [[-1,0,1,0],[1,1,0,0],[0,0,0,1]],
   [[0,1,0,-1],[0,0,1,1],[1,0,0,0]]
 ];return {id:"strassen",name:"Strassen",n:2,gates:raw.map(([A,B,C])=>({A:parseVector(A),B:parseVector(B),C:parseVector(C)})),source:"Strassen rank-7 integer certificate"};}
-async function imported(spec){const data=await fetch(spec.file).then(response=>{if(!response.ok)throw new Error(`${spec.file}: ${response.status}`);return response.json();});const n=data.n??spec.n;if(n!==spec.n)throw new Error(`${spec.file}: dimension ${n}, expected ${spec.n}`);if(data.r!==data.factors?.A?.length||data.r!==data.factors?.B?.length||data.r!==data.factors?.C?.length)throw new Error(`${spec.file}: factor counts do not equal rank ${data.r}`);const width=n*n;for(const factor of ["A","B","C"])if(data.factors[factor].some(row=>row.length!==width))throw new Error(`${spec.file}: ${factor} factor width is not ${width}`);return {id:spec.id,name:spec.label,n,source:spec.source||data.source,gates:data.factors.A.map((A,k)=>({A:parseVector(A),B:parseVector(data.factors.B[k]),C:parseVector(data.factors.C[k])}))};}
+async function imported(spec){const data=await fetch(spec.file).then(response=>{if(!response.ok)throw new Error(`${spec.file}: ${response.status}`);return response.json();});const n=data.n??spec.n;if(n!==spec.n)throw new Error(`${spec.file}: dimension ${n}, expected ${spec.n}`);if(data.r!==data.factors?.A?.length||data.r!==data.factors?.B?.length||data.r!==data.factors?.C?.length)throw new Error(`${spec.file}: factor counts do not equal rank ${data.r}`);const width=n*n;for(const factor of ["A","B","C"])if(data.factors[factor].some(row=>row.length!==width))throw new Error(`${spec.file}: ${factor} factor width is not ${width}`);return {id:spec.id,name:spec.label,pickerLabel:spec.pickerLabel,n,source:spec.source||data.source,gates:data.factors.A.map((A,k)=>({A:parseVector(A),B:parseVector(data.factors.B[k]),C:parseVector(data.factors.C[k])}))};}
 
 const state={dimension:2,construction:null,auditFilter:"nonzero",pair:null,basket:new Set(),highlight:new Set(),highlightID:null,mode:"cancel",order:"certificate",edgeFilter:"all",view:"both",hideEmpty:false,upper:false,focus:null,analysis:null,copyTimer:null};
 const constructions={2:[schoolbook(2),strassen()],3:[schoolbook(3)],4:[schoolbook(4)]};
@@ -67,7 +67,7 @@ function analyzeConstruction(){const c=state.construction,n=c.n,r=c.gates.length
 }
 
 function selectConstruction(constructionID){state.construction=constructions[state.dimension].find(x=>x.id===constructionID)||constructions[state.dimension][0];if(state.order==="laderman-19+4"&&state.construction.id!=="laderman")state.order="certificate";state.pair=null;state.basket=new Set();state.highlight=new Set();state.highlightID=null;state.focus=null;state.analysis=analyzeConstruction();renderControls();render();}
-function renderSelectors(){els.construction.replaceChildren(...constructions[state.dimension].map(c=>new Option(`${c.name} (rank ${c.gates.length})`,c.id)));els.construction.value=state.construction.id;}
+function renderSelectors(){els.construction.replaceChildren(...constructions[state.dimension].map(c=>new Option(c.pickerLabel||`${c.name} (rank ${c.gates.length})`,c.id)));els.construction.value=state.construction.id;}
 function renderControls(){const c=state.construction;renderSelectors();const splitOption=els["gate-order"].querySelector('option[value="laderman-19+4"]');splitOption.disabled=c.id!=="laderman";els["gate-order"].value=state.order;els.gates.replaceChildren(...c.gates.map((gate,i)=>{const label=document.createElement("label");label.className="gate-card";label.innerHTML=`<input type="checkbox" data-gate="${i}" checked><b>${id(i)}</b><small>${formText(gate.A,"a",c.n)} × ${formText(gate.B,"b",c.n)}<br>→ ${formText(gate.C,"c",c.n)}</small>`;return label;}));}
 function selectedAudit(){return [...document.querySelectorAll("[data-gate]")].filter(x=>x.checked).map(x=>Number(x.dataset.gate));}
 function setAll(value){document.querySelectorAll("[data-gate]").forEach(x=>{x.checked=value;});renderAudit();}
@@ -193,6 +193,7 @@ els["copy-workbench"].addEventListener("click",saveWorkbench);els["copy-pair"].a
 
 const importSpecs=[
   {file:"laderman.json",id:"laderman",label:"Laderman",n:3,source:"Programs/BilinearComplexity/laderman_matrices.sage"},
+  {file:"nealpatel-rank-24.json",id:"nealpatel-rank-24",label:"nealpatel rank-24",pickerLabel:"nealpatel rank-24",n:3},
   {file:"arxiv-2607.28676.json",id:"arxiv-2607-28676",label:"arXiv 2607.28676 rank-23",n:3},
   {file:"arxiv-2601.05272.json",id:"arxiv-2601-05272",label:"arXiv 2601.05272 rank-23",n:3},
   {file:"arxiv-2508.03857v1.json",id:"arxiv-2508-03857-v1",label:"arXiv 2508.03857v1 rank-23",n:3},

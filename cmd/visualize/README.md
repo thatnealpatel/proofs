@@ -7,7 +7,8 @@ decompositions.
 ## Constructions and exactness
 
 Selectors provide schoolbook rank 8 and Strassen rank 7 for 2×2;
-schoolbook rank 27, Laderman rank 23, the exact rank-23 schemes printed in
+schoolbook rank 27, Laderman rank 23, the provisional exact rational length-24
+presentation shown in the picker as `nealpatel rank-24`, the exact rank-23 schemes printed in
 [arXiv:2607.28676](https://arxiv.org/abs/2607.28676),
 [arXiv:2601.05272](https://arxiv.org/abs/2601.05272), and
 [arXiv:2508.03857v1](https://arxiv.org/abs/2508.03857v1), and two
@@ -30,6 +31,15 @@ appendix, the paper's convention maps to the visualizer as
 `A = vec_row_major(O)`, `B = vec_row_major(P)`, and
 `C = vec_row_major(transpose(Q))`. The generator establishes this mapping by
 exact reconstruction over `QQ`, not by visual inspection.
+
+The provisional `nealpatel rank-24` asset and its exporter are curated byte-for-
+byte from historical checkpoint `6b451d6` (`main-0817-merge`). The checkpoint
+records it as a length-24 presentation obtained from Laderman by one split and
+eight invertible exact flips; reversing that path recovers length 23. It is a
+mobile visualization waypoint, not a new tensor-rank bound, decomposition
+component, unrestricted inequivalence result, or historical novelty claim. The
+raw candidate, replay, and exploration remain historical checkpoint material
+and are deliberately not copied into this curated tree.
 
 All client-side coefficient arithmetic, tensor sums, proportionality checks,
 and Gaussian-elimination flattening ranks use reduced `BigInt` rational
@@ -127,6 +137,28 @@ timeout 300 python3 Programs/BilinearComplexity/export_visualize_arxiv_333.py \
 The extractor requires all printed dimensions, ternary coefficients, and 729
 Brent coordinates to verify before writing deterministic compact JSON. It
 preserves printed multiplication order and uses row-major A, B, and C factors.
+
+## Regenerate the provisional nealpatel length-24 presentation
+
+The immutable source candidate is intentionally not curated here. If checkpoint
+`6b451d6` is available in the local Git object store, regenerate into a temporary
+directory and compare it with the embedded asset:
+
+```sh
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+git show 6b451d6:Scratch/laderman_branch_K_length24_candidate.json > "$tmp/candidate.json"
+timeout 300 python3 Programs/BilinearComplexity/export_visualize_nealpatel_rank24.py \
+  "$tmp/candidate.json" "$tmp/nealpatel-rank-24.json"
+cmp "$tmp/nealpatel-rank-24.json" cmd/visualize/static/nealpatel-rank-24.json
+```
+
+The exporter absorbs each explicit rational term coefficient into its C factor,
+expands every term exactly, and checks all 729 Brent coordinates, rejecting the
+candidate unless they reconstruct the 3×3 matrix-multiplication tensor. The
+focused Go test also feeds the embedded factors back through the exporter and
+requires byte-identical deterministic output, without restoring the uncurated
+raw files.
 
 ## Regenerate the 4×4 certificates
 

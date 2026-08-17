@@ -57,7 +57,7 @@ func TestEmbeddedUIIsIndependentOfWorkingDirectory(t *testing.T) {
 	handler, _ := newTestHandler(t, t.TempDir())
 	server := httptest.NewServer(handler)
 	defer server.Close()
-	for _, path := range []string{"/", "/app.js", "/style.css", "/laderman.json", "/arxiv-2607.28676.json", "/arxiv-2601.05272.json", "/arxiv-2508.03857v1.json", "/smirnov-1.json", "/smirnov-2.json", "/strassen-squared.json", "/rational-48.json"} {
+	for _, path := range []string{"/", "/app.js", "/style.css", "/laderman.json", "/nealpatel-rank-24.json", "/arxiv-2607.28676.json", "/arxiv-2601.05272.json", "/arxiv-2508.03857v1.json", "/smirnov-1.json", "/smirnov-2.json", "/strassen-squared.json", "/rational-48.json"} {
 		response, err := http.Get(server.URL + path)
 		if err != nil {
 			t.Fatalf("GET %s: %v", path, err)
@@ -117,6 +117,8 @@ func TestUIContainsMachineReadableSchemasAndExactWorkbenchFeatures(t *testing.T)
 		"4:[schoolbook(4)]",
 		"strassen-squared.json",
 		"rational-48.json",
+		"nealpatel-rank-24.json",
+		"pickerLabel:\"nealpatel rank-24\"",
 		"Moran–Schwartz–Yuan rational rank-48",
 		"arxiv-2607.28676.json",
 		"arXiv 2607.28676 rank-23",
@@ -142,7 +144,7 @@ func TestREADMEDocumentsFourByFourScopeRegenerationAndServerLimits(t *testing.T)
 		t.Fatal(err)
 	}
 	readme := string(body)
-	for _, phrase := range []string{"schoolbook rank 64", "Strassen-squared rank 49", "rational rank-48", "not claimed to be optimal", "rank-47 construction in characteristic", "C = vec_row_major(transpose(Q))", "export_visualize_444.sage", "all 4096 ambient coordinates over `QQ`", "deterministically writing", "private per-process", "temporary directory", "loopback", "-allow-remote"} {
+	for _, phrase := range []string{"schoolbook rank 64", "Strassen-squared rank 49", "rational rank-48", "not claimed to be optimal", "rank-47 construction in characteristic", "C = vec_row_major(transpose(Q))", "export_visualize_444.sage", "all 4096 ambient coordinates over `QQ`", "deterministically writing", "private per-process", "temporary directory", "loopback", "-allow-remote", "provisional", "6b451d6", "export_visualize_nealpatel_rank24.py", "729 Brent coordinates"} {
 		if !strings.Contains(readme, phrase) {
 			t.Errorf("README does not contain %q", phrase)
 		}
@@ -202,6 +204,7 @@ func TestGeneratedCertificatesReconstructTarget(t *testing.T) {
 		n, rank, scale                        int
 	}{
 		{file: "laderman.json", name: "Laderman", n: 3, rank: 23, scale: 1},
+		{file: "nealpatel-rank-24.json", name: "nealpatel rank-24", field: "QQ", source: "Scratch/laderman_branch_K_length24_candidate.json (one Laderman split plus eight exact flips)", convention: "row-major A, B, and C factors; explicit term coefficient absorbed into C", n: 3, rank: 24, scale: 1},
 		{file: "arxiv-2607.28676.json", name: "arXiv 2607.28676 rank-23", field: "ZZ", source: "arXiv:2607.28676", convention: "row-major", n: 3, rank: 23, scale: 1},
 		{file: "arxiv-2601.05272.json", name: "arXiv 2601.05272 rank-23", field: "ZZ", source: "arXiv:2601.05272", convention: "row-major", n: 3, rank: 23, scale: 1},
 		{file: "arxiv-2508.03857v1.json", name: "arXiv 2508.03857v1 rank-23", field: "ZZ", source: "arXiv:2508.03857v1", convention: "row-major", n: 3, rank: 23, scale: 1},
@@ -383,6 +386,57 @@ func TestArXivRank23AssetsAreReproducible(t *testing.T) {
 		if !strings.Contains(string(body), phrase) {
 			t.Errorf("generator does not contain audit anchor %q", phrase)
 		}
+	}
+}
+
+func TestNealpatelRank24ExporterReproducesEmbeddedAsset(t *testing.T) {
+	root, err := filepath.Abs(filepath.Join("..", ".."))
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := staticFiles.ReadFile("static/nealpatel-rank-24.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var embedded certificate
+	if err := json.Unmarshal(body, &embedded); err != nil {
+		t.Fatal(err)
+	}
+	candidate := make([]map[string]any, embedded.R)
+	for gate := range candidate {
+		candidate[gate] = map[string]any{
+			"coefficient": "1",
+			"A":           embedded.Factors.A[gate],
+			"B":           embedded.Factors.B[gate],
+			"C":           embedded.Factors.C[gate],
+		}
+	}
+	input, err := json.Marshal(map[string]any{"candidate": candidate})
+	if err != nil {
+		t.Fatal(err)
+	}
+	outputDir := t.TempDir()
+	candidatePath := filepath.Join(outputDir, "candidate.json")
+	outputPath := filepath.Join(outputDir, "nealpatel-rank-24.json")
+	if err := os.WriteFile(candidatePath, input, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	command := exec.Command(
+		"timeout", "300", "python3",
+		"Programs/BilinearComplexity/export_visualize_nealpatel_rank24.py",
+		candidatePath,
+		outputPath,
+	)
+	command.Dir = root
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("regenerate nealpatel rank-24 certificate: %v\n%s", err, output)
+	}
+	generated, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(generated, body) {
+		t.Fatalf("regenerated asset differs from embedded asset: got %d bytes, want %d", len(generated), len(body))
 	}
 }
 
