@@ -1,37 +1,23 @@
-# Erdos attack program
+# Next Proving Targets — Coalesced Action Plan
 
-The prioritized queue of Erdos-problem proving targets, organized by
-formalization tiers (F1-F3) and proof-attempt tiers (P1-P3), with
-dispatch state, axed/gated items, and the burndown scoring from the
-four-batch sweep of erdosproblems.com. Publication standing lives in
-standing.md, not here; the covering lanes are in covering-arc.md.
+Updated 2026-08-06 after wave 3 + follow-on lanes.
 
-Sources: `git show 4901d3b:Plans/PLAN.md` sections DISPATCH STATE, TARGET QUEUE, AXED, GATED/DEFERRED; `git show 4901d3b:Plans/STATE1.md` sections erdos burndown ledgers, sweep-rubric; `git show 4901d3b:Plans/STATE3.md` sections disagreements with PLAN.md, retro Erdos kill list; reorganized 2026-08-10.
+## Landed in wave 3 (remove from dispatch consideration)
 
+P1 proof: Melfi practical+practical (2e5b1ab), #376 Kummer
+carry (626822b), #1063 Selfridge defect (8efac26), #535
+gcd-sunflower (0238c07), C1 base-b covering (37e5f2e).
+Archive: ‖2^n‖=2n (d657720), Brocard (7a1d51f), Noe
+Zumkeller (c1097d9), #1140 (da07f72), Sun derangements
+(6de4495), #406 base-3 (4bb6675), #7 odd covering
+(183c590), A244743 defect (b43f80d).
+Follow-on: three-smooth (398c7d6), n_k k=6–10 (7f3a26b),
+carry bound (5af455e).
 
-## DISPATCH STATE — as of 2026-08-09
-
-Waves 1–3 (dispatched 2026-08-05) are fully landed; per-lane results
-and commits are in git history, and the brief corrections are
-preserved in the claim-discipline draft's ledger
-(`~/p/patel.codes/data/words/claim_discipline_essay.draft.md`).
-Wave 5 was briefed
-2026-08-06 (`Prompts/User/20260806_WAVE5.md`: C7, C3, C4, P15 Switkay,
-P16 defect identity, P17 #376 digits, P18 A222603, and an archive batch
-#1213/#384/#673/#1062/#1160/#18) but NONE of its targets have landed —
-every wave-5 item remains open in the queue below. Landed outside the
-queue since 2026-08-06: Erdős #406 sieve bound + method barrier
-(4455bf3, La09 Thm 1.4 λ=1 case) and the Noe original↔repaired bridge
-(49f30bd).
-
-Landed rows from the queue were removed on 2026-08-06; recover from
-git history.
-
-
-# TARGET QUEUE
-
-Updated 2026-08-06 after wave 3 + follow-on lanes; landed rows removed
-(recover from git history).
+Sequencing updates: Melfi landed → Switkay/A222603/A373686
+unblocked. Kummer landed → #406 landed, #699/#1093–95
+unblocked. C1 landed → C2/C3 unblocked. #535 encoding is
+a one-problem tool (elaborator-confirmed).
 
 ## Summary statistics (post wave 3)
 
@@ -54,9 +40,17 @@ sorrys, and commit with the intended sorry(s) only.
 
 | Target | Source | Effort | Reuses | Notes |
 |--------|--------|--------|--------|-------|
-| A005153 Switkay | OEIS T1 | S | `Nat.Practical`, `StewartCriterion` | Melfi landed → the card's `melfi` sorry becomes an import. Parity reduction provable. |
+| ~~`‖2^n‖ = 2n`~~ | ~~gaps #6~~ | ~~S~~ | | LANDED d657720 + three-smooth 398c7d6 |
+| ~~A146968 Brocard~~ | ~~OEIS T1~~ | ~~S~~ | | LANDED 7a1d51f |
+| ~~A174865 Noe Zumkeller~~ | ~~OEIS T1~~ | ~~S~~ | | LANDED c1097d9 — forward ↔ no OPN |
+| A005153 Switkay | OEIS T1 | S | `Nat.Practical`, `StewartCriterion` | Sequence AFTER the Melfi lane (P1): the card's `melfi` sorry becomes an import. Parity reduction provable. |
+| ~~A000166 Sun derangements~~ | ~~OEIS T1~~ | ~~S~~ | | LANDED 6de4495 — coprimality proved ∀n |
+| ~~A244743 complexity defect~~ | ~~OEIS T1~~ | ~~S~~ | | LANDED b43f80d — brief def was wrong |
 | Erdős #242 / A192787 Erdős–Straus (merged) | both sweeps | S | none new; cleared-denominator `Nat` form | Archive-primary. Fragments: `erdosStraus_of_prime` + Mordell residue classes (effort M) are P2-grade work the card should carry. |
+| ~~Erdős #1140 n−2x²~~ | ~~Erdős B~~ | ~~S~~ | | LANDED da07f72 |
 | Erdős #405 (p−1)!+a^(p−1)=p^k | Erdős B | S | none | Pin the odd-p solution set from Yu–Liu before stating (DB examples use p=2). |
+| ~~Erdős #7 odd covering~~ | ~~Erdős UB~~ | ~~S~~ | | LANDED 183c590 — 945 lcm bound proved |
+| ~~Erdős #406 2^n base 3~~ | ~~Erdős UB~~ | ~~S~~ | | LANDED 4bb6675 — no sorry, Kummer load-bearing |
 | Erdős #677 lcm blocks | Erdős UB | S | `Erdos440/LcmCount` | Two coincidence witnesses by `decide`. |
 
 ### Tier F2 — Medium effort
@@ -94,8 +88,8 @@ sorrys, and commit with the intended sorry(s) only.
 
 | Target | Source | Effort | Reuses | Notes |
 |--------|--------|--------|--------|-------|
-| A323653 | wave-2 P8 batch | L | needs A276086 primorial-base + A003961 prime-shift defs | The one unlanded P8 item; def layer is heavy by prior ruling — keep last. |
-| A222603 practical tree | OEIS T3 | L | `Nat.Practical`, `SimpleGraph`; Melfi prerequisite | Successor well-definedness needs Melfi; acyclicity provable, connectivity is the conjecture. |
+| A323653 | PLAN P8 | L | needs A276086 primorial-base + A003961 prime-shift defs | The one unlanded P8 item; def layer is heavy by prior ruling — keep last. |
+| A222603 practical tree | OEIS T3 | L | `Nat.Practical`, `SimpleGraph`; Melfi (P1) prerequisite | Successor well-definedness needs Melfi; acyclicity provable, connectivity is the conjecture. |
 | A005153 Sun root-decreasing | OEIS T3 | L | `Nat.Practical`, asymptotics toolbox | Limit half known (Weingartner) but needs practical-counting asymptotics; monotonicity open. |
 | A000041 Sun antichain | OEIS T3 | L | partition machinery | Sketch's own review: weakest candidate; archive only, never schedule proof work. |
 | A265262 Erdős–Turán | OEIS T3 | L | fresh `profile`, `IsBasis2` | Archive-primary; the König tree-equivalence is the valuable P3 fragment. |
@@ -105,21 +99,23 @@ sorrys, and commit with the intended sorry(s) only.
 
 `prover` is scarce (largest stated-to-route gap only);
 everything else is `postdoc`. Efforts are the sketchers'
-calls, corrected by audit where noted. The covering lanes
-C2–C7 in this tier are detailed in covering-arc.md.
+calls, corrected by audit where noted.
 
 ### Tier P1 — Highest confidence (elementary proof, existing infra)
 
 | Target | Source | Agent | Attack surface | Reuses |
 |--------|--------|-------|----------------|--------|
-| C2 abstract sequence layer | covering arc | postdoc, S | ~15 lines, piggyback on C1; statement reuse only. | `FixedDivisor`, `RankOfApparition` |
-| C3 Brier numbers | covering arc | postdoc, S | Two independent `IsFixedDivisorSystem` instances; both certificates re-verified 2026-08-05; loads far inside the measured ceiling. First Lean + record-k framing; cite Cowles–Gamboa (ACL2). | `FixedDivisor`, `Sierpinski`, `Riesel` |
-| C4 Mirsky–Newman | covering arc | postdoc, M | Root-of-unity argument on committed `IsCoveringSystem`; novelty sweep clean; MUST resolve the 274.lean "Jostamon" pointer before claiming first-formalization. | `Covering/Basic` |
-| C7 drop `1 ≤ k` | covering arc | postdoc, S | k = 0 case already paid for; strengthens the flagship to A006285's convention. | `NotTwoPowerPlusPrime` |
+| ~~Melfi 1996~~ | ~~gaps #6~~ | | | LANDED 2e5b1ab — L risk avoided |
+| ~~C1 base-b~~ | ~~PLAN~~ | | | LANDED 37e5f2e — 51 new decls |
+| C2 abstract sequence layer | PLAN | postdoc, S | ~15 lines, piggyback on C1; statement reuse only. | `FixedDivisor`, `RankOfApparition` |
+| C3 Brier numbers | PLAN | postdoc, S | Two independent `IsFixedDivisorSystem` instances; both certificates re-verified 2026-08-05; loads far inside the measured ceiling. First Lean + record-k framing; cite Cowles–Gamboa (ACL2). | `FixedDivisor`, `Sierpinski`, `Riesel` |
+| C4 Mirsky–Newman | PLAN | postdoc, M | Root-of-unity argument on committed `IsCoveringSystem`; novelty sweep clean; MUST resolve the 274.lean "Jostamon" pointer before claiming first-formalization. | `Covering/Basic` |
+| C7 drop `1 ≤ k` | PLAN | postdoc, S | k = 0 case already paid for; strengthens the flagship to A006285's convention. | `NotTwoPowerPlusPrime` |
 | Erdős #1213 Hegyvári | Erdős A | postdoc, S | Pigeonhole on interval-sum residues; zero new defs. Best payoff-per-effort in the Erdős sweep. | `Finset.sum` vocabulary |
 | Erdős #384 Ecklund | Erdős A | postdoc, S | Corrected statement already in sketch (n ≥ 2k, p ≤ n/2, (7,3) exception); elementary via Bertrand. | Kummer machinery in `Erdos175` |
 | Erdős #673 divisor ratios | Erdős C | postdoc, S | Tao's trivial route: τ(n)/4 ≤ G(n) ≤ τ(n) pointwise; density half stays archived. | `Nat.divisors` |
 | Erdős #1062 no a∣b, a∣c | Erdős UA | postdoc, S | Interval [m+1, 3m+2] gives f(n) ≥ ⌈2n/3⌉; small exact values decidable. | Finset divisibility |
+| ~~Erdős #1063~~ | ~~Erdős UA~~ | | | LANDED 8efac26 + 7f3a26b + 5af455e |
 | Erdős #1160 m = 2, 3 cases | Erdős UB | postdoc, S/M | Skim verdict: `erdos_1160_m2` provable NOW from landed gnu lemmas; m = 3 provable-with-work. Headline stays archived (gnu(64) = 267 is out of certified range). | `GroupCount/Gnu` |
 
 ### Tier P2 — Medium confidence
@@ -127,17 +123,19 @@ C2–C7 in this tier are detailed in covering-arc.md.
 | Target | Source | Agent | Attack surface | Reuses |
 |--------|--------|-------|----------------|--------|
 | A002093 highly abundant → practical | gaps #6 | postdoc, M | Audit UPGRADE from archive: Eppstein 2015 gives an essentially complete argument (smallest-missing-prime P < p² bound + Stewart criterion + Alaoglu–Erdős divisibility-by-4 for large n). GATE: verify the blog argument end-to-end first; it settles a live OEIS conjecture, so the bar is high. | `StewartCriterion`, `Practical`, Mathlib `sigma` |
-| C5 Erdős #278 Rogers minimum | covering arc | postdoc, M | Inclusion–exclusion over lcms (Rogers via Halberstam–Roth; Tao 2026 writeup). Maximum question stays archived. | `Covering/Basic` |
-| C6 Wilf A083216 | covering arc | postdoc, M | Alpha-layer API confirmed ready; GATE on the scaled `decide` probe (155520 load is AT the ceiling); bridge must live in `ZMod p`; re-derive the 18-triple certificate independently. | `RankOfApparition`, `IsFibonacciLike` |
-| C5 Erdős #1188 fragment | covering arc | postdoc, S | Woett's elementary F(x) ≥ ⌊log₁₂ x⌋; archive the site's (Bloom-reinterpreted) statement and say which form it is. | `Covering/Basic` |
-| C5 Erdős #1189 fragment | covering arc | postdoc, S | Sun 2007 irreducible-covering certificate (divisors of 2^(p−1)·p) checked by the existing layer; archive the rest. | `Covering/Basic` |
+| C5 Erdős #278 Rogers minimum | PLAN | postdoc, M | Inclusion–exclusion over lcms (Rogers via Halberstam–Roth; Tao 2026 writeup). Maximum question stays archived. | `Covering/Basic` |
+| C6 Wilf A083216 | PLAN | postdoc, M | Alpha-layer API confirmed ready; GATE on the scaled `decide` probe (155520 load is AT the ceiling); bridge must live in `ZMod p`; re-derive the 18-triple certificate independently. | `RankOfApparition`, `IsFibonacciLike` |
+| C5 Erdős #1188 fragment | PLAN | postdoc, S | Woett's elementary F(x) ≥ ⌊log₁₂ x⌋; archive the site's (Bloom-reinterpreted) statement and say which form it is. | `Covering/Basic` |
+| C5 Erdős #1189 fragment | PLAN | postdoc, S | Sun 2007 irreducible-covering certificate (divisors of 2^(p−1)·p) checked by the existing layer; archive the rest. | `Covering/Basic` |
 | Erdős #1058 Luca n!+1 | Erdős A | postdoc, M | Five `decide` certificates + 4-page elementary tail (factorial divisibility + Bertrand). Full closure of an Erdős problem plausible. | certificate-then-tail pattern from `ErdosMinus2k` |
 | Erdős #482 Graham–Pollak | Erdős A | postdoc, M | Computable recurrence, short induction; floor-to-binary bridge is the fiddly part. | Mathlib `Real.sqrt`, `Nat.floor` |
 | Erdős #916 Thomassen | Erdős A | postdoc, M | ~5-page direct argument; primitives exist; Walk-API friction is the risk. | `SimpleGraph` experience from Erdos715 |
 | Erdős #58 Gyárfás headline | Erdős A | postdoc, M | Prove χ ≤ 2k+2, sorry the equality case (L). | Mathlib `chromaticNumber` |
 | Erdős #77 Ramsey layer | Erdős C | postdoc, M | R(k) def (~50 lines) + classical bounds (probabilistic lower, pigeonhole upper) + R(3) = 6; unlocks #781 and #112. | new def, high downstream reuse |
+| ~~Erdős #376 Kummer~~ | ~~Erdős UA~~ | | | LANDED 626822b — unlocks #406 (done), #699 |
 | Erdős #699 binomial gcd | Erdős UA | postdoc, M | Finiteness-per-(i,j) + balanced n = 2j case via the product identity; window provable. | BINOM arithmetic; Sylvester–Schur (P3) strengthens it later |
 | Erdős #856 lcm sunflowers | Erdős UA | postdoc, M | Er70 upper bound is a short prime-counting inequality; natural second client of Naslund–Sawin. | `Erdos857/NaslundSawin`, Mathlib Chebyshev |
+| ~~Erdős #535 gcd-sunflower~~ | ~~Erdős UA~~ | | | LANDED 0238c07 — one-problem tool |
 | Erdős #273 moduli p−1 | Erdős UA | postdoc, S–M | Verify Selfridge's p ≥ 3 certificate on the existing layer; gate the p > 877 obstruction on a scaled probe. | `Covering/Basic` |
 | Erdős #727 Balakran k=1 | Erdős UC | postdoc, M | (n+1)² ∣ C(2n,n) infinitely often via Catalan numbers (in Mathlib); k ≥ 2 stays open/archived. | Mathlib Catalan + factorial valuations |
 | Erdős #901 m(3) = 7 | Erdős UC | postdoc, M | Fano-plane finite theorem + m(2) = 3 + union-bound lower; entry point to finite probabilistic arguments. | proper-2-coloring defs shared with #836 |
@@ -158,7 +156,7 @@ C2–C7 in this tier are detailed in covering-arc.md.
 |--------|--------|-------|----------------|--------|
 | Erdős #683 Sylvester–Schur | Erdős UC | prover, L | Erdős's elementary proof; not in Mathlib; load-bearing for #699/#1094/#1095 and the #175 remainder. The single most valuable classical target in the BINOM family. | BINOM valuations |
 | Erdős #702 Frankl | Erdős C | prover, M–L | Needs a fresh shifting lemma; would deepen the extremal-set lane beyond sunflowers. | `Erdos20` compression experience |
-| Barker cliques A135908/09 | gated, now open | prover, S/L | The gate ("after P5, S_n machinery felt out") is now satisfied: P5 landed and `SubgroupCountSn` exists. Max-abelian-subgroup-of-S_n theorem is where it may stall. | `GroupCount`, `SubgroupCountSn` |
+| Barker cliques A135908/09 | PLAN gated | prover, S/L | PLAN's gate ("after P5, S_n machinery felt out") is now satisfied: P5 landed and `SubgroupCountSn` exists. Max-abelian-subgroup-of-S_n theorem is where it may stall. | `GroupCount`, `SubgroupCountSn` |
 | Erdős #112 Hunter–Steiner path variant | Erdős C | postdoc, M | Exact k(n,m) = (n−1)(m−1) for the directed-path variant; ~100 lines of tournament infra Mathlib lacks. | new tournament defs |
 | Erdős #130 Anning–Erdős 1945 | Erdős C | postdoc, M–L | Classic self-contained Euclidean argument; opens a `EuclideanSpace` lane the repo has not touched. | none — new lane |
 | Erdős #836 intersection bound | Erdős UA | postdoc, M | Erdős–Lovász r/log r bound, same paper as the landed g(k) work. GATE: verify the claimed 2026 proof of the second question against the live entry first. | `ErdosLovasz`, #901 defs |
@@ -175,14 +173,14 @@ C2–C7 in this tier are detailed in covering-arc.md.
 | Target | Source | Blocker | Next step |
 |--------|--------|---------|-----------|
 | A080210 DCS multiplicity | OEIS T2 | Entry defines neither "multiplicity" nor cites a proof; reconstructed reading unverified | Read the Zamojski survey; reclassify or drop. |
-| Erdős #1064 φ(n) > φ(n−φ(n)) | gaps #6 | Solved (Luca–Pomerance 2002), but Mathlib has NO natural density — "almost all" is unstatable faithfully (Schnirelmann.lean line 40 TODO, verified live) | Decide on a `naturalDensity` infra lane (see cross-cutting notes). |
+| Erdős #1064 φ(n) > φ(n−φ(n)) | gaps #6 | Solved (Luca–Pomerance 2002), but Mathlib has NO natural density — "almost all" is unstatable faithfully (Schnirelmann.lean line 40 TODO, verified live) | Decide on a `naturalDensity` infra lane (see cross-cutting); the 15·2^k counterexample family alone is trivial. |
 | Higman PORC | gaps #6 | Open but community-expected false (du Sautoy–Vaughan-Lee 2012 at p^10); high def cost (PORC functions + gnu quantifiers), zero sanity layer | Record as a documentation note in `GroupCount`; no Lean card unless the USER wants a likely-false archive. |
-| A000670-egf-family | gated | Needs an EGF layer Mathlib lacks — an infrastructure arc, not a lane | Scope the EGF design separately; do not dispatch. |
-| Hough–Nielsen (2 or 3 divides some modulus) | gated | XL; an ITP paper on its own | USER decision 2, unchanged. |
-| Excluded-63 re-triage | gaps #6 §1 | Only 8 of 63 upstream files were classified (all stubs); 55 solved problems with unclaimed proofs remain unassessed — #387/#851/#937/#1064 audited, all deep or blocked | Dispatch the Tier-A triage over the remaining ~55; highest expected yield per hour of any process item. |
+| A000670-egf-family | PLAN gated | Needs an EGF layer Mathlib lacks — an infrastructure arc, not a lane | Scope the EGF design separately; do not dispatch. |
+| Hough–Nielsen (2 or 3 divides some modulus) | PLAN gated | XL; an ITP paper on its own | USER decision 2, unchanged. |
+| Excluded-63 re-triage | gaps #6 §1 | Only 8 of 63 upstream files were classified (all stubs); 55 solved problems with unclaimed proofs remain unassessed — #387/#851/#937/#1064 audited this session, all deep or blocked | Dispatch the Tier-A triage over the remaining ~55; highest expected yield per hour of any process item. |
 | Algebraic-complexity lane | gaps #6 §2 | No database indexes the repo's deepest arc; A075099 killed on audit (contested def) | Literature-sourced mining: Bürgisser–Clausen–Shokrollahi problem list + Landsberg open problems. |
 | GreensOpenProblems/ + Kourovka/ | gaps #6 §5 | 53-file Green list and Kourovka group-theory tree unmined | Next mining sweep stage; also align defs with `FormalConjecturesForMathlib`. |
-| A093682 per-row forms | wave-2 P7 | Commit `f105bf4` names only A092482; whether the A093682 rows (A004793, A033157, A093678–81) landed is unverified | Check the committed file; unlanded rows are P2-grade follow-ons on `StanleyDigits`. |
+| A093682 per-row forms | PLAN P7 | Commit `f105bf4` names only A092482; whether the A093682 rows (A004793, A033157, A093678–81) landed is unverified | Check the committed file; unlanded rows are P2-grade follow-ons on `StanleyDigits`. |
 
 ## Cross-cutting notes
 
@@ -198,13 +196,6 @@ sieve theory not in Mathlib), A005820/A027687/A046060
 harder than OPN, plus a recorded contrary conjecture),
 A075099 (unattributed guess on a contested definition;
 the def is a DAG-computation model, not ~30 lines).
-
-Additionally do not re-mine (from f5exp retro, absent from
-the above list): [A] Erdős #1216 (the disproof quantifies
-over ~2^91 tournaments — no feasible certificate), #742,
-#835, #617 (native_decide search spaces infeasible on
-audit), #1027 (martingale proof), #402 (already formalized
-elsewhere).
 
 Natural density is the largest single Mathlib gap this
 queue hits: it blocks faithful statements for Erdős #1064,
@@ -231,10 +222,11 @@ form, A141386 literature check, and every 2025–26
 AI-assisted site comment cited in `ERDOS_CANDIDATES.md` —
 re-fetch before building on any of them. `oeis show` /
 `erdos fetch` ground truth before any Lean statement,
-per PROTOCOL.md.
+per PROTOCOL.
 
 Chores X1 (axiom-audit adoption) and X2 (INDEX refresh)
-are tracked in debt.md, not here.
+from `PLAN.md` remain open and are not proving targets;
+X2 should additionally record waves 2–3 landings.
 
 ## Process recommendations (from MINING_GAPS.md, now deleted)
 
@@ -277,154 +269,3 @@ C2 may be partially subsumed by `IsFixedDivisorSystemBase`
 
 Cleanup: `E1063.lean` fully and `E535.lean` mostly
 superseded by landed files — `goof rm` candidates.
-
-
-## AXED
-
-  * Old lane C (more Sierpinski/Riesel instantiations, A076336/A101036):
-    no firsts anywhere (ACL2 covers several), and framework reusability
-    is already evidenced by THREE landed instantiations (Sierpinski,
-    Riesel, Erdos1950Instance). Value per line ~zero.
-  * The five hand-rolled axiom sweeps — on X1 landing, not before.
-  * Old lane I (A006285 note) as a lane — demoted to micro-lane C7 plus,
-    at most, a formalization link on the entry. Formally still USER
-    decision 3; recommendation is drop the note, keep C7.
-  * A062733 (GL(3,2) char table): "bounded" but almost certainly a
-    kernel-decide grind, not proving. Stays a card in INDEX, not a lane.
-
-
-## GATED / DEFERRED
-
-  * Hough–Nielsen 2019 (was F) [XL]: every distinct covering system has
-    a modulus divisible by 2 or 3. An ITP paper on its own. GATED on
-    USER decision 2.
-  * Hough 2015 minimum-modulus (was G) [XXL]: recorded for completeness,
-    not dispatch.
-  * A000670-egf-family: needs an EGF layer designed first (Mathlib
-    gap) — infrastructure arc of its own, not a lane here.
-
-  (Barker cliques A135908/09 moved to the P3 queue — its gate is
-  satisfied: P5 landed and `SubgroupCountSn` exists.)
-
-
-## Erdos burndown scoring
-
-Erdos burndown score (0-5), for a Lean-formalizable win:
-5 — settled by an explicit small finite witness a
-`decide`/`native_decide` check could verify, or a short
-self-contained elementary proof. 4 — elementary known
-proof, one to a few pages, standard Mathlib facts.
-3 — resolution known and readable but needs moderate
-infrastructure; a special case is still respectable.
-2 — serious machinery; only a toy fragment formalizable.
-1 — statement hard to even state in Lean, or 30+ page
-hard analysis. 0 — not a sensible formal target (incl.
-ZFC-independent). Ground rules: quote erdosproblems.com,
-never assert resolution history from memory;
-`formalized=yes` means only that the statement exists in
-google-deepmind/formal-conjectures; honest verdicts beat
-volume. Problem 20 is already formalized in this repo.
-
-Epistemic status of all scores: [A] — agent-reported,
-re-fetch before citing. The campaign has a history of
-believed-then-falsified prior-art claims (nine falsified,
-all caught by retrieval, never by reasoning).
-
-### Score 5
-
-152 (already formalized by DeepMind — no contribution
-remains); 1058 (Luca 2001, Math. Comp., 4pp); special 742
-(Furedi 1992, large n, 18pp J. Graph Theory).
-
-### Score 4
-
-Batch 1: 175 (Granville-Ramare 1996; Velammal 1995;
-Kummer + Bertrand, Mathlib-ready), 245 (Mann 1960; needs
-character theory), 384 (Ecklund 1969, 4pp; Bertrand in
-Mathlib; top pick), 402 (Balasubramanian-Soundararajan
-1996; Szegedy 1986, 5pp; Hall's theorem in Mathlib; top
-pick), 440 (Tao comment proof, ~5 lines; ledger upgraded
-it 3→4; top pick).
-
-Batch 2: 542 (Schinzel-Szekeres 1959, ~8pp; witness
-{2,3,5}; top pick), 603 (Erdos-Rado; external
-formalization KitaKen1/erdos603-lean), 631 (Thomassen
-1994, 2pp induction; needs planar infra; top pick), 632
-(Dvorak-Hu-Sereni 2019; top pick if graph small), 702
-(Frankl 1977; shifting; top pick), 715 (Tashkinov 1982;
-Alon-Friedland-Kalai 1984, 1pp; GF(2) linear algebra; top
-pick), 771 (Alon-Freiman 1988, ~10pp; top pick), 781
-(Alon-Spencer 1989 "Ascending waves"; top pick).
-
-Batch 3: 842 (Fleischner-Stiebitz 1992, elementary), 880
-(Hegyvari-Hennecart-Plagne 2007; k=2 trivial, k≥3
-counterexample), 916 (Thomassen 1974, 6pp), 922 (Folkman
-1970, elementary induction), 1025 (Spencer 1972), 1027
-(proof is a KoishiChan comment-section post — verify
-before use), 1050 (Borwein 1991, 7pp, Pade approximants;
-top pick), 1140 (Epure-Gica 2010; finite list
-{2,5,7,13,31,61,181,199}), 1213 (Hegyvari 1986;
-pigeonhole; top pick), 1216 (Reid-Parker 1970;
-native_decide feasible; top pick).
-
-Special (unsolved, computational targets): 307, 364, 366
-(consecutive powerful-number searches, OEIS A060355;
-feasible in minutes to 10^12), 398 (Brocard-Ramanujan,
-A146968, verified to 10^9), 617 (Erdos-Gyarfas r=3
-formalizable; top pick), 647 (GBP25 prize; only n=24
-known; sieve to 10^9 feasible; top pick), 835 (Ma-Tang;
-k=3 decidable).
-
-### Score 3 (number lists only; prior art on the problem pages)
-
-Batch 1 — 35, 58, 73, 210, 216, 266, 362, 381, 438.
-Batch 2 — 471, 494, 504, 518, 534, 570, 577, 608, 630,
-673, 703, 720, 735, 745, 758, 763, 767, 780, 795, 800,
-806, 816. Batch 3 — 884, 895, 899, 903, 915, 924, 948,
-984, 994, 998, 1006, 1009, 1010, 1012, 1018, 1078, 1079,
-1105, 1114, 1147, 1187, 1202. Special — 19, 23, 106, 242,
-287, 475, 488, 547, 551, 556, 699, 779, 993.
-
-### Corrected score distribution
-
-Score 0: 9, 1: 133, 2: 160, 3: 67, 4: 29, 5: 3.
-Recounted from the four sweep docs' ## header lines;
-consistent with the 9-entry ZFC-independent list.
-
-### ZFC-independent (score 0, not formal targets)
-
-474, 736, 739, 1119, 1127, 1154, 1169, 1174, 1176.
-
-### External formalizations (do not re-do)
-
-152 (DeepMind), 441 (AxiomProver/AxiomMath 2026), 603
-(KitaKen1/erdos603-lean), 884 (github.com/honicky/
-erdos884), 986 (Bradac 2026), 1187 part-2 counterexample
-(KentaKitamura), 948 (Price — claimed, unverified).
-
-### Suspect entries needing human adjudication
-
-63 (attribution hedged), 69 (conditional on prime k-tuples
-only), 405 and 559 and 690 and 777 and 895
-(resolution/status unclear from page), 480
-(misformalization noted in formal-conjectures statement),
-518 (attribution unclear), 960 and 987 and 1091
-(resolution credited to "APSSV26b", an unpublished
-internal OpenAI-model preprint — uncitable; affects whether
-those targets count as solved), 1027 (comment-section
-proof), 1077 (problem misstated), 1114 (proof in
-Hungarian, Mat. Lapok), 1123 (rests on Erdos-Ulam "lost
-proof"), 548 (Ajtai-Komlos-Simonovits-Szemeredi proof
-unpublished, 200+ pp), 699 (statement subtle, sweep flags
-re-read).
-
-
-## #1213 route disagreement
-
-The P1 queue row above recommends the
-pigeonhole-on-interval-sums route as "Best
-payoff-per-effort in the Erdős sweep". The f5exp retro
-(2026-07-11) records the sweep's pigeonhole claim as
-REFUTED and the source paper inaccessible, deferring the
-problem. [A both ways] One of these is wrong; re-derive
-before dispatching #1213.
