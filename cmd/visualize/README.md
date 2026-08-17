@@ -98,6 +98,21 @@ The primary comparison canvas remains the output-routing factor `W`, padded to
 schoolbook width. Collapsible views retain full `U`, `V`, `W` factors and the
 complete 64-, 729-, or 4096-coordinate tensor audit.
 
+## Regenerate the 4×4 certificates
+
+From the repository root, run:
+
+```sh
+timeout 300 sage Programs/BilinearComplexity/export_visualize_444.sage cmd/visualize/static
+```
+
+The generator loads the authoritative `q2_strassen2.sage` factors and row
+permutation, strictly parses all 48 `O_j`, `P_j`, `Q_j` triples from the local
+reference appendix, rejects missing/duplicate/malformed entries, and verifies
+all 4096 ambient coordinates over `QQ` before deterministically writing
+`strassen-squared.json` and `rational-48.json`. Sage is not needed at visualizer
+runtime.
+
 ## Run
 
 ```sh

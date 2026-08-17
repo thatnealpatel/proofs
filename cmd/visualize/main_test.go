@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -123,22 +125,51 @@ func TestUIContainsMachineReadableSchemasAndExactWorkbenchFeatures(t *testing.T)
 	}
 }
 
-func TestREADMEDocumentsFourByFourScopeAndServerLimits(t *testing.T) {
+func TestREADMEDocumentsFourByFourScopeRegenerationAndServerLimits(t *testing.T) {
 	body, err := os.ReadFile("README.md")
 	if err != nil {
 		t.Fatal(err)
 	}
 	readme := string(body)
-	for _, phrase := range []string{"schoolbook rank 64", "Strassen-squared rank 49", "rational rank-48", "not claimed to be optimal", "rank-47 construction in characteristic", "C = vec_row_major(transpose(Q))", "private per-process", "temporary directory", "loopback", "-allow-remote"} {
+	for _, phrase := range []string{"schoolbook rank 64", "Strassen-squared rank 49", "rational rank-48", "not claimed to be optimal", "rank-47 construction in characteristic", "C = vec_row_major(transpose(Q))", "export_visualize_444.sage", "all 4096 ambient coordinates over `QQ`", "deterministically writing", "private per-process", "temporary directory", "loopback", "-allow-remote"} {
 		if !strings.Contains(readme, phrase) {
 			t.Errorf("README does not contain %q", phrase)
 		}
 	}
-	if strings.Contains(readme, "export_visualize_444.sage") {
-		t.Fatal("README advertises regeneration support that is not in this commit")
-	}
 	if strings.Contains(readme, "There is no 4×4 mode") {
 		t.Fatal("README still denies 4x4 support")
+	}
+}
+
+func TestFourByFourGeneratorReproducesEmbeddedAssets(t *testing.T) {
+	root, err := filepath.Abs(filepath.Join("..", ".."))
+	if err != nil {
+		t.Fatal(err)
+	}
+	outputDir := t.TempDir()
+	command := exec.Command(
+		"timeout", "300", "sage",
+		"Programs/BilinearComplexity/export_visualize_444.sage",
+		outputDir,
+	)
+	command.Dir = root
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("regenerate 4x4 certificates: %v\n%s", err, output)
+	}
+	for _, name := range []string{"strassen-squared.json", "rational-48.json"} {
+		t.Run(name, func(t *testing.T) {
+			got, err := os.ReadFile(filepath.Join(outputDir, name))
+			if err != nil {
+				t.Fatal(err)
+			}
+			want, err := staticFiles.ReadFile("static/" + name)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !bytes.Equal(got, want) {
+				t.Errorf("regenerated %s differs from embedded asset: got %d bytes, want %d", name, len(got), len(want))
+			}
+		})
 	}
 }
 
