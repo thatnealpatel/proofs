@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tensor Gate Lens</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div><p class="eyebrow">AN EXACT, INTERACTIVE READING AID</p><h1>Tensor Gate Lens</h1><p class="lede">Compare verified matrix-multiplication tensor decompositions, discover interaction structure mechanically, and export exact evidence without mistaking a pattern for a theorem.</p></div>
+  <div id="hero-equation" class="hero-eq">A₂×₂ · B₂×₂ = C₂×₂</div>
+</header>
+<main>
+<section class="primer panel">
+  <div><span class="step">01 · CHOOSE THE ALGORITHM</span><h2>A gate is an outer product</h2><p>A multiplication slot combines one linear form in <i>A</i> with one in <i>B</i>, then routes it through a factor in <i>C</i>. Original gate IDs (<span class="mono">P1</span>, <span class="mono">P2</span>, …) never change when a view is reordered.</p></div>
+  <div class="selectors"><label>Dimension<select id="dimension"><option value="2">⟨2,2,2⟩</option><option value="3">⟨3,3,3⟩</option><option value="4">⟨4,4,4⟩</option></select></label><label>Construction<select id="construction"></select></label></div>
+</section>
+
+<section id="interpretation" class="panel interpretation" aria-live="polite"></section>
+
+<section class="panel routing-panel">
+  <div class="canvas-heading"><div><span class="step">02 · OUTPUT ROUTING</span><h2>Primary W comparison canvas</h2></div><div id="rank-badge" class="score"></div></div>
+  <p id="routing-note" class="hint"></p>
+  <div class="coefficient-legend"><span><i class="cell-key negative"></i> negative</span><span><i class="cell-key zero"></i> 0</span><span><i class="cell-key positive"></i> positive</span><span><i class="cell-key padding"></i> unused slot</span></div>
+  <div class="routing-wrap"><div id="routing-grid" class="routing-grid" role="grid"></div></div>
+</section>
+
+<section class="panel interaction-panel">
+  <div class="canvas-heading">
+    <div><span class="step">03 · STRUCTURE DISCOVERY</span><h2>Interaction workbench</h2></div>
+    <div class="heading-actions"><button id="copy-workbench" type="button" class="quiet machine-copy">Save workbench JSON</button><div id="interaction-score" class="score"></div></div>
+  </div>
+  <p class="hint">Interactions are computed only on unwanted ambient coordinates. Green means opposite signs (cancellation pressure); red means equal signs (reinforcement). This graph is a diagnostic of a certificate, not evidence that a pattern is mathematically canonical.</p>
+  <div class="workbench-controls" aria-label="interaction display controls">
+    <label>Display metric<select id="interaction-mode"><option value="cancel">Cancellation count</option><option value="reinforce">Reinforcement count</option><option value="net">Net interaction</option><option value="binary">Binary adjacency</option><option value="weighted">Coefficient-weighted</option></select></label>
+    <label>Gate order<select id="gate-order"><option value="certificate">Certificate order</option><option value="components">Connected components</option><option value="communities">Interaction communities</option><option value="neighborhoods">Repeated neighborhoods</option><option value="degree">Degree</option><option value="clustered">Deterministic clustered</option></select></label>
+    <label>Pair filter<select id="edge-filter"><option value="all">All interactions</option><option value="cancel">Cancellation only</option><option value="reinforce">Reinforcement only</option></select></label>
+    <label>View<select id="interaction-view"><option value="both">Matrix + graph</option><option value="matrix">Matrix only</option><option value="graph">Graph only</option></select></label>
+    <label class="toggle"><input id="hide-empty" type="checkbox"> Hide empty cells</label>
+    <label class="toggle"><input id="upper-triangle" type="checkbox"> Upper triangle</label>
+  </div>
+  <p id="metric-definition" class="definition"></p>
+  <p id="order-definition" class="definition"></p>
+
+  <div id="interaction-views" class="interaction-views">
+    <div id="matrix-view" class="matrix-view">
+      <div class="interaction-wrap"><div id="interaction-grid" class="interaction-grid" role="grid" aria-label="gate interaction matrix"></div></div>
+      <div class="interaction-legend"><span><i class="interaction-key cancel"></i> cancellation</span><span><i class="interaction-key reinforce"></i> reinforcement</span><span><i class="interaction-key quiet"></i> no displayed overlap</span><span><i class="interaction-key basketed"></i> basket</span><span><i class="interaction-key highlighted"></i> structure highlight</span></div>
+    </div>
+    <div id="graph-view" class="graph-view"><svg id="interaction-graph" viewBox="0 0 900 620" role="img" aria-label="interaction graph"></svg></div>
+  </div>
+  <p class="grid-note">Single-click a matrix cell or graph edge to inspect it. Double-click adds both gates. Double-click a row/column label or graph node to add one gate. Focused or hovered gates reveal their row, column, labels, and graph neighbors. Basket membership is gold throughout.</p>
+
+  <div class="analysis-layout">
+    <aside class="pair-inspector panel-inset">
+      <div id="pair-summary" class="pair-summary">Choose a matrix cell or graph edge.</div><div id="pair-triptychs" class="pair-triptychs"></div><div id="pair-coordinates" class="pair-coordinates"></div>
+      <div class="button-row compact"><button id="add-pair" type="button" disabled>Add pair to basket</button><button id="copy-pair" type="button" class="quiet machine-copy" disabled>Copy pair JSON</button></div>
+    </aside>
+    <section class="structures panel-inset"><div class="subheading"><div><h3>Detected structures</h3><p class="hint">Generic graph definitions and scores are shown with every result.</p></div><button id="clear-highlight" type="button" class="quiet">Clear highlight</button></div><div id="structures-list" class="structures-list"></div></section>
+  </div>
+
+  <div class="basket">
+    <div class="basket-heading"><div><h3>Cluster basket</h3><p class="hint">The basket is the selected partial tensor <i>S</i>. Replacing its gates means decomposing exactly <i>S</i> with fewer rank-one terms; the untouched gates sum to exactly <i>T − S</i>.</p></div><div class="button-row compact"><button id="copy-basket" type="button" class="quiet machine-copy" disabled>Copy basket JSON</button><button id="clear-basket" type="button" class="quiet">Clear basket</button></div></div>
+    <div id="basket-gates" class="basket-gates"></div><div id="basket-verdict" class="basket-verdict"></div><div id="residual-summary" class="residual-summary"></div>
+  </div>
+</section>
+
+<details class="panel decomposition-details"><summary><span class="step">04 · FULL DECOMPOSITION</span><strong>Inspect U, V, and W factor matrices</strong></summary><div class="details-heading"><p class="hint">Basis coordinates are rows and multiplication slots are columns. Together U, V, and W specify each rank-one term; W alone is routing, not a verification.</p><button id="copy-construction" type="button" class="quiet machine-copy">Copy construction JSON</button></div><div id="factor-grids" class="factor-grids"></div></details>
+
+<details class="audit-details"><summary><span class="step">05 · EXPANSION AUDIT</span><strong>Inspect selected gates and ambient tensor cancellation</strong></summary>
+<section class="audit-workbench">
+  <aside class="panel controls"><span class="step">SELECT GATES</span><h2 id="gate-heading">Choose gates</h2><p class="hint">This independent audit selection updates the exact ambient-coordinate grid. The interaction basket remains synchronized between its matrix and graph.</p><div class="button-row"><button id="all">All gates</button><button id="none" class="quiet">Clear</button></div><div id="gates" class="gates"></div></aside>
+  <section class="panel canvas-panel"><div class="canvas-heading"><div><span class="step">EXPAND AND ADD</span><h2>Ambient tensor-coordinate grid</h2></div><div class="heading-actions"><button id="copy-audit" type="button" class="quiet machine-copy">Copy audit JSON</button><div class="score" id="score"></div></div></div><p id="audit-note" class="hint"></p><div class="coefficient-legend"><span><i class="cell-key negative"></i> negative</span><span><i class="cell-key zero"></i> 0</span><span><i class="cell-key positive"></i> positive</span><span><i class="target-key"></i> desired coordinate</span></div><div class="tensor-grid-wrap"><div id="tensor-grid" class="tensor-grid" role="grid"></div></div><p class="grid-note">Rows are input-entry pairs and columns are outputs. Gold outlines mark target matrix-multiplication coordinates. Hover or focus for exact gate contributions.</p><details class="ledger-details"><summary>Open exact coordinate ledger</summary><p class="hint">All arithmetic is reduced rational arithmetic; no floating-point equality is used.</p><div class="filter-row"><button class="filter active" data-filter="nonzero">Nonzero partial sum</button><button class="filter" data-filter="touched">All touched</button><button class="filter" data-filter="limbs">Limbs only</button></div><div class="table-wrap"><table><thead><tr><th>coordinate</th><th>kind</th><th>gate contributions</th><th>Σ</th></tr></thead><tbody id="ledger"></tbody></table></div><div id="empty" class="empty" hidden>Select a gate to expose its tensor coordinates.</div></details></section>
+</section>
+</details>
+
+<section class="panel audit"><div><span class="step">06 · THE CHECK</span><h2>Complete cancellation</h2><p>With every gate selected, each desired coordinate is exactly +1 and every unwanted coordinate is zero. Partial selections expose how the identity is assembled.</p></div><div class="target"><div class="target-title">Target tensor</div><code id="target-summary"></code></div></section>
+<section class="panel fusion"><div><span class="step">07 · A LOCAL REWRITE</span><h2>Two proportional modes can fuse</h2><p>If two rank-one gates are proportional in any two modes, scalar factors can be absorbed and distributivity merges them into one gate. Basket verdicts report this only when exact rational checks construct the merged factors.</p></div><div class="fusion-diagram"><div class="gate-shape"><b>x</b><span>⊗</span><b>y</b><span>⊗</span><b>z</b></div><div class="plus">+</div><div class="gate-shape"><b>αx</b><span>⊗</span><b>βy</b><span>⊗</span><b>w</b></div><div class="arrow">→</div><div class="gate-shape fused"><b>x</b><span>⊗</span><b>y</b><span>⊗</span><b>(z+αβw)</b></div></div><p class="footnote">This exact local identity is not a general decomposition search procedure.</p></section>
+</main>
+<div id="copy-status" class="copy-status" role="status" aria-live="polite"></div>
+<footer>Exact reduced BigInt rational arithmetic · verified characteristic-zero constructions only · heuristic graph organization is labeled · no optimization claim · ⟨4,4,4⟩ ranks 64, 49, and 48</footer>
+<script src="app.js"></script>
+</body>
+</html>
