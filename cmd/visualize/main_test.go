@@ -124,6 +124,11 @@ func TestUIContainsMachineReadableSchemasAndExactWorkbenchFeatures(t *testing.T)
 		"arXiv 2601.05272 rank-23",
 		"arxiv-2508.03857v1.json",
 		"arXiv 2508.03857v1 rank-23",
+		"Laderman 19+4",
+		"laderman-4-hubs",
+		"Laderman 19+4 · four (2,2,2) hubs",
+		"unwantedCoordinates!==92",
+		"crossingEdges!==20",
 	} {
 		if !strings.Contains(javascript, phrase) {
 			t.Errorf("app.js does not contain %q", phrase)

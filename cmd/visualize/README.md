@@ -45,7 +45,8 @@ It offers:
   binary adjacency, and exact coefficient-weighted interaction;
 - all/cancellation-only/reinforcement-only filters, empty-cell hiding, an upper
   triangle, and matrix/graph/both views;
-- original certificate order, connected-component order, deterministic label-
+- original certificate order, a Laderman-specific exact `19+4` partition order,
+  connected-component order, deterministic label-
   propagation communities, repeated-neighborhood order, degree order, and a
   deterministic breadth-first clustered heuristic;
 - a responsive SVG graph with green cancellation and red reinforcement edges,
@@ -56,7 +57,11 @@ It offers:
   exposes its definition and score and can be highlighted, added, used to
   replace the basket, or copied as JSON.
 
-These graph structures are certificate diagnostics and search cues. Communities,
+These graph structures are certificate diagnostics and search cues. Laderman also
+exposes an exact certificate-specific partition: the four `(2,2,2)` gates
+`P4, P7, P12, P16` contain all 92 unwanted coordinates, each canceled once by
+the complementary 19 gates; all 20 interaction edges cross the partition. The
+`Laderman 19+4` order displays its matrix block boundary. Communities,
 hubs, neighborhood similarity, and clustered ordering are explicitly heuristic;
 the UI does not claim they are invariant or mathematically significant.
 
