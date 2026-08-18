@@ -16,8 +16,8 @@
     <section class="graph-panel" aria-labelledby="graph-title">
       <div class="panel-heading">
         <div>
-          <h2 id="graph-title">Laderman rank 23 → split → eight flips</h2>
-          <p>Path nodes are gold. Click any node or edge; use the controls to walk the recorded construction.</p>
+          <h2 id="graph-title">Laderman 23-term presentation → split → eight flips</h2>
+          <p>Path nodes are gold. Hover or focus a node or edge to inspect it; click to pin the floating card.</p>
         </div>
         <div class="legend">
           <span><i class="path"></i> recorded path</span>
@@ -35,16 +35,16 @@
       </div>
       <div class="viewport"><svg id="graph" viewBox="0 0 1560 780" role="img" aria-label="Exact sampled neighborhood around a Laderman split-and-flip path"></svg></div>
     </section>
-    <aside id="detail" aria-live="polite">
-      <h2>Selection details</h2>
-      <p>Select a path step to inspect its available flips, exact verification, and the local factors changed by the recorded move.</p>
-    </aside>
     <section class="reading">
       <h2>What this sample is</h2>
       <p id="provenance"></p>
-      <p>Every vertex is a complete decomposition, not an individual multiplication gate. Same-rank flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman rank 23.</p>
+      <p>Every vertex is a complete decomposition of the same tensor, not an individual multiplication gate. Same-length flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman’s 23-term presentation.</p>
     </section>
   </main>
+  <aside id="inspector" class="inspector" aria-live="polite" aria-label="Graph inspector" hidden>
+    <button id="inspector-close" class="inspector-close" type="button" aria-label="Close inspector">×</button>
+    <div id="inspector-content"></div>
+  </aside>
   <footer>Finite curated sample only: not an exhaustive search, an optimality proof, or a nonexistence result.</footer>
   <script src="/app.js"></script>
 </body>
