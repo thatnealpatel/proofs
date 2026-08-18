@@ -1,7 +1,7 @@
 "use strict";
 
 const svgNS = "http://www.w3.org/2000/svg";
-const branchRows = [76, 142, 208, 274, 446, 512, 578, 644];
+const branchRows = [70, 135, 200, 265, 500, 565, 630, 695];
 const state = { graph: null, nodes: new Map(), selected: null, pathIndex: 0 };
 
 function element(name, className, text) {
@@ -32,7 +32,7 @@ function activate(node, callback) {
 
 function nodePosition(node, branchIndex) {
   const x = 92 + node.anchor * 150;
-  if (node.pathIndex !== null) return [x, node.rank === 23 ? 600 : 360];
+  if (node.pathIndex !== null) return [x, node.rank === 23 ? 730 : 382];
   const jitter = branchIndex % 2 ? 30 : -30;
   return [x + jitter, branchRows[branchIndex]];
 }
@@ -218,11 +218,11 @@ function draw(graph) {
   const svg = document.querySelector("#graph");
   const bands = svgElement("g", { class: "bands" });
   bands.append(
-    svgElement("line", { x1: 28, y1: 360, x2: 1532, y2: 360 }),
-    svgElement("line", { x1: 28, y1: 600, x2: 1532, y2: 600 })
+    svgElement("line", { x1: 28, y1: 382, x2: 1532, y2: 382 }),
+    svgElement("line", { x1: 28, y1: 730, x2: 1532, y2: 730 })
   );
-  const rank24 = svgElement("text", { x: 30, y: 342 }); rank24.textContent = "length 24";
-  const rank23 = svgElement("text", { x: 30, y: 582 }); rank23.textContent = "length 23";
+  const rank24 = svgElement("text", { x: 30, y: 364 }); rank24.textContent = "length 24";
+  const rank23 = svgElement("text", { x: 30, y: 712 }); rank23.textContent = "length 23";
   bands.append(rank24, rank23);
   svg.append(bands);
 
