@@ -26,6 +26,9 @@
 -/
 import Mathlib.LinearAlgebra.Matrix.Rank
 import BilinearComplexity.Basic
+import BilinearComplexity.LinearFlattening
+
+set_option autoImplicit false
 
 namespace BilinearComplexity
 
@@ -36,6 +39,26 @@ namespace BilinearComplexity
 def flattening {k : Type*} {a b c : ℕ} (T : Tensor k a b c) :
     Matrix (Fin a) (Fin b × Fin c) k :=
   fun i jl => T i jl.1 jl.2
+
+/-- The first-factor flattening as a linear map over a field. Its value is
+definitionally the existing ring-generic `flattening`. -/
+def flatteningLinear {k : Type*} [Field k] {a b c : ℕ} :
+    Tensor k a b c →ₗ[k] Matrix (Fin a) (Fin b × Fin c) k where
+  toFun := flattening
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+
+/-- Evaluating the linear wrapper gives the original flattening. -/
+@[simp] theorem flatteningLinear_apply {k : Type*} [Field k] {a b c : ℕ}
+    (T : Tensor k a b c) : flatteningLinear T = flattening T := rfl
+
+/-- Ground-truth check: the linear wrapper has the expected entry formula. -/
+example {k : Type*} [Field k] {a b c : ℕ} (T : Tensor k a b c)
+    (i : Fin a) (j : Fin b) (l : Fin c) :
+    flatteningLinear T i (j, l) = T i j l := rfl
+
+#check @flatteningLinear
+#check @flatteningLinear_apply
 
 /-- A rank-≤ r tensor has flattening rank ≤ r: the flattening factors as
 an `a × r` times `r × (b*c)` matrix product, so its rank is bounded by
@@ -52,6 +75,96 @@ theorem RankLE.rank_flattening_le {k : Type*} [CommRing k] [Nontrivial k]
   rw [hfac]
   exact (Matrix.rank_mul_le_left _ _).trans
     ((Matrix.rank_le_card_width _).trans_eq (Fintype.card_fin r))
+
+/-- The ordinary flattening of a simple tensor factors through one column,
+so its matrix rank is at most one. This proof is independent of the legacy
+tensor-rank flattening theorem. -/
+theorem rank_flatteningLinear_simple_le_one {k : Type*} [Field k]
+    {a b c : ℕ} (u : Fin a → k) (v : Fin b → k) (w : Fin c → k) :
+    (flatteningLinear (fun i j l => u i * v j * w l)).rank ≤ 1 := by
+  have hfac : flatteningLinear (fun i j l => u i * v j * w l) =
+      Matrix.of (fun i (_s : Fin 1) => u i) *
+        Matrix.of (fun (_s : Fin 1) jl => v jl.1 * w jl.2) := by
+    rw [flatteningLinear_apply]
+    ext i jl
+    simp [flattening, Matrix.mul_apply, mul_assoc]
+  rw [hfac]
+  exact (Matrix.rank_mul_le_left _ _).trans
+    ((Matrix.rank_le_card_width _).trans_eq (Fintype.card_fin 1))
+
+/-- Over a field, the generic linear-flattening theorem recovers the existing
+ordinary flattening rank bound. The ring-generic theorem above remains
+unchanged. -/
+theorem RankLE.rank_flatteningLinear_le {k : Type*} [Field k]
+    {a b c r : ℕ} {T : Tensor k a b c} (hT : RankLE T r) :
+    (flatteningLinear T).rank ≤ r := by
+  simpa using rank_linearMap_le_mul_of_rankLE flatteningLinear
+    rank_flatteningLinear_simple_le_one hT
+
+/-- A tiny linear flattening from `1 × 1 × 2` tensors to `2 × 2`
+matrices, placing the two tensor coordinates on the diagonal. Unlike adding a
+flattening to itself, a simple tensor can have image rank exactly two. -/
+def twoDiagonalLinear {k : Type*} [Field k] :
+    Tensor k 1 1 2 →ₗ[k] Matrix (Fin 2) (Fin 2) k where
+  toFun T i j := if i = j then T 0 0 i else 0
+  map_add' T S := by
+    ext i j
+    change (if i = j then (T + S) 0 0 i else 0) =
+      (if i = j then T 0 0 i else 0) + (if i = j then S 0 0 i else 0)
+    by_cases hij : i = j <;> simp [hij]
+  map_smul' x T := by
+    ext i j
+    change (if i = j then (x • T) 0 0 i else 0) =
+      x * (if i = j then T 0 0 i else 0)
+    by_cases hij : i = j <;> simp [hij]
+
+/-- Entry formula for the tiny two-diagonal linear flattening. -/
+@[simp] theorem twoDiagonalLinear_apply {k : Type*} [Field k]
+    (T : Tensor k 1 1 2) (i j : Fin 2) :
+    twoDiagonalLinear T i j = if i = j then T 0 0 i else 0 := rfl
+
+/-- Ground-truth check: the first tensor coordinate occupies the first
+diagonal entry. -/
+example : twoDiagonalLinear (k := ℚ) (fun _ _ l => (l : ℚ) + 3) 0 0 = 3 := by
+  simp
+
+/-- Every simple tensor has two-diagonal image rank at most two. -/
+theorem rank_twoDiagonalLinear_simple_le_two {k : Type*} [Field k]
+    (u : Fin 1 → k) (v : Fin 1 → k) (w : Fin 2 → k) :
+    (twoDiagonalLinear (fun i j l => u i * v j * w l)).rank ≤ 2 :=
+  (Matrix.rank_le_card_height _).trans_eq (Fintype.card_fin 2)
+
+/-- The generic linear-flattening theorem gives the genuine non-unit bound
+`rank (twoDiagonalLinear T) ≤ r * 2` from an `r`-triad decomposition. -/
+theorem RankLE.rank_twoDiagonalLinear_le {k : Type*} [Field k]
+    {r : ℕ} {T : Tensor k 1 1 2} (hT : RankLE T r) :
+    (twoDiagonalLinear T).rank ≤ r * 2 :=
+  rank_linearMap_le_mul_of_rankLE twoDiagonalLinear
+    rank_twoDiagonalLinear_simple_le_two hT
+
+/-- Over `ℚ`, the all-ones simple `1 × 1 × 2` tensor has a one-term
+triad decomposition and maps to the identity. Thus the uniform simple-image
+bound two is attained exactly, jointly with the generic `r * 2` application. -/
+example :
+    let T : Tensor ℚ 1 1 2 := fun _ _ _ => 1
+    RankLE T 1 ∧ (twoDiagonalLinear T).rank = 2 ∧
+      (twoDiagonalLinear T).rank ≤ 1 * 2 := by
+  dsimp
+  have hT : RankLE (fun _ _ _ => (1 : ℚ) : Tensor ℚ 1 1 2) 1 :=
+    ⟨fun _ _ => 1, fun _ _ => 1, fun _ _ => 1, by funext; simp⟩
+  have hmatrix : twoDiagonalLinear (fun _ _ _ => (1 : ℚ)) = 1 := by
+    ext i j
+    simp only [twoDiagonalLinear_apply, Matrix.one_apply]
+  refine ⟨hT, ?_, hT.rank_twoDiagonalLinear_le⟩
+  rw [hmatrix, Matrix.rank_one, Fintype.card_fin]
+
+#check @twoDiagonalLinear
+#check @twoDiagonalLinear_apply
+#check @rank_twoDiagonalLinear_simple_le_two
+#check @RankLE.rank_twoDiagonalLinear_le
+
+#check @rank_flatteningLinear_simple_le_one
+#check @RankLE.rank_flatteningLinear_le
 
 /-! ## 2. The flattening of the matmul tensor has full rank -/
 
@@ -104,5 +217,111 @@ theorem sq_le_rank_matMulTensor (k : Type*) [CommRing k] [Nontrivial k]
         (rank_flattening_matMulTensor k n).symm
     _ ≤ rank (matMulTensor k n n n) :=
         (rankLE_rank (matMulTensor k n n n)).rank_flattening_le
+
+/-! ## 4. Concrete satisfiability audit -/
+
+/-- Over `ℚ`, the `1 × 1 × 1` multiplication tensor simultaneously has a
+one-triad decomposition and a nonzero `1 × 1` flattening minor, so the
+certificate hypotheses are jointly satisfiable and non-vacuous. -/
+example :
+    let T := matMulTensor ℚ 1 1 1
+    RankLE T 1 ∧
+      ((flatteningLinear T).submatrix id (fun x : Fin 1 => (x, x))).det ≠ 0 := by
+  dsimp
+  constructor
+  · exact rankLE_matMulTensor_one ℚ
+  · have hmatrix :
+        (flatteningLinear (matMulTensor ℚ 1 1 1)).submatrix id
+          (fun x : Fin 1 => (x, x)) = 1 := by
+      ext i j
+      simp only [Matrix.submatrix_apply, id_eq, flatteningLinear_apply, flattening,
+        matMulTensor_apply, Matrix.one_apply]
+      rw [if_pos ⟨Fin.ext (by omega), Fin.ext (by omega),
+        Fin.ext (by omega)⟩, if_pos (Fin.ext (by omega))]
+    change ((flatteningLinear (matMulTensor ℚ 1 1 1)).submatrix id
+      (fun x : Fin 1 => (x, x))).det ≠ 0
+    rw [hmatrix, Matrix.det_one]
+    exact one_ne_zero
+
+/-- The generic theorem's simple-image and decomposition hypotheses are
+jointly realized by the positive-dimensional `1 × 1 × 1` multiplication tensor. -/
+example : (flatteningLinear (matMulTensor ℚ 1 1 1)).rank ≤ 1 :=
+  rank_linearMap_le_mul_of_rankLE flatteningLinear
+    rank_flatteningLinear_simple_le_one (rankLE_matMulTensor_one ℚ)
+
+/-- The strict minor threshold is jointly satisfiable: the nonzero scalar
+tensor cannot have a zero-term triad decomposition. -/
+example : ¬ RankLE (matMulTensor ℚ 1 1 1) 0 := by
+  have hmatrix :
+      (flatteningLinear (matMulTensor ℚ 1 1 1)).submatrix id
+        (fun x : Fin 1 => (x, x)) = 1 := by
+    ext i j
+    simp only [Matrix.submatrix_apply, id_eq, flatteningLinear_apply, flattening,
+      matMulTensor_apply, Matrix.one_apply]
+    rw [if_pos ⟨Fin.ext (by omega), Fin.ext (by omega),
+      Fin.ext (by omega)⟩, if_pos (Fin.ext (by omega))]
+  have hdet :
+      ((flatteningLinear (matMulTensor ℚ 1 1 1)).submatrix id
+        (fun x : Fin 1 => (x, x))).det ≠ 0 := by
+    rw [hmatrix, Matrix.det_one]
+    exact one_ne_zero
+  exact not_rankLE_of_mul_lt_of_submatrix_det_ne_zero
+    (r := 0) (q := 1) flatteningLinear rank_flatteningLinear_simple_le_one
+    id (fun x : Fin 1 => (x, x)) hdet (by omega)
+
+/-- A zero tensor mode is explicitly non-vacuous at the tensor level: the
+unique `0 × 1 × 1` tensor has a zero-term decomposition, and the generic
+linear theorem forces its flattening rank to zero. -/
+example :
+    let T : Tensor ℚ 0 1 1 := 0
+    RankLE T 0 ∧ (flatteningLinear T).rank = 0 := by
+  dsimp
+  have hT : RankLE (0 : Tensor ℚ 0 1 1) 0 := by
+    refine ⟨fun s => Fin.elim0 s, fun s => Fin.elim0 s,
+      fun s => Fin.elim0 s, ?_⟩
+    funext i
+    exact Fin.elim0 i
+  refine ⟨hT, Nat.le_zero.mp ?_⟩
+  exact rank_linearMap_le_mul_of_rankLE flatteningLinear
+    rank_flatteningLinear_simple_le_one hT
+
+/-- The second tensor mode may also be zero: the unique `1 × 0 × 1` tensor
+has a zero-term decomposition and zero flattening rank through the generic
+theorem. -/
+example :
+    let T : Tensor ℚ 1 0 1 := 0
+    RankLE T 0 ∧ (flatteningLinear T).rank = 0 := by
+  dsimp
+  have hT : RankLE (0 : Tensor ℚ 1 0 1) 0 := by
+    refine ⟨fun s => Fin.elim0 s, fun s => Fin.elim0 s,
+      fun s => Fin.elim0 s, ?_⟩
+    funext i j
+    exact Fin.elim0 j
+  refine ⟨hT, Nat.le_zero.mp ?_⟩
+  exact rank_linearMap_le_mul_of_rankLE flatteningLinear
+    rank_flatteningLinear_simple_le_one hT
+
+/-- The third tensor mode may likewise be zero: the unique `1 × 1 × 0`
+tensor has a zero-term decomposition and zero flattening rank through the
+generic theorem. -/
+example :
+    let T : Tensor ℚ 1 1 0 := 0
+    RankLE T 0 ∧ (flatteningLinear T).rank = 0 := by
+  dsimp
+  have hT : RankLE (0 : Tensor ℚ 1 1 0) 0 := by
+    refine ⟨fun s => Fin.elim0 s, fun s => Fin.elim0 s,
+      fun s => Fin.elim0 s, ?_⟩
+    funext i j l
+    exact Fin.elim0 l
+  refine ⟨hT, Nat.le_zero.mp ?_⟩
+  exact rank_linearMap_le_mul_of_rankLE flatteningLinear
+    rank_flatteningLinear_simple_le_one hT
+
+#print axioms flatteningLinear_apply
+#print axioms rank_flatteningLinear_simple_le_one
+#print axioms RankLE.rank_flatteningLinear_le
+#print axioms twoDiagonalLinear_apply
+#print axioms rank_twoDiagonalLinear_simple_le_two
+#print axioms RankLE.rank_twoDiagonalLinear_le
 
 end BilinearComplexity
