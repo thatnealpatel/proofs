@@ -10,6 +10,10 @@ defaultTargets = ["BilinearComplexity", "GroupTPP", "Erdos",
 autoImplicit = false
 
 [[lean_lib]]
+name = "PolynomialClosure"
+srcDir = "Proofs"
+
+[[lean_lib]]
 name = "BilinearComplexity"
 srcDir = "Proofs"
 

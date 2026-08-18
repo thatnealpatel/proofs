@@ -1,4 +1,6 @@
 import BilinearComplexity.Basic
+import BilinearComplexity.BorderRank
+import BilinearComplexity.BorderRankCompression
 import BilinearComplexity.BooleanRank
 import BilinearComplexity.BooleanRankGeneric
 import BilinearComplexity.Capset

@@ -1,7 +1,8 @@
 /-
-  Vp2/BorderRank — border rank of 3-tensors as polynomial closure.
+  Vp2/BorderRank — polynomial-closure border rank of 3-tensors.
 
-  This file supplies the border-rank infrastructure that discharges the
+  This file supplies the polynomial-closure border-rank infrastructure that
+  discharges the
   `SORRY[BorderRank]` definition in `Proofs.Vp2.Vp2`:
 
     · `RankLE T r`       — `T` is a sum of at most `r` rank-one tensors
@@ -13,19 +14,17 @@
                            polynomial over `k` vanishing on all rank-≤ r
                            tensors vanishes at `T`.
 
-  HONESTY NOTE (what this definition is and is not). Over `ℂ` — or any
-  algebraically closed field — the classical border-rank-≤ r locus is the
-  r-th secant variety of the Segre, i.e. the Zariski closure of the
-  rank-≤ r locus, which coincides there with the Euclidean closure; and
-  Zariski closure is exactly "cut out by all polynomials vanishing on the
-  set". So over `ℂ` `BorderRankLE` IS classical border rank ≤ r. Over an
-  arbitrary field `k` it is the POLYNOMIAL-CLOSURE notion —
-  "indistinguishable from rank ≤ r by polynomials over k" — which is
-  precisely the property `Distinguisher.vanishes` (Vp2.lean) consumes.
-  We claim nothing finer than that.
+  HONESTY NOTE (what this definition is and is not). Over every field,
+  `BorderRankLE` is only the POLYNOMIAL-CLOSURE notion:
+  "indistinguishable from rank ≤ r by polynomials over k". Relating this
+  definition over `ℂ` to classical border rank requires a separate bridge
+  through algebraic closedness, the Zariski closure of the Segre secant locus,
+  and Euclidean closure. That bridge is not proved in this file, so no such
+  equivalence is claimed here. The polynomial-closure property is precisely
+  what `Distinguisher.vanishes` (Vp2.lean) consumes.
 
   Infrastructure proved here (all sorry-free):
-    · `RankLE.borderRankLE`   rank ≤ r ⇒ border rank ≤ r     (closure incl.)
+    · `RankLE.borderRankLE`   rank ≤ r ⇒ polynomial-closure border rank ≤ r
     · `RankLE.mono`, `BorderRankLE.mono`                     (monotone in r)
     · `RankLE.rank_flattening_le`   a rank-≤ r tensor has flattening rank
       ≤ r — proved by factoring the flattening through `Fin r` as a matrix
@@ -41,11 +40,12 @@
     · `det_genericFlattening_submatrix_mem_vanishingIdeal`,
       `BorderRankLE.eval_det_genericFlattening_submatrix_eq_zero`
       the generic minor lies in the vanishing ideal of the rank-≤ r
-      locus, hence vanishes on every tensor of border rank ≤ r.
+      locus, hence vanishes on every tensor of polynomial-closure border rank
+      ≤ r.
 
   Together these feed the sorry-free
   `Vp2.exists_flattening_distinguisher` (Vp2.lean): flattening minors are
-  genuine distinguishers for the border-rank locus.
+  genuine distinguishers for the polynomial-closure border-rank locus.
 
   The base objects `Tensor3`, `EntryIndex`, `entries`, `flattening` are
   moved here VERBATIM from Vp2.lean (§0, §2a) so that this file sits
@@ -58,6 +58,9 @@ import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.RingTheory.Nullstellensatz
+import PolynomialClosure
+
+set_option autoImplicit false
 
 namespace Vp2
 
@@ -100,6 +103,8 @@ most `r`, as a subset of the point space `EntryIndex n → k` that
 def rankLocus (k : Type*) [CommSemiring k] (n r : ℕ) : Set (EntryIndex n → k) :=
   {x | ∃ T : Tensor3 k n, RankLE T r ∧ x = entries T}
 
+/-- Unfolding membership in the cubic ordinary rank-`≤ r` locus: a point
+is the entry vector of a tensor with an `r`-term triad decomposition. -/
 theorem mem_rankLocus {k : Type*} [CommSemiring k] {n r : ℕ} {x : EntryIndex n → k} :
     x ∈ rankLocus k n r ↔ ∃ T : Tensor3 k n, RankLE T r ∧ x = entries T :=
   Iff.rfl
@@ -115,21 +120,21 @@ theorem RankLE.mono {k : Type*} [CommSemiring k] {n : ℕ} {T : Tensor3 k n} {r 
     simp [Fin.sum_univ_add, Fin.append_left, Fin.append_right]
   rwa [show r + (r' - r) = r' from by omega] at key
 
-/-! ## 2. Border rank via polynomial closure -/
+/-! ## 2. Polynomial-closure border rank -/
 
-/-- `BorderRankLE T r` : the tensor `T` has border rank at most `r`, in
-the polynomial-closure sense: `entries T` lies in the zero locus of the
+/-- `BorderRankLE T r` means that `T` has polynomial-closure border rank
+at most `r`: `entries T` lies in the zero locus of the
 vanishing ideal of the rank-≤ r locus. Equivalently (`borderRankLE_iff`)
 every polynomial in the `n³` entry variables that vanishes on all
-rank-≤ r tensors also vanishes at `T`. Over `ℂ` this is the classical
-border rank (membership in the r-th secant variety of the Segre); over a
-general field it is the honest algebraic-closure notion — see the file
-header. -/
+rank-≤ r tensors also vanishes at `T`. Over every field this is the
+polynomial-closure notion. Equivalence over `ℂ` with classical border rank
+requires a separate algebraic-geometric/topological bridge and is not proved
+here. -/
 def BorderRankLE {k : Type*} [Field k] {n : ℕ} (T : Tensor3 k n) (r : ℕ) : Prop :=
-  entries T ∈
-    MvPolynomial.zeroLocus k (MvPolynomial.vanishingIdeal k (rankLocus k n r))
+  entries T ∈ PolynomialClosure.closure k (rankLocus k n r)
 
-/-- The defining property, unfolded: border rank ≤ r means every
+/-- The defining property, unfolded: polynomial-closure border rank at most
+`r` means every
 polynomial vanishing on the rank-≤ r locus vanishes at `entries T`.
 This is exactly the hypothesis `Distinguisher.vanishes` quantifies over. -/
 theorem borderRankLE_iff {k : Type*} [Field k] {n : ℕ} {T : Tensor3 k n} {r : ℕ} :
@@ -138,13 +143,15 @@ theorem borderRankLE_iff {k : Type*} [Field k] {n : ℕ} {T : Tensor3 k n} {r : 
         MvPolynomial.eval (entries T) p = 0 :=
   Iff.rfl
 
-/-- Rank ≤ r implies border rank ≤ r: the locus is contained in the zero
+/-- Ordinary rank at most `r` implies polynomial-closure border rank at most
+`r`: the locus is contained in the zero
 locus of its own vanishing ideal (`zeroLocus_vanishingIdeal_le`). -/
 theorem RankLE.borderRankLE {k : Type*} [Field k] {n : ℕ} {T : Tensor3 k n} {r : ℕ}
     (h : RankLE T r) : BorderRankLE T r :=
   MvPolynomial.zeroLocus_vanishingIdeal_le (rankLocus k n r) ⟨T, h, rfl⟩
 
-/-- Border rank is monotone in `r`: a larger locus has a smaller
+/-- Polynomial-closure border rank is monotone in `r`: a larger locus has a
+smaller
 vanishing ideal, hence a larger zero locus. -/
 theorem BorderRankLE.mono {k : Type*} [Field k] {n : ℕ} {T : Tensor3 k n} {r r' : ℕ}
     (h : BorderRankLE T r) (hrr' : r ≤ r') : BorderRankLE T r' := by
@@ -160,6 +167,9 @@ A rank-≤ r tensor has flattening rank ≤ r: the flattening factors as an
 `n × r` times `r × n²` matrix product, so its rank is bounded by the
 inner dimension. This avoids any rank-of-sum (Cardinal) bookkeeping. -/
 
+/-- A tensor with ordinary rank at most `r` has flattening rank at most `r`:
+the flattening factors through `Fin r` as an `n × r` matrix times an
+`r × n²` matrix. -/
 theorem RankLE.rank_flattening_le {k : Type*} [CommRing k] [Nontrivial k] {n : ℕ}
     {T : Tensor3 k n} {r : ℕ} (h : RankLE T r) : (flattening T).rank ≤ r := by
   obtain ⟨a, b, c, rfl⟩ := h
@@ -251,7 +261,7 @@ theorem eval_det_genericFlattening_submatrix {k : Type*} [CommRing k] {n m : ℕ
   ext s t
   simp [genericFlattening, flattening, entries]
 
-/-! ## 6. Generic minors vanish on the border-rank locus -/
+/-! ## 6. Generic minors vanish on the polynomial-closure border-rank locus -/
 
 /-- The generic flattening minor lies in the vanishing ideal of the
 rank-≤ r locus: at every rank-≤ r point it evaluates to a minor of a
@@ -266,13 +276,40 @@ theorem det_genericFlattening_submatrix_mem_vanishingIdeal {k : Type*} [Field k]
   rw [eval_det_genericFlattening_submatrix]
   exact det_submatrix_eq_zero_of_rank_le hT.rank_flattening_le ri ci
 
-/-- Generic flattening minors vanish on every tensor of border rank ≤ r:
-they lie in the vanishing ideal of the rank-≤ r locus, and border rank
-≤ r means by construction that all such polynomials vanish at `T`. -/
+/-- Generic flattening minors vanish on every tensor of polynomial-closure
+border rank at most `r`: they lie in the vanishing ideal of the ordinary
+rank-`≤ r` locus, and polynomial-closure border rank at most `r` means by
+construction that all such polynomials vanish at `T`. -/
 theorem BorderRankLE.eval_det_genericFlattening_submatrix_eq_zero {k : Type*} [Field k]
     {n : ℕ} {T : Tensor3 k n} {r : ℕ} (h : BorderRankLE T r)
     (ri : Fin (r + 1) → Fin n) (ci : Fin (r + 1) → Fin n × Fin n) :
     MvPolynomial.eval (entries T) ((genericFlattening k n).submatrix ri ci).det = 0 :=
   borderRankLE_iff.mp h _ (det_genericFlattening_submatrix_mem_vanishingIdeal ri ci)
+
+#check @mem_rankLocus
+#check @RankLE.mono
+#check @borderRankLE_iff
+#check @RankLE.borderRankLE
+#check @BorderRankLE.mono
+#check @RankLE.rank_flattening_le
+#check @det_submatrix_eq_zero_of_rank_le
+#check @det_genericFlattening_submatrix_eq_rename
+#check @det_genericFlattening_submatrix_ne_zero
+#check @eval_det_genericFlattening_submatrix
+#check @det_genericFlattening_submatrix_mem_vanishingIdeal
+#check @BorderRankLE.eval_det_genericFlattening_submatrix_eq_zero
+
+#print axioms mem_rankLocus
+#print axioms RankLE.mono
+#print axioms borderRankLE_iff
+#print axioms RankLE.borderRankLE
+#print axioms BorderRankLE.mono
+#print axioms RankLE.rank_flattening_le
+#print axioms det_submatrix_eq_zero_of_rank_le
+#print axioms det_genericFlattening_submatrix_eq_rename
+#print axioms det_genericFlattening_submatrix_ne_zero
+#print axioms eval_det_genericFlattening_submatrix
+#print axioms det_genericFlattening_submatrix_mem_vanishingIdeal
+#print axioms BorderRankLE.eval_det_genericFlattening_submatrix_eq_zero
 
 end Vp2

@@ -52,14 +52,15 @@
     · `MvPolynomial.eval`               — evaluation at the tensor entries [EXISTS]
     · `Matrix.det`                      — flattening / Koszul determinants [EXISTS]
     · `MvPolynomial.zeroLocus` /
-      `MvPolynomial.vanishingIdeal`     — border rank as poly closure     [EXISTS]
+      `MvPolynomial.vanishingIdeal`     — polynomial-closure border rank [EXISTS]
     · `Matrix.rank` + minor lemmas      — flattening rank bounds          [EXISTS]
     · `HomogeneousIdeal (graded ring)`  — Z-graded apolar candidate ideal  [EXISTS]
     · `Module.length`                   — length of a finite scheme        [EXISTS]
     · `IsReduced` / `Ideal.IsRadical`   — reduced = "distinct smooth pts"  [EXISTS]
   Nothing is `sorry`-defined here anymore. Of the infrastructure that
-  was genuinely absent: border rank is REAL (`AlgComplexity.Vp2.BorderRank`,
-  imported below — polynomial closure); arithmetic circuits are REAL
+  was genuinely absent: polynomial-closure border rank is REAL
+  (`AlgComplexity.Vp2.BorderRank`, imported below); arithmetic circuits are
+  REAL
   (`AlgComplexity.Vp2.Circuit`, imported below — `Circuit`, `size`, `eval`,
   `ComputedInSize`, `VPFamily`), and since the 2026-07-12 family
   retyping this file's statements quantify over distinguisher FAMILIES
@@ -68,8 +69,8 @@
   (`AlgComplexity.Vp2.Apolarity`, imported below — flattening/slice maps,
   `Candidate111`, `test111Locus`, the soundness core). Still absent
   from Mathlib and NOT modeled (documented scenery and docstrings, no
-  sorrys): secant/cactus varieties as schemes, the Hilbert scheme of
-  points, smoothability/Slip-membership.
+  sorrys): classical secant/cactus varieties as schemes, the Hilbert scheme
+  of points, smoothability/Slip-membership.
 
   CHANGELOG (2026-07-12, task WP-B — the (111) test made real; the
   final two sorrys discharged, file now sorry-free):
@@ -131,8 +132,9 @@
       `exists_flattening_vpDistinguisher`, `vp2OpenQuestion_iff`).
     · `VPDistinguisher` (single n) replaced by `VPDistinguisherFamily`
       over an n-indexed target rank `r : ℕ → ℕ`, with a `threshold`
-      field: members must be nonzero and vanish on the border-rank-≤ r n
-      locus for all `n ≥ threshold`. The "for sufficiently large n"
+      field: members must be nonzero and vanish on the polynomial-closure
+      border-rank-≤ `r n` locus over that field for all `n ≥ threshold`.
+      The "for sufficiently large n"
       quantifier is the standard asymptotic convention of the barrier
       literature: FSV (Defn 2.1) and GKSS quantify over poly-size
       circuit FAMILIES, whose size and agreement conditions are
@@ -178,13 +180,17 @@
       objects over families — is exactly what the 2026-07-12 entry above
       records. No statement here was weakened.
 
-  CHANGELOG (2026-07-11, task Pf1 — border rank infrastructure):
+  CHANGELOG (2026-07-11, task Pf1 — polynomial-closure border-rank
+  infrastructure):
     · `BorderRankLE` is no longer `sorry`-defined. Vp2/BorderRank.lean
       defines it as membership of `entries T` in the zero locus of the
       vanishing ideal of the rank-≤ r locus (`MvPolynomial.zeroLocus`,
       `MvPolynomial.vanishingIdeal`; Mathlib.RingTheory.Nullstellensatz).
-      Over ℂ this is classical border rank; over a general field it is
-      the polynomial-closure notion — exactly the property
+      This formalizes only polynomial-closure membership over the chosen
+      field. Equivalence over `ℂ` with classical complex border rank requires
+      a separate bridge through algebraic closedness, Segre secant loci,
+      Zariski closure, and the relevant topology; that bridge is not proved
+      here. This polynomial-closure property is exactly what
       `Distinguisher.vanishes` consumes. See the header of BorderRank.lean.
     · `Tensor3`, `EntryIndex`, `entries`, `flattening` moved VERBATIM to
       Vp2/BorderRank.lean, which now sits upstream of this file.
@@ -222,23 +228,26 @@ open scoped Classical
 
 `Tensor3`, `EntryIndex`, `entries`, and the `j`-flattening `flattening`
 now live in `AlgComplexity.Vp2.BorderRank` (imported above, same namespace),
-together with the rank-≤ r locus and border rank. -/
+together with the ordinary rank-≤ `r` locus and polynomial-closure border
+rank over the chosen field. -/
 
-/-! ## 1. Border rank  [REAL — AlgComplexity.Vp2.BorderRank]
+/-! ## 1. Polynomial-closure border rank  [REAL — AlgComplexity.Vp2.BorderRank]
 
 `BorderRankLE T r` is no longer `sorry`-defined. BorderRank.lean defines
 it as membership of `entries T` in
 `zeroLocus k (vanishingIdeal k (rankLocus k n r))`: every polynomial
 vanishing on all rank-≤ r tensors vanishes at `T` (`borderRankLE_iff`).
-Over `ℂ` that is the classical border rank, membership in the r-th
-secant variety `σ_r(Seg)` of the Segre (Zariski = Euclidean closure of
-the rank-≤ r locus); over a general field it is the polynomial-closure
-notion, which is precisely the property `Distinguisher.vanishes` below
+Only polynomial-closure membership over the arbitrary field is formalized.
+Equivalence over `ℂ` with classical complex border rank requires a separate
+bridge through algebraic closedness, the Segre secant locus, Zariski closure,
+and the relevant topology; that bridge is not proved here. This
+polynomial-closure property is precisely what `Distinguisher.vanishes` below
 consumes. Supporting infrastructure proved there, all sorry-free:
 `RankLE.borderRankLE`, monotonicity in `r` of both notions, the
 flattening rank bound `RankLE.rank_flattening_le`, minor vanishing
 `det_submatrix_eq_zero_of_rank_le`, and the generic flattening minors
-(nonzero as polynomials; identically zero on the border-rank locus). -/
+(nonzero as polynomials; identically zero on the formal polynomial-closure
+border-rank locus). -/
 
 /-! ## 2. VP-computable distinguishers  [circuit model: AlgComplexity.Vp2.Circuit]
 
@@ -271,24 +280,29 @@ retype `VPDistinguisher` / `DecidedByVP` / `Vp2OpenQuestion` /
 sorry is DISCHARGED BY DELETION: there is no per-`n` "IsVP" predicate to
 define, and nothing below is blocked on the circuit model. -/
 
-/-- A *distinguisher* for `σ_r(Seg)`: a nonzero polynomial in the tensor
-entries that vanishes on every tensor of border rank `≤ r` (FSV Defn 2.1,
-specialized to the secant variety per Np1 §2c). `[Field k]` because the
-real `BorderRankLE` (Vp2/BorderRank.lean) is stated over a field. -/
+/-- A *distinguisher* for the formal polynomial-closure border-rank-`≤ r`
+locus over `k`: a nonzero polynomial in the tensor entries that vanishes on
+every tensor satisfying `BorderRankLE T r`. FSV Defn 2.1 is source-side
+language about the classical secant variety `σ_r(Seg)`; identifying that
+variety with this formal locus over `ℂ` requires the separate algebraically
+closed/secant/Zariski/topological bridge not proved here. `[Field k]` is
+required because `BorderRankLE` is field-valued. -/
 structure Distinguisher (k : Type*) [Field k] (n r : ℕ) where
   /-- the polynomial in the `n³` entry variables -/
   poly : MvPolynomial (EntryIndex n) k
   /-- it is not identically zero -/
   ne_zero : poly ≠ 0
-  /-- it vanishes on the secant variety `σ_r(Seg)` -/
+  /-- it vanishes on the formal polynomial-closure border-rank-`≤ r` locus -/
   vanishes : ∀ T : Tensor3 k n, BorderRankLE T r → MvPolynomial.eval (entries T) poly = 0
 
-/-- A *VP-natural proof* against the border-rank loci `σ_{r n}(Seg)`, at
+/-- A *VP-natural proof* against the formal polynomial-closure border-rank
+loci at ranks `r n`, over `k`, at
 the honest family level: for each side `n` a polynomial `poly n` in the
 `n³` tensor entries which, for every sufficiently large `n`
 (`threshold ≤ n`), is a genuine distinguisher for rank `r n` — nonzero
-and vanishing on the whole border-rank-≤ `r n` locus — and which as a
-family is VP-computable (`VPFamily`, Circuit.lean). This is exactly the
+and vanishing on the whole polynomial-closure border-rank-≤ `r n` locus —
+and which as a family is VP-computable (`VPFamily`, Circuit.lean). This is
+exactly the
 object the algebraic natural-proofs barrier governs (Np1 §2d, item 4):
 FSV Defn 2.1 / GKSS quantify over poly-size circuit FAMILIES, and their
 size and agreement conditions are asymptotic, whence the `threshold`
@@ -302,8 +316,10 @@ structure VPDistinguisherFamily (k : Type*) [Field k] (r : ℕ → ℕ) where
   threshold : ℕ
   /-- beyond the threshold, the member is not identically zero -/
   ne_zero : ∀ n, threshold ≤ n → poly n ≠ 0
-  /-- beyond the threshold, the member vanishes on the whole
-  border-rank-≤ `r n` locus `σ_{r n}(Seg)` -/
+  /-- beyond the threshold, the member vanishes on the whole formal
+  polynomial-closure border-rank-≤ `r n` locus over `k`. The classical
+  source-side notation `σ_{r n}(Seg)` requires the separate bridge noted
+  above and is not identified with this locus here. -/
   vanishes : ∀ n, threshold ≤ n → ∀ T : Tensor3 k n,
     BorderRankLE T (r n) → MvPolynomial.eval (entries T) (poly n) = 0
   /-- the family is VP-computable: computed by circuits of size
@@ -319,15 +335,19 @@ The `(j)`-flattening of `T` is the `n × n²` matrix `M_T` with
 entries) vanishes (Np1 §2; Sager: 84 degree-3 minors witness this for
 `n = r = 3`). ALL legs of this supported fact are now PROVED, sorry-free:
 at fixed `n`, `exists_flattening_distinguisher` (via Vp2/BorderRank.lean)
-gives the nonzero minor vanishing on the whole border-rank-≤ r locus; at
+gives the nonzero minor vanishing on the whole formal polynomial-closure
+border-rank-≤ `r` locus over the chosen field; at
 the family level, `exists_flattening_vpDistinguisher` (via
 Vp2/Circuit.lean) adds VP-computability of the minor family. -/
 
-/-- Flattening minors are genuine distinguishers for `σ_r(Seg)` whenever
-`r + 1 ≤ n`: a fixed `(r+1)×(r+1)` minor of the generic flattening is a
-nonzero polynomial in the tensor entries (BorderRank.lean §5) that
-vanishes on every tensor of border rank `≤ r` (BorderRank.lean §6).
-Sorry-free — the fixed-`n` part of the SUPPORTED fact (Np1 §2);
+/-- Flattening minors are genuine distinguishers for the formal
+polynomial-closure border-rank-`≤ r` locus whenever `r + 1 ≤ n`: a fixed
+`(r+1)×(r+1)` minor of the generic flattening is a nonzero polynomial in the
+tensor entries (BorderRank.lean §5) that vanishes on every tensor of
+polynomial-closure border rank at most `r` (BorderRank.lean §6). The source
+literature describes the corresponding classical complex locus as
+`σ_r(Seg)`, but that correspondence needs the separate bridge not proved
+here. Sorry-free — the fixed-`n` part of the SUPPORTED fact (Np1 §2);
 VP-computability of the minor family is added, also sorry-free, by
 `exists_flattening_vpDistinguisher` below. -/
 theorem exists_flattening_distinguisher
@@ -346,7 +366,7 @@ the family of `(r+1)×(r+1)` diagonal minors of the generic flattening
 for the constant rank function `fun _ => r`, with threshold `r + 1`
 (the side must be large enough for the minor to be nontrivial). Legs:
 nonzero on injective picks (`det_genericFlattening_submatrix_ne_zero`);
-vanishing on the border-rank-≤ r locus
+vanishing on the formal polynomial-closure border-rank-≤ `r` locus
 (`BorderRankLE.eval_det_genericFlattening_submatrix_eq_zero`);
 VP-computability (`vpFamily_flatteningMinorFamily` — Leibniz circuits
 of size `(r+1)!·(2(r+1)+4)+1`, constant in `n`). Hence the barrier's
@@ -400,7 +420,7 @@ structure ApolarCandidate {ι : Type*} [DecidableEq ι] [AddCommMonoid ι]
   the homogeneity, which is the Mathlib-expressible part) -/
   ideal : HomogeneousIdeal 𝒜
   /-- the length of the quotient scheme `Spec(S/I)`; for an apolar scheme
-  of a border-rank-`r` decomposition this equals `r` -/
+  of a source-side classical border-rank-`r` decomposition this equals `r` -/
   length : ℕ
   /-- SMOOTHABILITY witness: `I` is the flat limit of homogeneous ideals
   of *reduced* (distinct-point) length-`length` schemes. This is the
@@ -514,9 +534,11 @@ families in the superlinear band `n ≲ r n < 2n³/(3n−1)`:
     expected TRUE for pure dimension-counting reasons — again no
     barrier content (not formalized: needs Krull dimension of
     determinantal loci).
-Matrix-multiplication-type parameters (`r n ~ n^(1+ε)`; even generic
-border rank ≈ n³/(3n−2) ≈ n²/3 sits a factor ~2 below the vacuity
-threshold) live inside the informative band, so the intended reading of
+The source-side generic complex border-rank heuristic
+`n³/(3n−2) ≈ n²/3` sits a factor ~2 below the vacuity threshold; relating
+that classical secant-variety quantity to formal `BorderRankLE` requires the
+separate bridge not proved here. Matrix-multiplication-type parameters
+`r n ~ n^(1+ε)` live inside the informative band, so the intended reading of
 `Vp2OpenQuestion` survives — stated out loud rather than implied. -/
 
 /-- `DecidedByVP k r` says a VP family decides the (111) test at target
@@ -569,7 +591,8 @@ theorem vp2OpenQuestion_iff (k : Type*) [Field k] (r : ℕ → ℕ) :
   rfl
 
 /-- Soundness anchor for the modeled test (the supported direction of
-CHL's method, Vp1 §2d): if `T` has border rank `≤ r`, the (111) test
+CHL's method, Vp1 §2d): if `T` has formal polynomial-closure border rank at
+most `r` over the chosen infinite field, the (111) test
 passes. Proof: `vanishingIdeal_test111Locus_le` (Vp2/Apolarity.lean —
 Lemma A-spread plus the perturbation of an arbitrary rank decomposition
 along a polynomial line) gives
