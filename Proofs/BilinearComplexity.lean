@@ -9,6 +9,7 @@ import BilinearComplexity.Flattening
 import BilinearComplexity.GroupTensor
 import BilinearComplexity.GroupTensorWedderburn
 import BilinearComplexity.KroneckerMatMul
+import BilinearComplexity.KoszulFlattening
 import BilinearComplexity.LinearFlattening
 import BilinearComplexity.LinearFlatteningCompression
 import BilinearComplexity.MatMulMono
