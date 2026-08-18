@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laderman flip neighborhood</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <p class="eyebrow">EXACT 3×3 MATRIX MULTIPLICATION · RATIONAL COEFFICIENTS</p>
+    <h1>A real split-and-flip path, with its local neighborhood</h1>
+    <p id="scope" class="scope">Loading graph…</p>
+  </header>
+  <main>
+    <section class="graph-panel" aria-labelledby="graph-title">
+      <div class="panel-heading">
+        <div>
+          <h2 id="graph-title">Laderman rank 23 → split → eight flips</h2>
+          <p>Path nodes are gold. Click any node or edge; use the controls to walk the recorded construction.</p>
+        </div>
+        <div class="legend">
+          <span><i class="path"></i> recorded path</span>
+          <span><i class="flip"></i> sampled flip</span>
+          <span><i class="split"></i> split / +1</span>
+          <span><i class="reduction"></i> reduction / −1</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="previous" type="button">← Previous</button>
+        <button id="next" type="button">Next →</button>
+        <button id="reset" type="button">Whole graph</button>
+        <label><input id="branches" type="checkbox" checked> alternatives</label>
+        <span id="progress"></span>
+      </div>
+      <div class="viewport"><svg id="graph" viewBox="0 0 1560 720" role="img" aria-label="Exact sampled neighborhood around a Laderman split-and-flip path"></svg></div>
+    </section>
+    <aside id="detail" aria-live="polite">
+      <h2>Selection details</h2>
+      <p>Select a path step to inspect its available flips, exact verification, and the local factors changed by the recorded move.</p>
+    </aside>
+    <section class="reading">
+      <h2>What this sample is</h2>
+      <p id="provenance"></p>
+      <p>Every vertex is a complete decomposition, not an individual multiplication gate. Same-rank flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman rank 23.</p>
+    </section>
+  </main>
+  <footer>Finite curated sample only: not an exhaustive search, an optimality proof, or a nonexistence result.</footer>
+  <script src="/app.js"></script>
+</body>
+</html>
