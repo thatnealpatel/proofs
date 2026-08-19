@@ -1,6 +1,9 @@
 "use strict";
 
 const svgNS = "http://www.w3.org/2000/svg";
+const graphFrame = Object.freeze({ x: 0, y: 0, width: 1560, height: 780 });
+const minZoom = 1;
+const maxZoom = 8;
 const branchRows = [70, 135, 200, 265, 500, 565, 630, 695];
 const views = {
   m2: {
@@ -11,7 +14,7 @@ const views = {
     eyebrow: "EXACT 2×2 MATRIX MULTIPLICATION · F₂ · SYMMETRY ORBITS",
     pageTitle: "The complete small case",
     graphTitle: "The schoolbook component, generated from 272 representatives",
-    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it; activate a node to highlight its neighborhood, or activate an edge to pin its card.",
+    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it; activate a graph item to retain its highlighting. Cards remain hover or focus only. Scroll to zoom and drag empty space to pan.",
     readingTitle: "What this complete component says",
     readingBody: "The generated data contains all 272 orbits and 1,183 transition edges in the rank-at-most-8 component containing schoolbook multiplication over F₂. The gold route is a deterministically chosen shortest path of eight moves to the unique length-7 representative, Strassen’s orbit.",
     footer: "Complete schoolbook component over F₂. One further length-8 orbit is isolated in the published data; no claim is made that these are every component.",
@@ -33,7 +36,7 @@ const views = {
     eyebrow: "EXACT 3×3 MATRIX MULTIPLICATION · RATIONAL COEFFICIENTS",
     pageTitle: "A real split-and-flip path, with its local neighborhood",
     graphTitle: "Laderman length 23 → split → eight flips",
-    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it; activate a node to highlight its neighborhood, or activate an edge to pin its card.",
+    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it; activate a graph item to retain its highlighting. Cards remain hover or focus only. Scroll to zoom and drag empty space to pan.",
     readingTitle: "What this finite sample is",
     readingBody: "Every vertex is a complete presentation of the same tensor. Same-length flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman’s length-23 presentation.",
     footer: "Finite curated M₃ sample only: not an exhaustive search, an optimality proof, or a nonexistence result.",
@@ -48,12 +51,12 @@ const state = {
   nodes: new Map(),
   edges: new Map(),
   current: null,
-  pinned: null,
-  activeNode: null,
-  pinSource: null,
+  activeItem: null,
   pathIndex: 0,
   hideTimer: null,
-  loadToken: 0
+  loadToken: 0,
+  camera: { ...graphFrame },
+  drag: null
 };
 
 function element(name, className, text) {
@@ -65,8 +68,128 @@ function element(name, className, text) {
 
 function svgElement(name, attributes = {}) {
   const node = document.createElementNS(svgNS, name);
-  for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+  for (const [key, value] of Object.entries(attributes)) {
+    if (value != null) node.setAttribute(key, value);
+  }
   return node;
+}
+
+function cameraZoom() {
+  return graphFrame.width / state.camera.width;
+}
+
+function clampCamera(camera) {
+  const width = Math.min(graphFrame.width, camera.width);
+  const height = Math.min(graphFrame.height, camera.height);
+  return {
+    x: Math.max(graphFrame.x, Math.min(camera.x, graphFrame.width - width)),
+    y: Math.max(graphFrame.y, Math.min(camera.y, graphFrame.height - height)),
+    width,
+    height
+  };
+}
+
+function applyCamera() {
+  const { x, y, width, height } = state.camera;
+  document.querySelector("#graph").setAttribute("viewBox", `${x} ${y} ${width} ${height}`);
+  const zoom = cameraZoom();
+  document.querySelector("#zoom-level").textContent = `${Math.round(zoom * 100)}%`;
+  document.querySelector("#zoom-out").disabled = zoom <= minZoom;
+  document.querySelector("#zoom-in").disabled = zoom >= maxZoom;
+}
+
+function setCamera(camera) {
+  state.camera = clampCamera(camera);
+  applyCamera();
+}
+
+function nodeTransform(node, zoom = cameraZoom()) {
+  return `translate(${node.position[0]} ${node.position[1]}) scale(${1 / zoom})`;
+}
+
+function anchoredScale(position, zoom = cameraZoom()) {
+  const [x, y] = position;
+  return `translate(${x} ${y}) scale(${1 / zoom}) translate(${-x} ${-y})`;
+}
+
+function applySemanticZoom() {
+  const zoom = cameraZoom();
+  document.querySelectorAll(".graph-node").forEach(group => {
+    const node = state.nodes.get(group.dataset.id);
+    if (node) group.setAttribute("transform", nodeTransform(node, zoom));
+  });
+  document.querySelectorAll(".graph-edge.self-loop").forEach(path => {
+    const edge = state.edges.get(path.dataset.id);
+    const node = edge && state.nodes.get(edge.from);
+    if (node) path.setAttribute("transform", anchoredScale(node.position, zoom));
+  });
+}
+
+function setZoom(zoom, focus = null) {
+  zoom = Math.max(minZoom, Math.min(maxZoom, zoom));
+  const current = state.camera;
+  const point = focus || { x: current.x + current.width / 2, y: current.y + current.height / 2 };
+  const xRatio = (point.x - current.x) / current.width;
+  const yRatio = (point.y - current.y) / current.height;
+  const width = graphFrame.width / zoom;
+  const height = graphFrame.height / zoom;
+  setCamera({
+    x: point.x - xRatio * width,
+    y: point.y - yRatio * height,
+    width,
+    height
+  });
+  applySemanticZoom();
+}
+
+function resetCamera() {
+  setCamera({ ...graphFrame });
+  applySemanticZoom();
+}
+
+function clientGraphPoint(event) {
+  const svg = document.querySelector("#graph");
+  const point = svg.createSVGPoint();
+  point.x = event.clientX;
+  point.y = event.clientY;
+  return point.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function startPan(event) {
+  const svg = document.querySelector("#graph");
+  if (event.button !== 0 || event.target !== svg) return;
+  const matrix = svg.getScreenCTM();
+  state.drag = {
+    pointerId: event.pointerId,
+    clientX: event.clientX,
+    clientY: event.clientY,
+    camera: { ...state.camera },
+    scale: Math.hypot(matrix.a, matrix.b)
+  };
+  svg.setPointerCapture(event.pointerId);
+  svg.classList.add("panning");
+  event.preventDefault();
+}
+
+function movePan(event) {
+  if (!state.drag || event.pointerId !== state.drag.pointerId) return;
+  const dx = (event.clientX - state.drag.clientX) / state.drag.scale;
+  const dy = (event.clientY - state.drag.clientY) / state.drag.scale;
+  setCamera({ ...state.drag.camera, x: state.drag.camera.x - dx, y: state.drag.camera.y - dy });
+}
+
+function stopPan(event) {
+  if (!state.drag || event.pointerId !== state.drag.pointerId) return;
+  const svg = document.querySelector("#graph");
+  if (svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
+  state.drag = null;
+  svg.classList.remove("panning");
+}
+
+function wheelZoom(event) {
+  if (!state.graph) return;
+  event.preventDefault();
+  setZoom(cameraZoom() * Math.exp(-event.deltaY * 0.0015), clientGraphPoint(event));
 }
 
 function nodePosition(node, branchIndex) {
@@ -105,10 +228,9 @@ function cancelHide() {
 
 function scheduleRestore() {
   cancelHide();
-  if (state.pinned) return;
   state.hideTimer = window.setTimeout(() => {
     state.hideTimer = null;
-    closeInspector(false);
+    closeInspector();
   }, 80);
 }
 
@@ -142,71 +264,37 @@ function positionInspector(position) {
   inspector.style.top = `${Math.round(top)}px`;
 }
 
-function activationMode(item) {
-  return item.kind === "node" ? "highlight" : "pin";
-}
-
 function prepareActivation(item) {
-  const mode = activationMode(item);
-  if (mode === "highlight") {
-    state.pinned = null;
-    state.pinSource = null;
-    state.activeNode = item;
-  } else {
-    state.activeNode = null;
-  }
-  return mode;
+  state.activeItem = item;
 }
 
 function activateInspectorTarget(target, item, point) {
-  const mode = prepareActivation(item);
-  if (mode === "highlight") {
-    inspect(item, { source: target, point });
-    return;
-  }
-  inspect(item, { pin: true, source: target, point });
+  prepareActivation(item);
+  inspect(item, { source: target, point });
 }
 
 function inspect(item, options = {}) {
   cancelHide();
-  if (options.pin) {
-    state.activeNode = null;
-    state.pinned = item;
-    state.pinSource = options.source || null;
-    if (item.kind === "node" && item.value.pathIndex != null) state.pathIndex = item.value.pathIndex;
-    if (item.kind === "edge" && item.value.onPath) {
-      const endpoints = [state.nodes.get(item.value.from), state.nodes.get(item.value.to)];
-      state.pathIndex = Math.max(...endpoints.map(node => node.pathIndex).filter(index => index != null));
-    }
-  } else if (state.pinned && !sameItem(state.pinned, item)) {
-    return;
-  }
   state.current = item;
   if (item.kind === "node") renderNode(item.value);
   else renderEdge(item.value);
   const inspector = document.querySelector("#inspector");
   inspector.hidden = false;
-  inspector.classList.toggle("pinned", Boolean(state.pinned));
   positionInspector(options.point || targetPosition(options.source || itemTarget(item)));
   updateSelection();
-  if (options.center) centerNode(item.kind === "node" ? item.value : state.nodes.get(item.value.to));
 }
 
-function closeInspector(restoreFocus = false) {
+function closeInspector() {
   cancelHide();
-  const source = state.pinSource;
-  state.pinned = null;
-  state.pinSource = null;
   state.current = null;
   document.querySelector("#inspector").hidden = true;
   updateSelection();
-  if (restoreFocus && source?.isConnected) source.focus();
 }
 
 function bindInspectorTarget(target, item) {
   target.addEventListener("pointerenter", event => inspect(item, { point: pointerPosition(event) }));
   target.addEventListener("pointermove", event => {
-    if (!state.pinned && sameItem(state.current, item)) positionInspector(pointerPosition(event));
+    if (sameItem(state.current, item)) positionInspector(pointerPosition(event));
   });
   target.addEventListener("pointerleave", scheduleRestore);
   target.addEventListener("focus", () => inspect(item, { point: targetPosition(target) }));
@@ -505,7 +593,7 @@ function renderEdge(edge) {
 function updateSelection() {
   if (!state.graph) return;
   const branches = document.querySelector("#branches").checked;
-  const selected = state.pinned || state.activeNode;
+  const selected = state.activeItem;
   document.querySelectorAll(".graph-node").forEach(group => {
     const node = state.nodes.get(group.dataset.id);
     group.classList.toggle("hidden", !branches && node.pathIndex == null);
@@ -536,26 +624,32 @@ function updateSelection() {
 }
 
 function centerNode(node) {
-  const viewport = document.querySelector(".viewport");
-  viewport.scrollTo({ left: Math.max(0, node.position[0] - viewport.clientWidth / 2), behavior: "smooth" });
+  if (cameraZoom() <= minZoom) return;
+  setCamera({
+    ...state.camera,
+    x: node.position[0] - state.camera.width / 2,
+    y: node.position[1] - state.camera.height / 2
+  });
 }
 
 function showPathStep(index) {
   state.pathIndex = Math.max(0, Math.min(state.graph.path.length - 1, index));
   const node = state.nodes.get(state.graph.path[state.pathIndex]);
-  if (state.pathIndex === 0) {
-    inspect(descriptor("node", node), { pin: true, center: true });
-    return;
+  let item = descriptor("node", node);
+  if (state.pathIndex > 0) {
+    const previous = state.graph.path[state.pathIndex - 1];
+    const edge = state.graph.edges.find(value => value.onPath &&
+      ((value.from === previous && value.to === node.id) || (value.to === previous && value.from === node.id)));
+    if (edge) item = descriptor("edge", edge);
   }
-  const previous = state.graph.path[state.pathIndex - 1];
-  const edge = state.graph.edges.find(value => value.onPath &&
-    ((value.from === previous && value.to === node.id) || (value.to === previous && value.from === node.id)));
-  inspect(edge ? descriptor("edge", edge) : descriptor("node", node), { pin: true, center: true });
+  prepareActivation(item);
+  closeInspector();
+  centerNode(node);
 }
 
 function draw(graph) {
-  closeInspector(false);
-  state.activeNode = null;
+  closeInspector();
+  state.activeItem = null;
   state.graph = graph;
   state.pathIndex = 0;
   for (const node of graph.nodes) node.pathIndex ??= null;
@@ -579,6 +673,7 @@ function draw(graph) {
   }
 
   const svg = document.querySelector("#graph");
+  resetCamera();
   svg.replaceChildren();
   if (state.view.bands) {
     const bands = svgElement("g", { class: "bands" });
@@ -598,11 +693,12 @@ function draw(graph) {
     const path = svgElement("path", {
       d: edgePath(from, to),
       class: `graph-edge ${edge.type}${edge.selfLoop ? " self-loop" : ""}${edge.onPath ? " on-path" : ""}`,
+      transform: edge.selfLoop ? anchoredScale(from.position) : null,
       "data-id": edge.id,
       tabindex: "0",
       role: "button",
       "aria-pressed": "false",
-      "aria-label": `${edge.type} from ${from.name} to ${to.name}; focus to inspect, activate to pin its card`
+      "aria-label": `${edge.type} from ${from.name} to ${to.name}; focus to inspect, activate to retain its graph highlight`
     });
     bindInspectorTarget(path, descriptor("edge", edge));
     edgeLayer.append(path);
@@ -611,11 +707,10 @@ function draw(graph) {
 
   const nodeLayer = svgElement("g", { class: "nodes" });
   for (const node of graph.nodes) {
-    const [x, y] = node.position;
     const length = node.length ?? node.rank;
     const group = svgElement("g", {
       class: `graph-node ${state.view.kind === "orbit" ? "orbit-node " : ""}${node.pathIndex == null ? "branch" : "path-node"} length-${length}${node.id === graph.source ? " source-node" : ""}${node.id === graph.target ? " target-node" : ""}`,
-      transform: `translate(${x} ${y})`,
+      transform: nodeTransform(node),
       "data-id": node.id,
       tabindex: "0",
       role: "button",
@@ -690,10 +785,11 @@ function configureView(view) {
 function loadGraph(view) {
   state.view = view;
   state.graph = null;
-  state.activeNode = null;
+  state.activeItem = null;
   const token = ++state.loadToken;
   configureView(view);
-  closeInspector(false);
+  resetCamera();
+  closeInspector();
   document.querySelector("#graph").replaceChildren();
   document.querySelector("#scope").textContent = "Loading exact graph…";
   fetch(view.url)
@@ -711,24 +807,28 @@ function loadGraph(view) {
 
 function start() {
   const inspector = document.querySelector("#inspector");
-  inspector.addEventListener("pointerenter", cancelHide);
-  inspector.addEventListener("pointerleave", scheduleRestore);
-  inspector.addEventListener("focusin", cancelHide);
-  inspector.addEventListener("focusout", scheduleRestore);
-  document.querySelector("#inspector-close").addEventListener("click", () => closeInspector(true));
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !inspector.hidden) {
       event.preventDefault();
-      closeInspector(true);
+      closeInspector();
     }
   });
 
   document.querySelector("#previous").addEventListener("click", () => showPathStep(state.pathIndex - 1));
   document.querySelector("#next").addEventListener("click", () => showPathStep(state.pathIndex + 1));
+  document.querySelector("#zoom-out").addEventListener("click", () => setZoom(cameraZoom() / 1.35));
+  document.querySelector("#zoom-in").addEventListener("click", () => setZoom(cameraZoom() * 1.35));
+  document.querySelector("#zoom-fit").addEventListener("click", resetCamera);
+  const svg = document.querySelector("#graph");
+  svg.addEventListener("wheel", wheelZoom, { passive: false });
+  svg.addEventListener("pointerdown", startPan);
+  svg.addEventListener("pointermove", movePan);
+  svg.addEventListener("pointerup", stopPan);
+  svg.addEventListener("pointercancel", stopPan);
   document.querySelector("#reset").addEventListener("click", () => {
+    resetCamera();
     document.querySelector("#branches").checked = true;
     showPathStep(0);
-    document.querySelector(".viewport").scrollTo({ left: 0, behavior: "smooth" });
   });
   document.querySelector("#branches").addEventListener("change", updateSelection);
   document.querySelector("#tab-m2").addEventListener("click", () => loadGraph(views.m2));
@@ -740,5 +840,5 @@ function start() {
 if (typeof module === "undefined") {
   start();
 } else {
-  module.exports = { activationMode, prepareActivation, state };
+  module.exports = { anchoredScale, nodeTransform, prepareActivation, state };
 }

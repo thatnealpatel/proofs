@@ -10,7 +10,10 @@ go run ./cmd/flip
 Then open <http://127.0.0.1:11111>. The default address is exactly `:11111`, so
 it listens on every available network interface. The server has no
 authentication; use `-addr` to choose another address when desired. Static
-assets and graph data are embedded in the binary.
+assets and graph data are embedded in the binary. Use the zoom controls or
+mouse wheel/trackpad to spread graph positions while nodes and edge strokes
+retain their display size, drag empty graph space to pan, and select **Fit** to
+restore the complete frame.
 
 ## M2 over F2: a complete component
 

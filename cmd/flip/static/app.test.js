@@ -2,23 +2,27 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { activationMode, prepareActivation, state } = require("./app.js");
+const { anchoredScale, nodeTransform, prepareActivation, state } = require("./app.js");
 
-test("node activation highlights without retaining card pinning", () => {
-  const node = { kind: "node", id: "n1" };
-  state.pinned = { kind: "edge", id: "e1" };
-  state.pinSource = {};
-
-  assert.equal(prepareActivation(node), "highlight");
-  assert.equal(state.activeNode, node);
-  assert.equal(state.pinned, null);
-  assert.equal(state.pinSource, null);
+test("semantic zoom preserves node and self-loop display sizes", () => {
+  assert.equal(nodeTransform({ position: [120, 340] }, 4), "translate(120 340) scale(0.25)");
+  assert.equal(anchoredScale([120, 340], 4), "translate(120 340) scale(0.25) translate(-120 -340)");
 });
 
-test("edge activation retains pinning policy and supersedes node highlighting", () => {
-  state.activeNode = { kind: "node", id: "n1" };
+test("node activation retains graph highlighting without card pinning", () => {
+  const node = { kind: "node", id: "n1" };
 
-  assert.equal(activationMode({ kind: "edge" }), "pin");
-  assert.equal(prepareActivation({ kind: "edge", id: "e1" }), "pin");
-  assert.equal(state.activeNode, null);
+  prepareActivation(node);
+
+  assert.equal(state.activeItem, node);
+  assert.equal("pinned" in state, false);
+});
+
+test("edge activation retains graph highlighting without card pinning", () => {
+  const edge = { kind: "edge", id: "e1" };
+
+  prepareActivation(edge);
+
+  assert.equal(state.activeItem, edge);
+  assert.equal("pinned" in state, false);
 });

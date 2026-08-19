@@ -190,29 +190,53 @@ button:disabled {
 }
 .controls input { accent-color: var(--green); }
 #progress {
-  margin-left: auto;
+  margin-left: 4px;
   color: var(--green);
   font: 700 .82rem ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.zoom-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.zoom-controls button {
+  min-width: 37px;
+  padding: 7px 10px;
+  border-color: var(--line);
+  color: var(--ink);
+  background: transparent;
+}
+#zoom-level {
+  min-width: 54px;
+  color: var(--muted);
+  text-align: center;
+  font: 700 .76rem ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
 .viewport {
   width: 100%;
   height: clamp(620px, 72vh, 820px);
-  overflow: auto;
+  overflow: hidden;
   border: 1px solid var(--line);
   background: #faf7ef;
-  scrollbar-color: #b5ad9e #eee8db;
+  overscroll-behavior: contain;
 }
 .viewport svg {
   display: block;
-  width: max(100%, 1560px);
+  width: 100%;
   height: 100%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
+.viewport svg.panning { cursor: grabbing; }
 
 .bands line {
   stroke: #d7d0c1;
   stroke-width: 1;
   stroke-dasharray: 5 7;
+  vector-effect: non-scaling-stroke;
 }
 .bands text {
   fill: #7b837e;
@@ -227,6 +251,7 @@ button:disabled {
   opacity: .27;
   cursor: pointer;
   pointer-events: stroke;
+  vector-effect: non-scaling-stroke;
   transition: opacity .15s, stroke-width .15s;
 }
 .graph-edge.split { stroke: var(--red); }
@@ -329,10 +354,6 @@ button:disabled {
   pointer-events: none;
 }
 .inspector[hidden] { display: none; }
-.inspector.pinned {
-  border-top-color: var(--gold);
-  pointer-events: auto;
-}
 .inspector::after {
   position: absolute;
   top: 8px;
@@ -342,24 +363,6 @@ button:disabled {
   font: 800 .62rem ui-monospace, SFMono-Regular, Consolas, monospace;
   letter-spacing: .12em;
 }
-.inspector.pinned::after { content: "PINNED · ESC TO CLOSE"; color: #875d13; }
-.inspector-close {
-  position: sticky;
-  z-index: 2;
-  top: 0;
-  float: right;
-  width: 32px;
-  height: 32px;
-  margin: -7px -8px 0 12px;
-  padding: 0;
-  border-color: var(--line);
-  border-radius: 50%;
-  color: var(--ink);
-  background: var(--paper);
-  font-size: 1.4rem;
-  visibility: hidden;
-}
-.inspector.pinned .inspector-close { visibility: visible; }
 #inspector-content > p { color: var(--muted); }
 
 .type {
@@ -668,6 +671,7 @@ code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
   .graph-panel { padding: 12px; }
   .controls button { padding: 7px 9px; }
   #progress { width: 100%; margin-left: 0; }
+  .zoom-controls { margin-left: 0; }
   .viewport { height: 620px; }
   .inspector {
     width: calc(100vw - 14px);
