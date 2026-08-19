@@ -14,7 +14,7 @@ const views = {
     eyebrow: "EXACT 2×2 MATRIX MULTIPLICATION · F₂ · SYMMETRY ORBITS",
     pageTitle: "The complete small case",
     graphTitle: "The schoolbook component, generated from 272 representatives",
-    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it; activate a graph item to retain its highlighting. Cards remain hover or focus only. Scroll to zoom and drag empty space to pan.",
+    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it. Activate nodes to toggle their incident edges and neighboring nodes in the combined highlighting; Escape clears the set. Cards remain hover or focus only. Scroll to zoom and drag empty space to pan.",
     readingTitle: "What this complete component says",
     readingBody: "The generated data contains all 272 orbits and 1,183 transition edges in the rank-at-most-8 component containing schoolbook multiplication over F₂. The gold route is a deterministically chosen shortest path of eight moves to the unique length-7 representative, Strassen’s orbit.",
     footer: "Complete schoolbook component over F₂. One further length-8 orbit is isolated in the published data; no claim is made that these are every component.",
@@ -36,7 +36,7 @@ const views = {
     eyebrow: "EXACT 3×3 MATRIX MULTIPLICATION · RATIONAL COEFFICIENTS",
     pageTitle: "A real split-and-flip path, with its local neighborhood",
     graphTitle: "Laderman length 23 → split → eight flips",
-    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it; activate a graph item to retain its highlighting. Cards remain hover or focus only. Scroll to zoom and drag empty space to pan.",
+    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it. Activate nodes to toggle their incident edges and neighboring nodes in the combined highlighting; Escape clears the set. Cards remain hover or focus only. Scroll to zoom and drag empty space to pan.",
     readingTitle: "What this finite sample is",
     readingBody: "Every vertex is a complete presentation of the same tensor. Same-length flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman’s length-23 presentation.",
     footer: "Finite curated M₃ sample only: not an exhaustive search, an optimality proof, or a nonexistence result.",
@@ -51,7 +51,8 @@ const state = {
   nodes: new Map(),
   edges: new Map(),
   current: null,
-  activeItem: null,
+  activeNodes: new Set(),
+  activeEdges: new Set(),
   pathIndex: 0,
   hideTimer: null,
   loadToken: 0,
@@ -264,8 +265,38 @@ function positionInspector(position) {
   inspector.style.top = `${Math.round(top)}px`;
 }
 
+function retainActivation(item) {
+  const active = item.kind === "node" ? state.activeNodes : state.activeEdges;
+  active.add(item.id);
+}
+
 function prepareActivation(item) {
-  state.activeItem = item;
+  const active = item.kind === "node" ? state.activeNodes : state.activeEdges;
+  if (active.has(item.id)) active.delete(item.id);
+  else active.add(item.id);
+}
+
+function clearActivation() {
+  state.activeNodes.clear();
+  state.activeEdges.clear();
+}
+
+function hasActivation() {
+  return state.activeNodes.size > 0 || state.activeEdges.size > 0;
+}
+
+function activeNeighborhood(edges, activeNodes = state.activeNodes) {
+  const nodes = new Set();
+  const edgeIDs = new Set();
+  for (const edge of edges) {
+    const fromActive = activeNodes.has(edge.from);
+    const toActive = activeNodes.has(edge.to);
+    if (!fromActive && !toActive) continue;
+    edgeIDs.add(edge.id);
+    if (fromActive) nodes.add(edge.to);
+    if (toActive) nodes.add(edge.from);
+  }
+  return { nodes, edges: edgeIDs };
 }
 
 function activateInspectorTarget(target, item, point) {
@@ -593,31 +624,24 @@ function renderEdge(edge) {
 function updateSelection() {
   if (!state.graph) return;
   const branches = document.querySelector("#branches").checked;
-  const selected = state.activeItem;
+  const neighborhood = activeNeighborhood(state.graph.edges);
   document.querySelectorAll(".graph-node").forEach(group => {
     const node = state.nodes.get(group.dataset.id);
+    const selected = state.activeNodes.has(node.id);
     group.classList.toggle("hidden", !branches && node.pathIndex == null);
-    group.classList.toggle("selected", selected?.kind === "node" && selected.id === node.id);
-    group.setAttribute("aria-pressed", String(selected?.kind === "node" && selected.id === node.id));
-    group.classList.remove("adjacent");
+    group.classList.toggle("selected", selected);
+    group.classList.toggle("adjacent", neighborhood.nodes.has(node.id));
+    group.setAttribute("aria-pressed", String(selected));
   });
   document.querySelectorAll(".graph-edge").forEach(path => {
     const edge = state.edges.get(path.dataset.id);
+    const selected = state.activeEdges.has(edge.id);
     const keepSampleReduction = state.view.kind === "sample" && edge.type === "reduction";
     path.classList.toggle("hidden", !branches && !edge.onPath && !keepSampleReduction);
-    path.classList.toggle("selected", selected?.kind === "edge" && selected.id === edge.id);
-    path.setAttribute("aria-pressed", String(selected?.kind === "edge" && selected.id === edge.id));
-    path.classList.remove("adjacent");
+    path.classList.toggle("selected", selected);
+    path.classList.toggle("adjacent", neighborhood.edges.has(edge.id));
+    path.setAttribute("aria-pressed", String(selected));
   });
-  if (selected?.kind === "node") {
-    const id = selected.id;
-    for (const edge of state.graph.edges) {
-      if (edge.from !== id && edge.to !== id) continue;
-      document.querySelector(`.graph-edge[data-id="${edge.id}"]`)?.classList.add("adjacent");
-      const other = edge.from === id ? edge.to : edge.from;
-      document.querySelector(`.graph-node[data-id="${other}"]`)?.classList.add("adjacent");
-    }
-  }
   document.querySelector("#progress").textContent = `path ${state.pathIndex + 1}/${state.graph.path.length}`;
   document.querySelector("#previous").disabled = state.pathIndex === 0;
   document.querySelector("#next").disabled = state.pathIndex === state.graph.path.length - 1;
@@ -642,14 +666,14 @@ function showPathStep(index) {
       ((value.from === previous && value.to === node.id) || (value.to === previous && value.from === node.id)));
     if (edge) item = descriptor("edge", edge);
   }
-  prepareActivation(item);
+  retainActivation(item);
   closeInspector();
   centerNode(node);
 }
 
 function draw(graph) {
   closeInspector();
-  state.activeItem = null;
+  clearActivation();
   state.graph = graph;
   state.pathIndex = 0;
   for (const node of graph.nodes) node.pathIndex ??= null;
@@ -785,7 +809,7 @@ function configureView(view) {
 function loadGraph(view) {
   state.view = view;
   state.graph = null;
-  state.activeItem = null;
+  clearActivation();
   const token = ++state.loadToken;
   configureView(view);
   resetCamera();
@@ -808,8 +832,9 @@ function loadGraph(view) {
 function start() {
   const inspector = document.querySelector("#inspector");
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !inspector.hidden) {
+    if (event.key === "Escape" && (!inspector.hidden || hasActivation())) {
       event.preventDefault();
+      clearActivation();
       closeInspector();
     }
   });
@@ -827,6 +852,7 @@ function start() {
   svg.addEventListener("pointercancel", stopPan);
   document.querySelector("#reset").addEventListener("click", () => {
     resetCamera();
+    clearActivation();
     document.querySelector("#branches").checked = true;
     showPathStep(0);
   });
@@ -840,5 +866,5 @@ function start() {
 if (typeof module === "undefined") {
   start();
 } else {
-  module.exports = { anchoredScale, nodeTransform, prepareActivation, state };
+  module.exports = { activeNeighborhood, anchoredScale, clearActivation, hasActivation, nodeTransform, prepareActivation, state };
 }
