@@ -100,5 +100,6 @@ nonexistence result.
 
 ```sh
 node --check cmd/flip/static/app.js
+node --test cmd/flip/static/app.test.js
 go test ./cmd/flip/...
 ```

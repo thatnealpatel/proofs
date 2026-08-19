@@ -11,7 +11,7 @@ const views = {
     eyebrow: "EXACT 2×2 MATRIX MULTIPLICATION · F₂ · SYMMETRY ORBITS",
     pageTitle: "The complete small case",
     graphTitle: "The schoolbook component, generated from 272 representatives",
-    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it; click to pin the floating card.",
+    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it; activate a node to highlight its neighborhood, or activate an edge to pin its card.",
     readingTitle: "What this complete component says",
     readingBody: "The generated data contains all 272 orbits and 1,183 transition edges in the rank-at-most-8 component containing schoolbook multiplication over F₂. The gold route is a deterministically chosen shortest path of eight moves to the unique length-7 representative, Strassen’s orbit.",
     footer: "Complete schoolbook component over F₂. One further length-8 orbit is isolated in the published data; no claim is made that these are every component.",
@@ -33,7 +33,7 @@ const views = {
     eyebrow: "EXACT 3×3 MATRIX MULTIPLICATION · RATIONAL COEFFICIENTS",
     pageTitle: "A real split-and-flip path, with its local neighborhood",
     graphTitle: "Laderman length 23 → split → eight flips",
-    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it; click to pin the floating card.",
+    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it; activate a node to highlight its neighborhood, or activate an edge to pin its card.",
     readingTitle: "What this finite sample is",
     readingBody: "Every vertex is a complete presentation of the same tensor. Same-length flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman’s length-23 presentation.",
     footer: "Finite curated M₃ sample only: not an exhaustive search, an optimality proof, or a nonexistence result.",
@@ -49,6 +49,7 @@ const state = {
   edges: new Map(),
   current: null,
   pinned: null,
+  activeNode: null,
   pinSource: null,
   pathIndex: 0,
   hideTimer: null,
@@ -141,9 +142,35 @@ function positionInspector(position) {
   inspector.style.top = `${Math.round(top)}px`;
 }
 
+function activationMode(item) {
+  return item.kind === "node" ? "highlight" : "pin";
+}
+
+function prepareActivation(item) {
+  const mode = activationMode(item);
+  if (mode === "highlight") {
+    state.pinned = null;
+    state.pinSource = null;
+    state.activeNode = item;
+  } else {
+    state.activeNode = null;
+  }
+  return mode;
+}
+
+function activateInspectorTarget(target, item, point) {
+  const mode = prepareActivation(item);
+  if (mode === "highlight") {
+    inspect(item, { source: target, point });
+    return;
+  }
+  inspect(item, { pin: true, source: target, point });
+}
+
 function inspect(item, options = {}) {
   cancelHide();
   if (options.pin) {
+    state.activeNode = null;
     state.pinned = item;
     state.pinSource = options.source || null;
     if (item.kind === "node" && item.value.pathIndex != null) state.pathIndex = item.value.pathIndex;
@@ -186,12 +213,12 @@ function bindInspectorTarget(target, item) {
   target.addEventListener("blur", scheduleRestore);
   target.addEventListener("click", event => {
     event.stopPropagation();
-    inspect(item, { pin: true, source: target, point: pointerPosition(event) });
+    activateInspectorTarget(target, item, pointerPosition(event));
   });
   target.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      inspect(item, { pin: true, source: target, point: targetPosition(target) });
+      activateInspectorTarget(target, item, targetPosition(target));
     }
   });
 }
@@ -478,11 +505,12 @@ function renderEdge(edge) {
 function updateSelection() {
   if (!state.graph) return;
   const branches = document.querySelector("#branches").checked;
-  const selected = state.pinned;
+  const selected = state.pinned || state.activeNode;
   document.querySelectorAll(".graph-node").forEach(group => {
     const node = state.nodes.get(group.dataset.id);
     group.classList.toggle("hidden", !branches && node.pathIndex == null);
     group.classList.toggle("selected", selected?.kind === "node" && selected.id === node.id);
+    group.setAttribute("aria-pressed", String(selected?.kind === "node" && selected.id === node.id));
     group.classList.remove("adjacent");
   });
   document.querySelectorAll(".graph-edge").forEach(path => {
@@ -490,6 +518,7 @@ function updateSelection() {
     const keepSampleReduction = state.view.kind === "sample" && edge.type === "reduction";
     path.classList.toggle("hidden", !branches && !edge.onPath && !keepSampleReduction);
     path.classList.toggle("selected", selected?.kind === "edge" && selected.id === edge.id);
+    path.setAttribute("aria-pressed", String(selected?.kind === "edge" && selected.id === edge.id));
     path.classList.remove("adjacent");
   });
   if (selected?.kind === "node") {
@@ -526,6 +555,7 @@ function showPathStep(index) {
 
 function draw(graph) {
   closeInspector(false);
+  state.activeNode = null;
   state.graph = graph;
   state.pathIndex = 0;
   for (const node of graph.nodes) node.pathIndex ??= null;
@@ -571,7 +601,8 @@ function draw(graph) {
       "data-id": edge.id,
       tabindex: "0",
       role: "button",
-      "aria-label": `${edge.type} from ${from.name} to ${to.name}; focus to inspect, press Enter to pin`
+      "aria-pressed": "false",
+      "aria-label": `${edge.type} from ${from.name} to ${to.name}; focus to inspect, activate to pin its card`
     });
     bindInspectorTarget(path, descriptor("edge", edge));
     edgeLayer.append(path);
@@ -588,7 +619,8 @@ function draw(graph) {
       "data-id": node.id,
       tabindex: "0",
       role: "button",
-      "aria-label": `${node.name}, complete length ${length} presentation; focus to inspect, press Enter to pin`
+      "aria-pressed": "false",
+      "aria-label": `${node.name}, complete length ${length} presentation; focus to inspect, activate to highlight its incident edges and neighboring nodes`
     });
     const ordinaryRadius = state.view.kind === "orbit" ? 5 : 9;
     const pathRadius = state.view.kind === "orbit" ? 10 : 17;
@@ -658,6 +690,7 @@ function configureView(view) {
 function loadGraph(view) {
   state.view = view;
   state.graph = null;
+  state.activeNode = null;
   const token = ++state.loadToken;
   configureView(view);
   closeInspector(false);
@@ -676,28 +709,36 @@ function loadGraph(view) {
     });
 }
 
-const inspector = document.querySelector("#inspector");
-inspector.addEventListener("pointerenter", cancelHide);
-inspector.addEventListener("pointerleave", scheduleRestore);
-inspector.addEventListener("focusin", cancelHide);
-inspector.addEventListener("focusout", scheduleRestore);
-document.querySelector("#inspector-close").addEventListener("click", () => closeInspector(true));
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && !inspector.hidden) {
-    event.preventDefault();
-    closeInspector(true);
-  }
-});
+function start() {
+  const inspector = document.querySelector("#inspector");
+  inspector.addEventListener("pointerenter", cancelHide);
+  inspector.addEventListener("pointerleave", scheduleRestore);
+  inspector.addEventListener("focusin", cancelHide);
+  inspector.addEventListener("focusout", scheduleRestore);
+  document.querySelector("#inspector-close").addEventListener("click", () => closeInspector(true));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !inspector.hidden) {
+      event.preventDefault();
+      closeInspector(true);
+    }
+  });
 
-document.querySelector("#previous").addEventListener("click", () => showPathStep(state.pathIndex - 1));
-document.querySelector("#next").addEventListener("click", () => showPathStep(state.pathIndex + 1));
-document.querySelector("#reset").addEventListener("click", () => {
-  document.querySelector("#branches").checked = true;
-  showPathStep(0);
-  document.querySelector(".viewport").scrollTo({ left: 0, behavior: "smooth" });
-});
-document.querySelector("#branches").addEventListener("change", updateSelection);
-document.querySelector("#tab-m2").addEventListener("click", () => loadGraph(views.m2));
-document.querySelector("#tab-m3").addEventListener("click", () => loadGraph(views.m3));
+  document.querySelector("#previous").addEventListener("click", () => showPathStep(state.pathIndex - 1));
+  document.querySelector("#next").addEventListener("click", () => showPathStep(state.pathIndex + 1));
+  document.querySelector("#reset").addEventListener("click", () => {
+    document.querySelector("#branches").checked = true;
+    showPathStep(0);
+    document.querySelector(".viewport").scrollTo({ left: 0, behavior: "smooth" });
+  });
+  document.querySelector("#branches").addEventListener("change", updateSelection);
+  document.querySelector("#tab-m2").addEventListener("click", () => loadGraph(views.m2));
+  document.querySelector("#tab-m3").addEventListener("click", () => loadGraph(views.m3));
 
-loadGraph(views.m2);
+  loadGraph(views.m2);
+}
+
+if (typeof module === "undefined") {
+  start();
+} else {
+  module.exports = { activationMode, prepareActivation, state };
+}
