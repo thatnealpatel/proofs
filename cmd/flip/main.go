@@ -80,7 +80,7 @@ func run() error {
 	}
 	serverErrors := make(chan error, 1)
 	go func() { serverErrors <- server.Serve(listener) }()
-	log.Printf("exact 3x3 flip graph: http://%s", *address)
+	log.Printf("matrix multiplication flip graphs: http://%s", *address)
 	select {
 	case err := <-serverErrors:
 		if errors.Is(err, http.ErrServerClosed) {

@@ -1,0 +1,17 @@
+M2 orbit flip-graph data attribution
+
+The topology and representative identifiers in graph-222.json are derived from
+the `222flipgraph_rank8` dataset in:
+
+  Flip Graphs for Matrix Multiplication
+  Jakob Moosbauer and Michael Poole
+  https://github.com/jakobmoosbauer/flips
+  revision e31a0a0f0d2577cee5da047ca7dcae0c61992e40
+  paper: https://arxiv.org/abs/2212.01175
+
+The source repository includes the GNU General Public License, version 3 or
+later. Its license text is reproduced in graph-222.LICENSE.txt. The graph JSON
+was independently generated from the published `.exp` representatives and
+`edges.txt`; it does not copy program source or figure geometry. The generated
+layout and highlighted deterministic shortest path are additions in this
+project.

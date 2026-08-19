@@ -3,49 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Laderman flip neighborhood</title>
+  <title>M₂ orbit flip graph</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <header>
-    <p class="eyebrow">EXACT 3×3 MATRIX MULTIPLICATION · RATIONAL COEFFICIENTS</p>
-    <h1>A real split-and-flip path, with its local neighborhood</h1>
+    <p id="eyebrow" class="eyebrow">MATRIX MULTIPLICATION FLIP GRAPHS</p>
+    <h1 id="page-title">The complete small case</h1>
     <p id="scope" class="scope">Loading graph…</p>
+    <nav class="view-tabs" aria-label="Flip graph view">
+      <button id="tab-m2" class="view-tab active" type="button" aria-selected="true">M₂ · complete F₂ component</button>
+      <button id="tab-m3" class="view-tab" type="button" aria-selected="false">M₃ · rational path</button>
+    </nav>
   </header>
   <main>
     <section class="graph-panel" aria-labelledby="graph-title">
       <div class="panel-heading">
         <div>
-          <h2 id="graph-title">Laderman 23-term presentation → split → eight flips</h2>
-          <p>Path nodes are gold. Hover or focus a node or edge to inspect it; click to pin the floating card.</p>
+          <h2 id="graph-title">Exact decomposition graph</h2>
+          <p id="graph-description">Hover or focus a node or edge to inspect it; click to pin the floating card.</p>
         </div>
-        <div class="legend">
-          <span><i class="path"></i> recorded path</span>
-          <span><i class="flip"></i> sampled flip</span>
-          <span><i class="split"></i> split / +1</span>
-          <span><i class="reduction"></i> reduction / −1</span>
+        <div class="panel-tools">
+          <div id="legend" class="legend"></div>
         </div>
       </div>
       <div class="controls">
         <button id="previous" type="button">← Previous</button>
         <button id="next" type="button">Next →</button>
         <button id="reset" type="button">Whole graph</button>
-        <label><input id="branches" type="checkbox" checked> alternatives</label>
+        <label id="alternatives-control"><input id="branches" type="checkbox" checked> <span id="alternatives-label">all orbits</span></label>
         <span id="progress"></span>
       </div>
-      <div class="viewport"><svg id="graph" viewBox="0 0 1560 780" role="img" aria-label="Exact sampled neighborhood around a Laderman split-and-flip path"></svg></div>
+      <div class="viewport"><svg id="graph" viewBox="0 0 1560 780" role="img" aria-label="Exact matrix multiplication decomposition graph"></svg></div>
     </section>
     <section class="reading">
-      <h2>What this sample is</h2>
+      <h2 id="reading-title">What this view is</h2>
       <p id="provenance"></p>
-      <p>Every vertex is a complete decomposition of the same tensor, not an individual multiplication gate. Same-length flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman’s 23-term presentation.</p>
+      <p id="reading-body"></p>
     </section>
   </main>
   <aside id="inspector" class="inspector" aria-live="polite" aria-label="Graph inspector" hidden>
     <button id="inspector-close" class="inspector-close" type="button" aria-label="Close inspector">×</button>
     <div id="inspector-content"></div>
   </aside>
-  <footer>Finite curated sample only: not an exhaustive search, an optimality proof, or a nonexistence result.</footer>
+  <footer id="footer-note">Every vertex is a complete decomposition, not an individual multiplication gate.</footer>
   <script src="/app.js"></script>
 </body>
 </html>

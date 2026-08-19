@@ -2,7 +2,48 @@
 
 const svgNS = "http://www.w3.org/2000/svg";
 const branchRows = [70, 135, 200, 265, 500, 565, 630, 695];
+const views = {
+  m2: {
+    key: "m2",
+    kind: "orbit",
+    url: "/graph-222.json",
+    documentTitle: "M₂ orbit flip graph",
+    eyebrow: "EXACT 2×2 MATRIX MULTIPLICATION · F₂ · SYMMETRY ORBITS",
+    pageTitle: "The complete small case",
+    graphTitle: "The schoolbook component, generated from 272 representatives",
+    graphDescription: "Each point is a symmetry orbit of complete presentations. Hover or focus a node or transition to inspect it; click to pin the floating card.",
+    readingTitle: "What this complete component says",
+    readingBody: "The generated data contains all 272 orbits and 1,183 transition edges in the rank-at-most-8 component containing schoolbook multiplication over F₂. The gold route is a deterministically chosen shortest path of eight moves to the unique length-7 representative, Strassen’s orbit.",
+    footer: "Complete schoolbook component over F₂. One further length-8 orbit is isolated in the published data; no claim is made that these are every component.",
+    ariaLabel: "Complete orbit flip graph component for two by two matrix multiplication over F2",
+    alternativesLabel: "all orbits",
+    legend: [["path", "shortest schoolbook–Strassen path"], ["flip", "same-length flip"], ["reduction", "length-reducing edge"], ["loop", "flip within one orbit"]]
+  },
+  m3: {
+    key: "m3",
+    kind: "sample",
+    url: "/api/graph",
+    size: 3,
+    coordinateCount: 729,
+    lowerBound: 19,
+    xStep: 150,
+    rankY: { 24: 382, 23: 730 },
+    bands: [{ rank: 24, y: 382 }, { rank: 23, y: 730 }],
+    documentTitle: "M₃ exact decomposition landscape",
+    eyebrow: "EXACT 3×3 MATRIX MULTIPLICATION · RATIONAL COEFFICIENTS",
+    pageTitle: "A real split-and-flip path, with its local neighborhood",
+    graphTitle: "Laderman length 23 → split → eight flips",
+    graphDescription: "Path nodes are gold. Hover or focus a node or edge to inspect it; click to pin the floating card.",
+    readingTitle: "What this finite sample is",
+    readingBody: "Every vertex is a complete presentation of the same tensor. Same-length flip edges are invertible. Reversing the gold path applies eight inverse flips and then the green reduction back to Laderman’s length-23 presentation.",
+    footer: "Finite curated M₃ sample only: not an exhaustive search, an optimality proof, or a nonexistence result.",
+    ariaLabel: "Exact sampled neighborhood around a Laderman split-and-flip path",
+    alternativesLabel: "alternatives",
+    legend: [["path", "recorded path"], ["flip", "sampled flip"], ["split", "split / +1"], ["reduction", "reduction / −1"]]
+  }
+};
 const state = {
+  view: views.m2,
   graph: null,
   nodes: new Map(),
   edges: new Map(),
@@ -10,7 +51,8 @@ const state = {
   pinned: null,
   pinSource: null,
   pathIndex: 0,
-  hideTimer: null
+  hideTimer: null,
+  loadToken: 0
 };
 
 function element(name, className, text) {
@@ -27,14 +69,18 @@ function svgElement(name, attributes = {}) {
 }
 
 function nodePosition(node, branchIndex) {
-  const x = 92 + node.anchor * 150;
-  if (node.pathIndex !== null) return [x, node.rank === 23 ? 730 : 382];
+  if (state.view.kind === "orbit") return [node.x * 1560, node.y * 780];
+  const x = 92 + node.anchor * state.view.xStep;
+  if (node.pathIndex != null) return [x, state.view.rankY[node.rank]];
   return [x + (branchIndex % 2 ? 30 : -30), branchRows[branchIndex]];
 }
 
 function edgePath(from, to) {
   const [x1, y1] = from.position;
   const [x2, y2] = to.position;
+  if (from.id === to.id) {
+    return `M ${x1 - 4} ${y1 - 4} C ${x1 - 24} ${y1 - 34}, ${x1 + 24} ${y1 - 34}, ${x1 + 4} ${y1 - 4}`;
+  }
   if (Math.abs(x2 - x1) < 4) {
     const bend = x1 + (y2 > y1 ? 38 : -38);
     return `M ${x1} ${y1} Q ${bend} ${(y1 + y2) / 2} ${x2} ${y2}`;
@@ -100,10 +146,10 @@ function inspect(item, options = {}) {
   if (options.pin) {
     state.pinned = item;
     state.pinSource = options.source || null;
-    if (item.kind === "node" && item.value.pathIndex !== null) state.pathIndex = item.value.pathIndex;
-    if (item.kind === "edge") {
-      const destination = state.nodes.get(item.value.to);
-      if (item.value.onPath && destination.pathIndex !== null) state.pathIndex = destination.pathIndex;
+    if (item.kind === "node" && item.value.pathIndex != null) state.pathIndex = item.value.pathIndex;
+    if (item.kind === "edge" && item.value.onPath) {
+      const endpoints = [state.nodes.get(item.value.from), state.nodes.get(item.value.to)];
+      state.pathIndex = Math.max(...endpoints.map(node => node.pathIndex).filter(index => index != null));
     }
   } else if (state.pinned && !sameItem(state.pinned, item)) {
     return;
@@ -150,12 +196,23 @@ function bindInspectorTarget(target, item) {
   });
 }
 
-function formatModes(counts) {
-  return ["A", "B", "C"].map(mode => `${mode}: ${counts[mode] || 0}`).join(" · ");
+function modeOpportunities(counts) {
+  const list = element("div", "mode-opportunities");
+  for (const mode of ["A", "B", "C"]) {
+    const count = counts[mode] || 0;
+    const item = element("div", `mode-opportunity${count === 0 ? " empty" : ""}`);
+    item.append(
+      element("strong", null, mode),
+      element("b", null, String(count)),
+      element("span", null, count === 1 ? "eligible pair" : "eligible pairs")
+    );
+    list.append(item);
+  }
+  return list;
 }
 
 function factorName(kind, index) {
-  return `${kind}${Math.floor(index / 3)}${index % 3}`;
+  return `${kind}${Math.floor(index / state.view.size)}${index % state.view.size}`;
 }
 
 function formatFactor(kind, values) {
@@ -177,16 +234,14 @@ function termCard(term, sharedMode) {
   for (const mode of ["A", "B", "C"]) {
     const row = element("div", `factor${mode === sharedMode ? " shared-factor" : ""}`);
     row.append(element("strong", null, mode), element("code", null, formatFactor(mode, term[mode])));
-    if (mode === sharedMode) row.append(element("span", "held", "held fixed"));
+    if (mode === sharedMode) row.append(element("span", "held", "same projective factor"));
     card.append(row);
   }
   return card;
 }
 
-function metric(label, value) {
-  const box = element("div", "metric");
-  box.append(element("span", null, label), element("strong", null, String(value)));
-  return box;
+function sectionTitle(text) {
+  return element("h3", "inspector-section-title", text);
 }
 
 function inspectorHeading(kind, title) {
@@ -196,37 +251,167 @@ function inspectorHeading(kind, title) {
   return content;
 }
 
-function renderNode(node) {
-  const content = inspectorHeading(node.pathIndex === null ? "sampled neighbor" : "recorded state", node.name);
-  content.append(element("p", "decomposition-callout", `Complete ${node.rank}-term decomposition of the 3×3 matrix multiplication tensor`));
-  content.append(element("span", "badge", "exact on all 729 coordinates"));
-  content.append(element("p", "hash", `state ${node.id}`));
+function metric(label, value) {
+  const card = element("div", "metric");
+  card.append(element("span", null, label), element("strong", null, String(value)));
+  return card;
+}
+
+function supportSummary(histogram) {
+  return histogram.map((count, index) => count ? `${count} × weight ${index + 1}` : null).filter(Boolean).join(" · ");
+}
+
+function renderOrbitNode(node) {
+  const isSource = node.id === state.graph.source;
+  const isTarget = node.id === state.graph.target;
+  const onPath = node.pathIndex != null;
+  const title = isSource ? "Schoolbook orbit" : isTarget ? "Strassen orbit" : `Orbit ${node.name}`;
+  const content = inspectorHeading(onPath ? "shortest-path orbit" : "orbit representative", title);
+
+  const identity = element("div", "validity-card");
+  identity.append(
+    element("strong", null, `LENGTH ${node.length} · OVER F₂`),
+    element("span", null, "This point represents a complete symmetry orbit of presentations, not one raw scheme. Its ID names the published representative used to generate the graph.")
+  );
+  content.append(identity);
+
   const metrics = element("div", "metrics");
   metrics.append(
-    metric("rank-one terms", node.rank),
-    metric("movable pairs", node.movablePairs),
-    metric("reductions", node.reductions),
-    metric("largest component", Math.max(...node.components))
+    metric("distinct neighbors", node.degree),
+    metric("flip edges", node.flipEdges),
+    metric("reduction edges", node.reductions),
+    metric("self-loops", node.selfLoops)
   );
-  content.append(metrics, element("h3", null, "Flip opportunities by shared factor"));
-  content.append(element("p", "identity", formatModes(node.movableByMode)));
+  content.append(metrics, sectionTitle("Representative support profile"));
+
+  const profile = element("div", "mode-opportunities");
+  ["A", "B", "C"].forEach((mode, index) => {
+    const row = element("div", "mode-opportunity");
+    row.append(element("strong", null, mode), element("span", null, supportSummary(node.supportHistogram[index])));
+    profile.append(row);
+  });
+  content.append(profile);
+
+  const reference = element("div", "reference");
+  reference.append(
+    element("strong", null, onPath ? `Shortest-path checkpoint ${node.pathIndex + 1}/${state.graph.path.length}` : "Complete component vertex"),
+    element("span", null, isSource
+      ? "All factors in the representative are coordinate vectors, which identifies schoolbook multiplication."
+      : isTarget
+        ? "This is the component’s unique length-7 representative."
+        : "Incidence counts include every deduplicated orbit edge in the published component."),
+    element("code", null, `representative ${node.id}`)
+  );
+  content.append(reference);
+}
+
+function renderOrbitEdge(edge) {
+  const from = state.nodes.get(edge.from);
+  const to = state.nodes.get(edge.to);
+  const loop = edge.selfLoop;
+  const title = loop ? `${from.name} ↺ its orbit` : `${from.name} ${edge.type === "reduction" ? "→" : "↔"} ${to.name}`;
+  const content = inspectorHeading(edge.onPath ? `shortest-path ${edge.type}` : `orbit ${edge.type}`, title);
+
+  const summary = edge.type === "reduction"
+    ? `CONTRACTION · LENGTH ${from.length} → ${to.length}`
+    : loop
+      ? `INVERTIBLE FLIP · LENGTH ${from.length} · SAME SYMMETRY ORBIT`
+      : `INVERTIBLE FLIP · LENGTH ${from.length} UNCHANGED`;
+  content.append(element("p", `mechanic-summary ${edge.type}`, summary));
+  content.append(element("p", "mechanic-explanation", edge.type === "reduction"
+    ? "A length-reducing transition connects these two presentation orbits. Direction is shown from the longer presentation to the shorter one."
+    : loop
+      ? "The flip changes the representative scheme but symmetry canonicalization returns it to the same orbit. The self-loop is retained because it is one of the published 1,183 orbit edges."
+      : "An invertible same-length flip connects representatives in these two symmetry orbits."));
+
+  const reference = element("div", "reference");
+  reference.append(
+    element("strong", null, edge.onPath ? "Chosen shortest route" : "Complete component transition"),
+    element("span", null, "The importer canonicalizes endpoint order and removes duplicate rows from edges.txt; no geometry comes from the paper figure."),
+    element("code", null, `edge ${edge.id}`)
+  );
+  content.append(reference);
+}
+
+function renderNode(node) {
+  if (state.view.kind === "orbit") return renderOrbitNode(node);
+  const onPath = node.pathIndex !== null;
+  const content = inspectorHeading(onPath ? "gold path checkpoint" : "retained sample state", node.name);
+
+  const tensorName = `M${state.view.size}`;
+  const validity = element("div", "validity-card");
+  validity.append(
+    element("strong", null, `VALID · ${node.rank}-TERM PRESENTATION`),
+    element("span", null, `Its ${state.view.size * state.view.size} × ${state.view.size * state.view.size} × ${state.view.size * state.view.size} = ${state.view.coordinateCount} rational coordinates exactly equal the ${tensorName} tensor. This certifies the construction, not optimality.`)
+  );
+  content.append(validity);
+
+  content.append(sectionTitle("Useful next moves"));
+  const atLowerBound = node.rank === state.view.lowerBound;
+  const reduction = element("div", `move-signal${node.reductions > 0 || atLowerBound ? " available" : ""}`);
+  reduction.append(
+    element("strong", null, atLowerBound
+      ? `Proven optimum · tensor rank ${state.view.lowerBound}`
+      : node.reductions > 0
+        ? `${node.reductions} immediate ${node.reductions === 1 ? "contraction" : "contractions"}`
+        : "No immediate contraction"),
+    element("span", null, atLowerBound
+      ? `No exact presentation with fewer than ${state.view.lowerBound} rank-one terms exists.`
+      : node.reductions > 0
+        ? `A displayed 2 → 1 move can lower this presentation from ${node.rank} to ${node.rank - 1} terms.`
+        : "No currently recognized pair combines directly from two terms to one.")
+  );
+  content.append(reduction);
+
+  const pairs = element("p", "pair-summary");
+  pairs.append(element("strong", null, `${node.movablePairs} eligible term ${node.movablePairs === 1 ? "pair" : "pairs"}`),
+    " share exactly one projective factor. Each pair can support many rational rebases; this is not a count of neighboring states.");
+  content.append(pairs, modeOpportunities(node.movableByMode));
+
+  const largestComponent = Math.max(...node.components);
+  content.append(sectionTitle("Mobility heuristic"));
+  const mobility = element("p", "mobility-note");
+  mobility.append(element("strong", null, `${largestComponent} terms connected`),
+    " in the largest chain of shared-factor opportunities. A larger chain suggests that local flips can propagate farther; it does not prove reachability or reducibility.");
+  content.append(mobility);
+
   const incident = state.graph.edges.filter(edge => edge.from === node.id || edge.to === node.id);
-  const sampleStatus = node.pathIndex === null
-    ? `Sampled off-path state · ${incident.length} displayed connection${incident.length === 1 ? "" : "s"}.`
-    : `Recorded path state ${node.pathIndex + 1} of ${state.graph.path.length} · ${incident.length} displayed connection${incident.length === 1 ? "" : "s"}.`;
-  content.append(element("p", "sample-status", sampleStatus));
+  const reference = element("div", "reference");
+  reference.append(
+    element("strong", null, onPath
+      ? `Gold path checkpoint ${node.pathIndex + 1}/${state.graph.path.length}`
+      : "Off-path state retained for this finite sample"),
+    element("span", null, `Only ${incident.length} incident ${incident.length === 1 ? "edge is" : "edges are"} retained in this picture; this is not the state’s full degree.`),
+    element("code", null, `state ${node.id}`)
+  );
+  content.append(reference);
 }
 
 function basisDiagram(columns) {
   const wrap = element("div", "basis-block");
-  wrap.append(element("span", "basis-label", "2×2 basis · columns u, v"));
+  wrap.append(element("span", "basis-label", "Invertible G · columns u, v"));
   const matrix = element("div", "basis-matrix");
   matrix.append(
     element("code", null, columns[0][0]), element("code", null, columns[1][0]),
     element("code", null, columns[0][1]), element("code", null, columns[1][1])
   );
-  wrap.append(matrix);
+  wrap.append(matrix, element("strong", "invertible", "det G ≠ 0"));
   return wrap;
+}
+
+function flipMechanic(sharedMode) {
+  const changedModes = ["A", "B", "C"].filter(mode => mode !== sharedMode);
+  const map = element("div", "transform-map");
+  for (const [mode, operation, description] of [
+    [sharedMode, "fixed", "same projective factor"],
+    [changedModes[0], "× G", "choose a new basis"],
+    [changedModes[1], "× G⁻¹", "apply the dual change"]
+  ]) {
+    const step = element("div", `transform-step${mode === sharedMode ? " shared" : ""}`);
+    step.append(element("strong", null, mode), element("b", null, operation), element("span", null, description));
+    map.append(step);
+  }
+  return map;
 }
 
 function termGroup(label, terms, sharedMode, className) {
@@ -239,42 +424,55 @@ function termGroup(label, terms, sharedMode, className) {
 function renderDelta(content, edge) {
   const comparison = element("div", "delta-comparison");
   comparison.append(
-    termGroup(`Before · remove ${edge.removed.length}`, edge.removed, edge.type === "flip" ? edge.mode : null, "before"),
-    element("div", "delta-arrow", "→"),
-    termGroup(`After · add ${edge.added.length}`, edge.added, edge.type === "flip" ? edge.mode : null, "after")
+    termGroup(`Local tensor before · remove ${edge.removed.length}`, edge.removed, edge.type === "flip" ? edge.mode : null, "before"),
+    element("div", "delta-arrow", "="),
+    termGroup(`Same local tensor after · add ${edge.added.length}`, edge.added, edge.type === "flip" ? edge.mode : null, "after")
   );
   content.append(comparison);
 }
 
 function renderEdge(edge) {
+  if (state.view.kind === "orbit") return renderOrbitEdge(edge);
   const from = state.nodes.get(edge.from);
   const to = state.nodes.get(edge.to);
   const title = edge.type === "flip" ? `${from.name} ↔ ${to.name}` : `${from.name} → ${to.name}`;
-  const content = inspectorHeading(edge.onPath ? `recorded ${edge.type}` : `sampled ${edge.type}`, title);
+  const content = inspectorHeading(edge.onPath ? `gold path ${edge.type}` : `sampled ${edge.type}`, title);
 
   if (edge.type === "flip") {
-    content.append(element("p", "mechanic-summary", `Reversible, length-preserving move · ${from.rank} terms ↔ ${to.rank} terms`));
-    const explanation = element("p", "identity");
-    explanation.append("The two terms share their ", element("strong", "mode-chip", `${edge.mode} factor`), ". Hold that factor fixed; change the other two modes with a basis / inverse-basis pair.");
+    content.append(element("p", "mechanic-summary", `LOCAL REBASING · 2 → 2 TERMS · LENGTH ${from.rank} UNCHANGED`));
+    content.append(flipMechanic(edge.mode));
+    const explanation = element("p", "mechanic-explanation");
+    explanation.append("The terms share one ", element("strong", "mode-chip", `${edge.mode} projective factor`),
+      ". Choosing an invertible 2 × 2 basis G in one remaining mode and the inverse basis in the other preserves their sum. The move is exactly reversible.");
     content.append(explanation);
     if (edge.basisColumns) content.append(basisDiagram(edge.basisColumns));
   } else {
     const isSplit = edge.type === "split";
-    content.append(element("p", `mechanic-summary ${edge.type}`,
-      isSplit
-        ? `Split: one rank-one term becomes two; length ${from.rank} → ${to.rank}.`
-        : `Reduction: two compatible terms contract to one; length ${from.rank} → ${to.rank}.`));
-    content.append(element("p", "sample-status", isSplit
-      ? "The local tensor contribution is unchanged while the decomposition gains one term. Reversing this move is the displayed reduction."
-      : "The local tensor contribution is unchanged while the decomposition loses one term. Reversing this move is a split."));
+    content.append(element("p", `mechanic-summary ${edge.type}`, isSplit
+      ? `LIFT · 1 → 2 TERMS · LENGTH ${from.rank} → ${to.rank}`
+      : `CONTRACTION · 2 → 1 TERM · LENGTH ${from.rank} → ${to.rank}`));
+    content.append(element("p", "mechanic-explanation", isSplit
+      ? "One rank-one contribution is represented by two terms. The tensor is unchanged, but the extra term introduces redundancy that later flips can redistribute."
+      : "Two compatible rank-one contributions combine into one. The tensor is unchanged while the presentation loses a term."));
   }
 
   if (Array.isArray(edge.removed) && Array.isArray(edge.added)) {
+    const untouched = from.rank - edge.removed.length;
+    content.append(element("p", "untouched", `Only the terms shown below change; the other ${untouched} terms remain untouched.`));
     renderDelta(content, edge);
   } else {
-    content.append(element("p", "unavailable", "Local factor delta unavailable for this sampled cross-link. Only its endpoints, shared mode, and 2×2 basis were retained."));
+    content.append(element("p", "unavailable", "NOT VISUALLY INSPECTABLE: this sampled cross-link stores only endpoints, shared mode, and G. Its removed and added terms were not retained."));
   }
-  content.append(element("p", "edge-status", edge.onPath ? "Recorded construction edge · exact local replacement data." : "Sampled neighborhood cross-link."));
+
+  const status = element("div", "reference");
+  status.append(
+    element("strong", null, edge.onPath ? "Gold path certificate" : "Finite-sample cross-link"),
+    element("span", null, edge.onPath
+      ? "The complete local replacement is stored and can be replayed exactly."
+      : "Its presence proves this sampled adjacency, not that it is preferred or exhaustive."),
+    element("code", null, `edge ${edge.id}`)
+  );
+  content.append(status);
 }
 
 function updateSelection() {
@@ -283,13 +481,14 @@ function updateSelection() {
   const selected = state.pinned;
   document.querySelectorAll(".graph-node").forEach(group => {
     const node = state.nodes.get(group.dataset.id);
-    group.classList.toggle("hidden", !branches && node.pathIndex === null);
+    group.classList.toggle("hidden", !branches && node.pathIndex == null);
     group.classList.toggle("selected", selected?.kind === "node" && selected.id === node.id);
     group.classList.remove("adjacent");
   });
   document.querySelectorAll(".graph-edge").forEach(path => {
     const edge = state.edges.get(path.dataset.id);
-    path.classList.toggle("hidden", !branches && !edge.onPath && edge.type !== "reduction");
+    const keepSampleReduction = state.view.kind === "sample" && edge.type === "reduction";
+    path.classList.toggle("hidden", !branches && !edge.onPath && !keepSampleReduction);
     path.classList.toggle("selected", selected?.kind === "edge" && selected.id === edge.id);
     path.classList.remove("adjacent");
   });
@@ -320,37 +519,47 @@ function showPathStep(index) {
     return;
   }
   const previous = state.graph.path[state.pathIndex - 1];
-  const edge = state.graph.edges.find(value => value.onPath && value.from === previous && value.to === node.id);
+  const edge = state.graph.edges.find(value => value.onPath &&
+    ((value.from === previous && value.to === node.id) || (value.to === previous && value.from === node.id)));
   inspect(edge ? descriptor("edge", edge) : descriptor("node", node), { pin: true, center: true });
 }
 
 function draw(graph) {
+  closeInspector(false);
   state.graph = graph;
+  state.pathIndex = 0;
+  for (const node of graph.nodes) node.pathIndex ??= null;
   state.nodes = new Map(graph.nodes.map(node => [node.id, node]));
   state.edges = new Map(graph.edges.map(edge => [edge.id, edge]));
+
   const perAnchor = new Map();
-  for (const node of graph.nodes) {
-    if (node.pathIndex !== null) continue;
-    const siblings = perAnchor.get(node.anchor) || [];
-    siblings.push(node);
-    perAnchor.set(node.anchor, siblings);
+  if (state.view.kind === "sample") {
+    for (const node of graph.nodes) {
+      if (node.pathIndex != null) continue;
+      const siblings = perAnchor.get(node.anchor) || [];
+      siblings.push(node);
+      perAnchor.set(node.anchor, siblings);
+    }
+    for (const siblings of perAnchor.values()) siblings.sort((a, b) => a.id.localeCompare(b.id));
   }
-  for (const siblings of perAnchor.values()) siblings.sort((a, b) => a.id.localeCompare(b.id));
   for (const node of graph.nodes) {
-    const index = node.pathIndex === null ? perAnchor.get(node.anchor).indexOf(node) : 0;
+    const siblings = perAnchor.get(node.anchor) || [];
+    const index = node.pathIndex == null ? siblings.indexOf(node) : 0;
     node.position = nodePosition(node, index);
   }
 
   const svg = document.querySelector("#graph");
-  const bands = svgElement("g", { class: "bands" });
-  bands.append(
-    svgElement("line", { x1: 28, y1: 382, x2: 1532, y2: 382 }),
-    svgElement("line", { x1: 28, y1: 730, x2: 1532, y2: 730 })
-  );
-  const length24 = svgElement("text", { x: 30, y: 364 }); length24.textContent = "length 24";
-  const length23 = svgElement("text", { x: 30, y: 712 }); length23.textContent = "length 23";
-  bands.append(length24, length23);
-  svg.append(bands);
+  svg.replaceChildren();
+  if (state.view.bands) {
+    const bands = svgElement("g", { class: "bands" });
+    for (const band of state.view.bands) {
+      bands.append(svgElement("line", { x1: 28, y1: band.y, x2: 1532, y2: band.y }));
+      const label = svgElement("text", { x: 30, y: band.y - 18 });
+      label.textContent = `length ${band.rank}`;
+      bands.append(label);
+    }
+    svg.append(bands);
+  }
 
   const edgeLayer = svgElement("g", { class: "edges" });
   for (const edge of graph.edges) {
@@ -358,7 +567,7 @@ function draw(graph) {
     const to = state.nodes.get(edge.to);
     const path = svgElement("path", {
       d: edgePath(from, to),
-      class: `graph-edge ${edge.type}${edge.onPath ? " on-path" : ""}`,
+      class: `graph-edge ${edge.type}${edge.selfLoop ? " self-loop" : ""}${edge.onPath ? " on-path" : ""}`,
       "data-id": edge.id,
       tabindex: "0",
       role: "button",
@@ -372,22 +581,32 @@ function draw(graph) {
   const nodeLayer = svgElement("g", { class: "nodes" });
   for (const node of graph.nodes) {
     const [x, y] = node.position;
+    const length = node.length ?? node.rank;
     const group = svgElement("g", {
-      class: `graph-node ${node.pathIndex === null ? "branch" : "path-node"} length-${node.rank}`,
+      class: `graph-node ${state.view.kind === "orbit" ? "orbit-node " : ""}${node.pathIndex == null ? "branch" : "path-node"} length-${length}${node.id === graph.source ? " source-node" : ""}${node.id === graph.target ? " target-node" : ""}`,
       transform: `translate(${x} ${y})`,
       "data-id": node.id,
       tabindex: "0",
       role: "button",
-      "aria-label": `${node.name}, complete length ${node.rank} decomposition; focus to inspect, press Enter to pin`
+      "aria-label": `${node.name}, complete length ${length} presentation; focus to inspect, press Enter to pin`
     });
-    group.append(svgElement("circle", { r: node.pathIndex === null ? 9 : 17 }));
-    if (node.pathIndex !== null) {
-      const number = svgElement("text", { y: 5 }); number.textContent = node.pathIndex;
-      const label = svgElement("text", { y: node.rank === 23 ? 34 : -28, class: "node-label" }); label.textContent = node.name;
-      group.append(number, label);
+    const ordinaryRadius = state.view.kind === "orbit" ? 5 : 9;
+    const pathRadius = state.view.kind === "orbit" ? 10 : 17;
+    group.append(svgElement("circle", { r: node.pathIndex == null ? ordinaryRadius : pathRadius }));
+    if (node.pathIndex != null) {
+      const number = svgElement("text", { y: 4 });
+      number.textContent = node.pathIndex;
+      group.append(number);
+      if (state.view.kind === "sample" || node.id === graph.source || node.id === graph.target) {
+        const label = svgElement("text", { y: node.position[1] > 500 ? 29 : -19, class: "node-label" });
+        label.textContent = node.id === graph.source ? "schoolbook" : node.id === graph.target ? "Strassen" : node.name;
+        group.append(label);
+      }
     }
     const title = svgElement("title");
-    title.textContent = `${node.name}: complete length ${node.rank} decomposition, ${node.movablePairs} movable pairs, ${node.reductions} reductions`;
+    title.textContent = state.view.kind === "orbit"
+      ? `${node.name}: length ${length} orbit, ${node.degree} distinct neighbors, ${node.reductions} reduction edges`
+      : `${node.name}: complete length ${length} presentation, ${node.movablePairs} movable pairs, ${node.reductions} reductions`;
     group.append(title);
     bindInspectorTarget(group, descriptor("node", node));
     nodeLayer.append(group);
@@ -395,17 +614,66 @@ function draw(graph) {
   svg.append(nodeLayer);
 
   document.querySelector("#scope").textContent = graph.scope;
-  document.querySelector("#provenance").textContent = graph.provenance;
-  document.querySelector("#previous").addEventListener("click", () => showPathStep(state.pathIndex - 1));
-  document.querySelector("#next").addEventListener("click", () => showPathStep(state.pathIndex + 1));
-  document.querySelector("#reset").addEventListener("click", () => {
-    document.querySelector("#branches").checked = true;
-    showPathStep(0);
-    document.querySelector(".viewport").scrollTo({ left: 0, behavior: "smooth" });
-  });
-  document.querySelector("#branches").addEventListener("change", updateSelection);
+  const provenance = typeof graph.provenance === "string"
+    ? graph.provenance
+    : `Generated from ${graph.provenance.dataset} at ${graph.provenance.revision.slice(0, 12)} · ${graph.provenance.repository}`;
+  document.querySelector("#provenance").textContent = provenance;
+  const hasAlternatives = graph.nodes.some(node => node.pathIndex == null);
+  document.querySelector("#alternatives-control").hidden = !hasAlternatives;
+  document.querySelector("#branches").checked = true;
   centerNode(state.nodes.get(graph.path[0]));
   updateSelection();
+}
+
+function renderLegend(view) {
+  const legend = document.querySelector("#legend");
+  legend.replaceChildren();
+  for (const [className, label] of view.legend) {
+    const item = element("span");
+    item.append(element("i", className), document.createTextNode(label));
+    legend.append(item);
+  }
+}
+
+function configureView(view) {
+  document.title = view.documentTitle;
+  document.querySelector("#eyebrow").textContent = view.eyebrow;
+  document.querySelector("#page-title").textContent = view.pageTitle;
+  document.querySelector("#graph-title").textContent = view.graphTitle;
+  document.querySelector("#graph-description").textContent = view.graphDescription;
+  document.querySelector("#reading-title").textContent = view.readingTitle;
+  document.querySelector("#reading-body").textContent = view.readingBody;
+  document.querySelector("#footer-note").textContent = view.footer;
+  document.querySelector("#alternatives-label").textContent = view.alternativesLabel;
+  document.querySelector("#graph").setAttribute("aria-label", view.ariaLabel);
+  for (const [key, candidate] of Object.entries(views)) {
+    const tab = document.querySelector(`#tab-${key}`);
+    const active = candidate === view;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+  }
+  renderLegend(view);
+}
+
+function loadGraph(view) {
+  state.view = view;
+  state.graph = null;
+  const token = ++state.loadToken;
+  configureView(view);
+  closeInspector(false);
+  document.querySelector("#graph").replaceChildren();
+  document.querySelector("#scope").textContent = "Loading exact graph…";
+  fetch(view.url)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(graph => {
+      if (token === state.loadToken) draw(graph);
+    })
+    .catch(error => {
+      if (token === state.loadToken) document.querySelector("#scope").textContent = `Could not load graph: ${error.message}`;
+    });
 }
 
 const inspector = document.querySelector("#inspector");
@@ -421,12 +689,15 @@ document.addEventListener("keydown", event => {
   }
 });
 
-fetch("/api/graph")
-  .then(response => {
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
-  })
-  .then(draw)
-  .catch(error => {
-    document.querySelector("#scope").textContent = `Could not load graph: ${error.message}`;
-  });
+document.querySelector("#previous").addEventListener("click", () => showPathStep(state.pathIndex - 1));
+document.querySelector("#next").addEventListener("click", () => showPathStep(state.pathIndex + 1));
+document.querySelector("#reset").addEventListener("click", () => {
+  document.querySelector("#branches").checked = true;
+  showPathStep(0);
+  document.querySelector(".viewport").scrollTo({ left: 0, behavior: "smooth" });
+});
+document.querySelector("#branches").addEventListener("change", updateSelection);
+document.querySelector("#tab-m2").addEventListener("click", () => loadGraph(views.m2));
+document.querySelector("#tab-m3").addEventListener("click", () => loadGraph(views.m3));
+
+loadGraph(views.m2);

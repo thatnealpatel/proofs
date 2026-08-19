@@ -70,6 +70,22 @@ h3 { margin: 1rem 0 .45rem; font-size: .92rem; }
   color: #52605a;
   font-size: 1.05rem;
 }
+.view-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+.view-tab {
+  border-color: var(--line);
+  color: var(--muted);
+  background: rgba(255, 253, 247, .72);
+}
+.view-tab.active {
+  border-color: var(--green);
+  color: white;
+  background: var(--green);
+}
 
 .graph-panel,
 .reading {
@@ -98,6 +114,11 @@ h3 { margin: 1rem 0 .45rem; font-size: .92rem; }
   margin: .25rem 0;
   color: var(--muted);
 }
+.panel-tools {
+  display: grid;
+  justify-items: end;
+  gap: 13px;
+}
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -124,6 +145,7 @@ h3 { margin: 1rem 0 .45rem; font-size: .92rem; }
   height: 5px;
   border-top: 2px dashed var(--green);
 }
+.legend .loop { background: #6f4c86; }
 
 .controls {
   display: flex;
@@ -212,6 +234,10 @@ button:disabled {
   stroke: var(--green);
   stroke-dasharray: 7 5;
 }
+.graph-edge.self-loop {
+  stroke: #6f4c86;
+  opacity: .55;
+}
 .graph-edge.on-path {
   stroke: var(--gold);
   stroke-width: 5;
@@ -241,6 +267,7 @@ button:disabled {
   stroke-width: 2;
 }
 .graph-node.branch { opacity: .64; }
+.graph-node.orbit-node.branch { opacity: .78; }
 .graph-node.branch:hover,
 .graph-node.branch:focus,
 .graph-node.branch.adjacent { opacity: 1; }
@@ -253,6 +280,11 @@ button:disabled {
   fill: var(--green-soft);
   stroke: var(--green);
 }
+.graph-node.target-node circle {
+  fill: var(--green-soft);
+  stroke: var(--green);
+}
+.graph-node.source-node circle { stroke-width: 4; }
 .graph-node:hover circle,
 .graph-node:focus circle,
 .graph-node.adjacent circle {
@@ -340,9 +372,9 @@ button:disabled {
 }
 .type.sampled-split { color: var(--red); }
 .type.sampled-reduction { color: var(--green); }
-.type.recorded-state,
-.type.recorded-flip,
-.type.recorded-split { color: var(--gold); }
+.type.gold-path-checkpoint,
+.type.gold-path-flip,
+.type.gold-path-split { color: var(--gold); }
 .badge {
   display: inline-block;
   border: 1px solid var(--green);
@@ -353,6 +385,92 @@ button:disabled {
   font-size: .67rem;
   font-weight: 700;
 }
+.validity-card {
+  display: grid;
+  gap: 3px;
+  margin: 10px 0 16px;
+  padding: 11px 13px;
+  border: 1px solid var(--green);
+  border-left-width: 5px;
+  background: var(--green-soft);
+}
+.validity-card strong {
+  color: var(--green);
+  font: 800 .76rem ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .04em;
+}
+.validity-card span { color: #345d50; font-size: .75rem; }
+.inspector-section-title {
+  margin: 15px 0 7px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font: 750 .82rem ui-sans-serif, system-ui, sans-serif;
+}
+.move-signal {
+  display: grid;
+  gap: 2px;
+  padding: 9px 11px;
+  border-left: 5px solid var(--muted);
+  background: #eeece6;
+}
+.move-signal.available {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+.move-signal strong { font-size: .78rem; }
+.move-signal span { color: var(--muted); font-size: .72rem; }
+.pair-summary,
+.mobility-note,
+.mechanic-explanation {
+  margin: 9px 0;
+  color: var(--muted);
+  font-size: .76rem;
+}
+.pair-summary strong,
+.mobility-note strong { margin-right: 4px; color: var(--ink); }
+.mode-opportunities {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.mode-opportunity {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 0 8px;
+  padding: 8px 10px;
+  border: 1px solid #9db7cc;
+  background: var(--blue-soft);
+}
+.mode-opportunity strong { color: var(--blue); }
+.mode-opportunity b {
+  justify-self: end;
+  font: 800 1.05rem ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.mode-opportunity span {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: .64rem;
+}
+.mode-opportunity.empty { opacity: .48; }
+.mobility-note {
+  margin-top: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  background: #faf7ef;
+}
+.reference {
+  display: grid;
+  gap: 3px;
+  margin-top: 14px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .67rem;
+}
+.reference strong { color: var(--ink); }
+.reference code { font-size: .67rem; }
 .decomposition-callout,
 .mechanic-summary {
   margin: 8px 0;
@@ -395,6 +513,32 @@ button:disabled {
   color: var(--blue);
   white-space: nowrap;
 }
+.transform-map {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: 9px 0;
+}
+.transform-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1px 8px;
+  padding: 8px 9px;
+  border: 1px solid #9db7cc;
+  background: var(--blue-soft);
+}
+.transform-step.shared {
+  border-color: #d6b04d;
+  background: var(--gold-soft);
+}
+.transform-step strong { color: var(--blue); }
+.transform-step.shared strong { color: #875d13; }
+.transform-step b { justify-self: end; }
+.transform-step span {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: .61rem;
+}
 .basis-block {
   display: flex;
   align-items: center;
@@ -408,6 +552,11 @@ button:disabled {
   color: var(--muted);
   font-size: .7rem;
   font-weight: 750;
+}
+.invertible {
+  color: var(--green);
+  font: 750 .66rem ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: nowrap;
 }
 .basis-matrix {
   display: grid;
@@ -495,11 +644,21 @@ button:disabled {
   color: #762820 !important;
   font-weight: 700;
 }
+.untouched {
+  margin: 9px 0 5px;
+  color: var(--muted);
+  font-size: .7rem;
+  font-weight: 700;
+}
 code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 
 @media (max-width: 850px) {
   .panel-heading { display: block; }
-  .legend { min-width: 0; justify-content: start; margin-top: 14px; }
+  .panel-tools {
+    justify-items: start;
+    margin-top: 14px;
+  }
+  .legend { min-width: 0; justify-content: start; }
   .viewport { height: 680px; }
 }
 
@@ -515,7 +674,10 @@ code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
     max-height: min(72vh, 690px);
     padding: 18px 14px;
   }
-  .metrics { grid-template-columns: 1fr 1fr; }
+  .metrics,
+  .mode-opportunities,
+  .transform-map { grid-template-columns: 1fr 1fr; }
+  .transform-step.shared { grid-column: 1 / -1; }
   .delta-comparison { grid-template-columns: 1fr; }
   .delta-arrow { padding: 0; transform: rotate(90deg); }
 }
