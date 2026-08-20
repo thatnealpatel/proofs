@@ -5,10 +5,12 @@
   A135908(n) is the clique number of the commuting graph of `S_n`, A135909(n)
   the same for `A_n`.  Vertex-set convention: the literature carries three
   (all of `G`; `G ∖ Z(G)`, used by the entries' reference Iranmanesh &
-  Jafarzadeh 2008; `G ∖ {1}`).  They agree for `S_n` (n ≥ 3) and `A_n`
-  (n ≥ 4) and differ only at the two boundary terms — the entries' own
-  boundary data is mixed (A135908(2) = 0 fits `G ∖ Z(G)`, A135909(3) = 2
-  fits `G ∖ {1}`).  This file takes `G ∖ {1}`.
+  Jafarzadeh 2008; `G ∖ {1}`).  When the center is trivial, the latter two
+  vertex sets agree; using all of `G` adds the universal identity vertex and
+  raises the clique number by one.  The exceptional low-degree groups also
+  account for the entries' mixed boundary data (A135908(2) = 0 fits
+  `G ∖ Z(G)`, while A135909(3) = 2 fits `G ∖ {1}`).  This file takes
+  `G ∖ {1}`.
   Colin Barker (2013-07-26) conjectured the recurrence
   `a(n) = a(n-1) + 3·a(n-3) - 3·a(n-4)` for `n > 7` (A135908) and `n > 6`
   (A135909), with explicit rational generating functions.
@@ -37,21 +39,23 @@
   * A135909: Barker's claimed validity range `n > 6` is *false* against the
     entry's own data: at `n = 8` the recurrence predicts 14 while a(8) = 15,
     and at `n = 9` it predicts 27 while a(9) = 26.  This numerical refutation
-    is unconditional; it is immediate from the published terms.  The Lean
-    theorem about the actual alternating-group clique numbers is conditional
-    on `AltStructure`, as is the positive recurrence for `n > 9`.  Barker's
-    own generating function in the same formula clause already encodes
-    `n > 9`: its numerator has degree 9 over a degree-4 denominator, and the
-    nonzero numerator coefficients predict exactly the observed failure set —
-    the stated range contradicts the g.f. beside it.  Repository issue #36
-    is a correction report, not evidence that OEIS has accepted or applied
-    the change.
+    is unconditional; it is immediate from the published terms.  This file
+    proves that the largest abelian subgroup order of `A_n` is `gAlt n`, and
+    consequently proves the recurrence for the actual alternating-group
+    clique numbers in its maximal tail range `n > 9`.  Barker's own generating
+    function in the same formula clause already encodes `n > 9`: its numerator
+    has degree 9 over a degree-4 denominator, and the nonzero numerator
+    coefficients predict exactly the observed failure set — the stated range
+    contradicts the g.f. beside it.  Repository issue #36 is a correction
+    report, not evidence that OEIS has accepted or applied the change.
 
-  Novelty language is deliberately limited: no prior written proof of Barker's
-  recurrence and no general published determination of the largest abelian
-  subgroup order of `A_n` were found in the searched sources.  These are
-  found-no-record statements, not priority claims.  `AltStructure` remains an
-  open prospective result in this file.
+  The determination of maximum-order abelian subgroups of alternating groups
+  is due to E. P. Vdovin, "Maximal orders of Abelian subgroups in finite
+  simple groups," Algebra and Logic 38 (1999), 67–83.  This file gives an
+  elementary orbit-induction proof in Lean and derives Barker's corrected
+  recurrence from it.  No prior written proof of Barker's recurrence was found
+  in the searched sources; that is a found-no-record statement, not a priority
+  claim.
 -/
 import Mathlib
 
@@ -634,17 +638,12 @@ example :
 
 /-! ### OEIS A135909: alternating groups -/
 
-/-- The conjectured largest abelian subgroup order of the alternating group
-`A_n`: `1, 1, 1, 3, 4, 5, 9, 12, 16` for `n ≤ 8`, then `gAlt (n+3) = 3 * gAlt n`.
-Verified by exhaustive enumeration of abelian subgroup orders for `n ≤ 8`.
-At `n = 8`: 16 is witnessed by an elementary abelian `V₄ × V₄` on `4 + 4`
-points; anything larger is ≤ 18 by the `S_8` bound `a000792 8 = 18`
-(`maxAbelianOrder_alternating_le`); 17 is excluded by Lagrange
-(`17 ∤ |A_8|`); and both abelian order-18 shapes fail — `C₁₈` needs an
-element of order 9, absent in `S_8`, and `C₃ × C₃ × C₂` needs an even
-involution centralizing a `C₃ × C₃` on 8 points, whose only candidate is an
-odd transposition.  The full structure theorem is open in this file:
-theorems below that need it take `AltStructure` as a hypothesis. -/
+/-- The largest abelian subgroup order of the alternating group `A_n`:
+`1, 1, 1, 3, 4, 5, 9, 12, 16` for `n ≤ 8`, followed by the recursion
+`gAlt (n + 3) = 3 * gAlt n`.  The equality with the group-theoretic quantity
+is proved below as `maxAbelianOrder_alternating_fin`.  At `n = 8`, the value
+16 is attained by a product of two Klein four groups on disjoint four-point
+blocks; the orbit induction below proves the matching upper bound uniformly. -/
 def gAlt : ℕ → ℕ
   | 0 => 1
   | 1 => 1
@@ -667,6 +666,95 @@ theorem gAlt_add_three {n : ℕ} (hn : 6 ≤ n) : gAlt (n + 3) = 3 * gAlt n := b
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 6 := ⟨n - 6, by omega⟩
   rfl
 
+/-- For each admissible block size at most eight, adjoining that block grows
+`gAlt` by at least the block size. -/
+theorem small_mul_gAlt_le {k : ℕ} (hk : k ≤ 8) (hk0 : k ≠ 0) (hk2 : k ≠ 2) :
+    ∀ m : ℕ, k * gAlt m ≤ gAlt (m + k) := by
+  intro m
+  induction m using gAlt.induct with
+  | case1 => interval_cases k <;> norm_num [gAlt] at *
+  | case2 => interval_cases k <;> norm_num [gAlt] at *
+  | case3 => interval_cases k <;> norm_num [gAlt] at *
+  | case4 => interval_cases k <;> norm_num [gAlt] at *
+  | case5 => interval_cases k <;> norm_num [gAlt] at *
+  | case6 => interval_cases k <;> norm_num [gAlt] at *
+  | case7 => interval_cases k <;> norm_num [gAlt] at *
+  | case8 => interval_cases k <;> norm_num [gAlt] at *
+  | case9 => interval_cases k <;> norm_num [gAlt] at *
+  | case10 m ih =>
+    have hleft : gAlt (m + 9) = 3 * gAlt (m + 6) := by rfl
+    have hright : gAlt (m + 9 + k) = 3 * gAlt (m + 6 + k) := by
+      have h := gAlt_add_three (n := m + 6 + k) (by omega)
+      rwa [show m + 6 + k + 3 = m + 9 + k from by omega] at h
+    rw [hleft, hright]
+    nlinarith only [ih]
+
+/-- The orbit-size arithmetic for the alternating-group induction: unless the
+orbit has size two, `k * gAlt m ≤ gAlt (m + k)`. -/
+theorem mul_gAlt_le (k : ℕ) :
+    ∀ m : ℕ, k ≠ 0 → k ≠ 2 → k * gAlt m ≤ gAlt (m + k) := by
+  induction k using gAlt.induct with
+  | case1 => intro m hk0; exact absurd rfl hk0
+  | case2 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 1) (by omega) (by omega) (by omega) m
+  | case3 => intro m _ hk2; exact absurd rfl hk2
+  | case4 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 3) (by omega) (by omega) (by omega) m
+  | case5 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 4) (by omega) (by omega) (by omega) m
+  | case6 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 5) (by omega) (by omega) (by omega) m
+  | case7 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 6) (by omega) (by omega) (by omega) m
+  | case8 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 7) (by omega) (by omega) (by omega) m
+  | case9 =>
+    intro m _ _
+    exact small_mul_gAlt_le (k := 8) (by omega) (by omega) (by omega) m
+  | case10 k ih =>
+    intro m _ _
+    show (k + 9) * gAlt m ≤ gAlt (m + (k + 9))
+    have h1 : (k + 9) * gAlt m ≤ (3 * (k + 6)) * gAlt m :=
+      Nat.mul_le_mul_right _ (by omega)
+    have h2 : (3 * (k + 6)) * gAlt m = (k + 6) * (3 * gAlt m) := by ring
+    have hthree : 3 * gAlt m ≤ gAlt (m + 3) :=
+      small_mul_gAlt_le (k := 3) (by omega) (by omega) (by omega) m
+    have h3 : (k + 6) * (3 * gAlt m) ≤ (k + 6) * gAlt (m + 3) :=
+      Nat.mul_le_mul_left _ hthree
+    have h4 : (k + 6) * gAlt (m + 3) ≤ gAlt (m + 3 + (k + 6)) :=
+      ih (m + 3) (by omega) (by omega)
+    rw [show m + 3 + (k + 6) = m + (k + 9) from by omega] at h4
+    omega
+
+/-- The symmetric-group bound on the complement of a two-point orbit is no
+larger than the alternating-group target on the full set. -/
+theorem a000792_sub_two_le_gAlt {n : ℕ} (hn : 2 ≤ n) :
+    a000792 (n - 2) ≤ gAlt n := by
+  induction n using gAlt.induct with
+  | case1 => omega
+  | case2 => omega
+  | case3 => decide
+  | case4 => decide
+  | case5 => decide
+  | case6 => decide
+  | case7 => decide
+  | case8 => decide
+  | case9 => decide
+  | case10 n ih =>
+    have ha : a000792 (n + 9 - 2) = 3 * a000792 (n + 6 - 2) := by
+      rw [show n + 9 - 2 = n + 7 from by omega,
+        show n + 6 - 2 = n + 4 from by omega]
+      have h := a000792_add_three (n := n + 4) (by omega)
+      rwa [show n + 4 + 3 = n + 7 from by omega] at h
+    rw [ha, show gAlt (n + 9) = 3 * gAlt (n + 6) from rfl]
+    exact Nat.mul_le_mul_left 3 (ih (by omega))
+
 /-- OEIS A135909: the clique number of the commuting graph of `A_n` on the
 nonidentity elements.  Unlike `a135908`, this matches every listed term of
 the entry, including the `n ≤ 2` boundary. -/
@@ -687,27 +775,380 @@ theorem maxAbelianOrder_alternating_le (n : ℕ) :
   have h := maxAbelianOrder_subgroup_le (alternatingGroup (Fin n))
   rwa [maxAbelianOrder_perm_fin] at h
 
-/-- The open alternating-group structure statement: the largest abelian
-subgroup order of `A_n` is `gAlt n`.  Known for `n = 3` in this file
-(`altStructure_three` below) and exhaustively verified for `n ≤ 8` by
-computer search.  No published determination of the general `A_n` case was
-found (the Bercov–Moser paper cited for `S_n` does not treat alternating
-groups); its Lean proof is left open. -/
-def AltStructure : Prop :=
-  ∀ n : ℕ, maxAbelianOrder ↥(alternatingGroup (Fin n)) = gAlt n
+/-! ### The structure theorem for alternating groups -/
 
-/-- Partial satisfiability witness for `AltStructure`: the `n = 3` instance.
-`A_3 ≅ C_3` is cyclic of prime order 3, hence abelian, so its largest abelian
-subgroup is the whole group and `maxAbelianOrder A_3 = 3 = gAlt 3`. -/
-theorem altStructure_three : maxAbelianOrder ↥(alternatingGroup (Fin 3)) = gAlt 3 := by
+/-- Products of abelian subgroups on disjoint finite sets give an abelian
+subgroup of the alternating group on their union, with product order. -/
+theorem exists_alt_prod {m k r s : ℕ}
+    (H₁ : Subgroup (alternatingGroup (Fin m))) (h₁ : IsMulCommutative H₁)
+    (hc₁ : Nat.card H₁ = r)
+    (H₂ : Subgroup (alternatingGroup (Fin k))) (h₂ : IsMulCommutative H₂)
+    (hc₂ : Nat.card H₂ = s) :
+    ∃ H : Subgroup (alternatingGroup (Fin (m + k))),
+      IsMulCommutative H ∧ Nat.card H = r * s := by
+  let sumHom : alternatingGroup (Fin m) × alternatingGroup (Fin k) →*
+      alternatingGroup (Fin m ⊕ Fin k) :=
+    { toFun := fun g => ⟨Equiv.Perm.sumCongr g.1.1 g.2.1, by
+          rw [Equiv.Perm.mem_alternatingGroup, Equiv.Perm.sign_sumCongr,
+            Equiv.Perm.mem_alternatingGroup.mp g.1.2,
+            Equiv.Perm.mem_alternatingGroup.mp g.2.2, mul_one]⟩
+      map_one' := by
+        apply Subtype.ext
+        exact Equiv.Perm.sumCongr_one
+      map_mul' := fun g h => by
+        apply Subtype.ext
+        exact (Equiv.Perm.sumCongr_mul g.1.1 g.2.1 h.1.1 h.2.1).symm }
+  let finHom : alternatingGroup (Fin m ⊕ Fin k) →*
+      alternatingGroup (Fin (m + k)) :=
+    { toFun := fun g => ⟨finSumFinEquiv.permCongr g.1, by
+          rw [Equiv.Perm.mem_alternatingGroup, Equiv.Perm.sign_permCongr]
+          exact Equiv.Perm.mem_alternatingGroup.mp g.2⟩
+      map_one' := by
+        apply Subtype.ext
+        exact (finSumFinEquiv.permCongrHom).map_one
+      map_mul' := fun g h => by
+        apply Subtype.ext
+        exact (finSumFinEquiv.permCongrHom).map_mul g.1 h.1 }
+  let f := finHom.comp sumHom
+  have hsum : Function.Injective sumHom := by
+    intro x y hxy
+    have hu : Equiv.Perm.sumCongrHom (Fin m) (Fin k) (x.1.1, x.2.1) =
+        Equiv.Perm.sumCongrHom (Fin m) (Fin k) (y.1.1, y.2.1) :=
+      congrArg Subtype.val hxy
+    have hp := Equiv.Perm.sumCongrHom_injective hu
+    apply Prod.ext <;> apply Subtype.ext
+    · exact congrArg Prod.fst hp
+    · exact congrArg Prod.snd hp
+  have hfin : Function.Injective finHom := by
+    intro x y hxy
+    apply Subtype.ext
+    exact finSumFinEquiv.permCongr.injective (congrArg Subtype.val hxy)
+  have hf : Function.Injective f := hfin.comp hsum
+  haveI : IsMulCommutative (H₁.prod H₂) := isMulCommutative_prod _ _ h₁ h₂
+  refine ⟨(H₁.prod H₂).map f, inferInstance, ?_⟩
+  rw [← hc₁, ← hc₂]
+  calc
+    Nat.card ((H₁.prod H₂).map f) = Nat.card (H₁.prod H₂) :=
+      (Nat.card_congr (Subgroup.equivMapOfInjective _ f hf).toEquiv).symm
+    _ = Nat.card H₁ * Nat.card H₂ := by
+      rw [Nat.card_congr (Subgroup.prodEquiv H₁ H₂).toEquiv, Nat.card_prod]
+
+/-- The alternating group on three points contains an abelian subgroup of
+order three. -/
+theorem exists_alt_three :
+    ∃ H : Subgroup (alternatingGroup (Fin 3)),
+      IsMulCommutative H ∧ Nat.card H = 3 := by
   have hcard : Nat.card ↥(alternatingGroup (Fin 3)) = 3 := by
-    rw [Nat.card_eq_fintype_card]; decide
+    rw [Nat.card_eq_fintype_card]
+    decide
   haveI : Fact (Nat.Prime 3) := ⟨by norm_num⟩
   haveI : IsCyclic ↥(alternatingGroup (Fin 3)) := isCyclic_of_prime_card hcard
   haveI : IsMulCommutative ↥(alternatingGroup (Fin 3)) :=
     ⟨⟨(IsCyclic.commGroup (α := ↥(alternatingGroup (Fin 3)))).mul_comm⟩⟩
-  rw [maxAbelianOrder_eq_card inferInstance, hcard]
-  rfl
+  refine ⟨⊤, inferInstance, ?_⟩
+  rw [Subgroup.card_top, hcard]
+
+/-- The Klein four subgroup witnesses an abelian subgroup of order four in
+`A₄`. -/
+theorem exists_alt_four :
+    ∃ H : Subgroup (alternatingGroup (Fin 4)),
+      IsMulCommutative H ∧ Nat.card H = 4 := by
+  let H := alternatingGroup.kleinFour (Fin 4)
+  haveI : IsKleinFour H := alternatingGroup.kleinFour_isKleinFour (by simp)
+  refine ⟨H, IsKleinFour.isMulCommutative, ?_⟩
+  exact alternatingGroup.kleinFour_card_of_card_eq_four (by simp)
+
+/-- A five-cycle witnesses an abelian subgroup of order five in `A₅`. -/
+theorem exists_alt_five :
+    ∃ H : Subgroup (alternatingGroup (Fin 5)),
+      IsMulCommutative H ∧ Nat.card H = 5 := by
+  let c : alternatingGroup (Fin 5) :=
+    ⟨finRotate 5, by
+      exact Equiv.Perm.finRotate_bit1_mem_alternatingGroup (n := 2)⟩
+  refine ⟨Subgroup.zpowers c, inferInstance, ?_⟩
+  rw [Nat.card_zpowers]
+  have hord := orderOf_injective (alternatingGroup (Fin 5)).subtype
+    (alternatingGroup (Fin 5)).subtype_injective c
+  rw [← hord]
+  change orderOf (finRotate 5) = 5
+  rw [(isCycle_finRotate (n := 3)).orderOf,
+    support_finRotate (n := 3), Finset.card_univ, Fintype.card_fin]
+
+/-- Every value of `gAlt` is attained by an abelian subgroup of the
+corresponding alternating group. -/
+theorem exists_isMulCommutative_card_gAlt (n : ℕ) :
+    ∃ H : Subgroup (alternatingGroup (Fin n)),
+      IsMulCommutative H ∧ Nat.card H = gAlt n := by
+  induction n using gAlt.induct with
+  | case1 => exact ⟨⊥, by infer_instance, Subgroup.card_bot⟩
+  | case2 => exact ⟨⊥, by infer_instance, Subgroup.card_bot⟩
+  | case3 => exact ⟨⊥, by infer_instance, Subgroup.card_bot⟩
+  | case4 => simpa [gAlt] using exists_alt_three
+  | case5 => simpa [gAlt] using exists_alt_four
+  | case6 => simpa [gAlt] using exists_alt_five
+  | case7 =>
+    obtain ⟨H₁, h₁, hc₁⟩ := exists_alt_three
+    obtain ⟨H₂, h₂, hc₂⟩ := exists_alt_three
+    simpa [gAlt] using exists_alt_prod H₁ h₁ hc₁ H₂ h₂ hc₂
+  | case8 =>
+    obtain ⟨H₁, h₁, hc₁⟩ := exists_alt_four
+    obtain ⟨H₂, h₂, hc₂⟩ := exists_alt_three
+    simpa [gAlt] using exists_alt_prod H₁ h₁ hc₁ H₂ h₂ hc₂
+  | case9 =>
+    obtain ⟨H₁, h₁, hc₁⟩ := exists_alt_four
+    obtain ⟨H₂, h₂, hc₂⟩ := exists_alt_four
+    simpa [gAlt] using exists_alt_prod H₁ h₁ hc₁ H₂ h₂ hc₂
+  | case10 n ih =>
+    obtain ⟨H₁, h₁, hc₁⟩ := ih
+    obtain ⟨H₂, h₂, hc₂⟩ := exists_alt_three
+    simpa [gAlt, Nat.mul_comm] using exists_alt_prod H₁ h₁ hc₁ H₂ h₂ hc₂
+
+/-- Induction-keyed upper bound for abelian subgroups of alternating groups.
+For an orbit of size other than two, its point stabilizer embeds in the
+alternating group on the complement.  For a two-point orbit, the whole group
+embeds in the symmetric group on the complement: parity makes the restriction
+injective, since the only even permutation supported on two points is the
+identity. -/
+theorem card_le_gAlt_aux :
+    ∀ (n : ℕ) (α : Type*) [Fintype α] [DecidableEq α], Nat.card α = n →
+      ∀ H : Subgroup (alternatingGroup α),
+        IsMulCommutative H → Nat.card H ≤ gAlt n := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n IH =>
+    intro α _ _ hcard H hH
+    classical
+    haveI := hH
+    rcases isEmpty_or_nonempty α with hemp | hne
+    · haveI : Subsingleton (Perm α) := ⟨fun f g => Equiv.ext fun x => (IsEmpty.false x).elim⟩
+      haveI : Subsingleton H := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
+      have h1 : Nat.card H = 1 := Nat.card_unique
+      rw [h1]
+      have hn0 : n = 0 := by
+        rw [← hcard, Nat.card_eq_zero]
+        exact Or.inl hemp
+      rw [hn0]
+      decide
+    · obtain ⟨a⟩ := hne
+      set O : Set α := MulAction.orbit H a with hOdef
+      set K : Subgroup H := MulAction.stabilizer H a with hKdef
+      have hak : a ∈ O := by
+        rw [hOdef]
+        exact MulAction.mem_orbit_self a
+      haveI : Nonempty O := ⟨⟨a, hak⟩⟩
+      set k : ℕ := Nat.card O with hkdef
+      have hk1 : 1 ≤ k := Nat.card_pos
+      have hkn : k ≤ n := by
+        rw [← hcard, hkdef]
+        exact Nat.card_le_card_of_injective _ Subtype.val_injective
+      have hsplit : Nat.card H = k * Nat.card K := by
+        rw [Subgroup.card_eq_card_quotient_mul_card_subgroup K, hkdef]
+        congr 1
+        exact (Nat.card_congr (MulAction.orbitEquivQuotientStabilizer H a)).symm
+      have hfix : ∀ g : H, g ∈ K → ∀ x ∈ O, g • x = x := by
+        intro g hg x hx
+        obtain ⟨h, rfl⟩ := hx
+        have hga : g • a = a := MulAction.mem_stabilizer_iff.mp hg
+        calc g • h • a = (g * h) • a := (mul_smul g h a).symm
+          _ = (h * g) • a := by rw [mul_comm' g h]
+          _ = h • g • a := mul_smul h g a
+          _ = h • a := by rw [hga]
+      have horbit : ∀ g : H, ∀ x ∈ O, g • x ∈ O := by
+        intro g x hx
+        obtain ⟨h, rfl⟩ := hx
+        exact ⟨g * h, mul_smul g h a⟩
+      have hpresO : ∀ g : H, ∀ x : α,
+          (((g : H) : alternatingGroup α) : Perm α) x ∈ O ↔ x ∈ O := by
+        intro g x
+        constructor
+        · intro hgx
+          have hi : g⁻¹ • g • x ∈ O := horbit g⁻¹ (g • x) hgx
+          rwa [inv_smul_smul] at hi
+        · intro hx
+          have hgx := horbit g x hx
+          simpa only [Subgroup.smul_def, Equiv.Perm.smul_def] using hgx
+      have hpresC : ∀ g : H, ∀ x : α,
+          (((g : H) : alternatingGroup α) : Perm α) x ∉ O ↔ x ∉ O := by
+        intro g x
+        exact not_congr (hpresO g x)
+      have hOcompl : Nat.card {x : α // x ∉ O} = n - k := by
+        have h1 : O.ncard + Oᶜ.ncard = Nat.card α :=
+          Set.ncard_add_ncard_compl O (Set.toFinite O)
+        have h2 : Nat.card {x : α // x ∉ O} = Oᶜ.ncard := Nat.card_coe_set_eq _
+        have h3 : k = O.ncard := by rw [hkdef, Nat.card_coe_set_eq]
+        omega
+      by_cases hk2 : k = 2
+      · set χ : H →* Perm {x : α // x ∉ O} :=
+          { toFun := fun g => Equiv.Perm.subtypePerm
+              (((g : H) : alternatingGroup α) : Perm α) (hpresC g)
+            map_one' := rfl
+            map_mul' := fun _ _ => rfl } with hχdef
+        have hχinj : Function.Injective χ := by
+          intro g h hgh
+          let q : H := g * h⁻¹
+          have hχq : χ q = 1 := by
+            dsimp [q]
+            rw [map_mul, map_inv, hgh, mul_inv_cancel]
+          have hqfixC : ∀ x : α, x ∉ O →
+              (((q : H) : alternatingGroup α) : Perm α) x = x := by
+            intro x hx
+            have hv := congrArg
+              (fun σ : Perm {x : α // x ∉ O} => (σ ⟨x, hx⟩ : {x : α // x ∉ O}).val) hχq
+            exact hv
+          have hcardO : Nat.card O = 2 := by rw [← hkdef, hk2]
+          haveI : Nontrivial O := by
+            rw [← Fintype.one_lt_card_iff_nontrivial, ← Nat.card_eq_fintype_card, hcardO]
+            decide
+          have hcardAO : Fintype.card (alternatingGroup O) = 1 := by
+            rw [← Nat.card_eq_fintype_card, nat_card_alternatingGroup, hcardO]
+            decide
+          haveI : Subsingleton (alternatingGroup O) :=
+            Fintype.card_le_one_iff_subsingleton.mp hcardAO.le
+          have hqpresO : ∀ x : α,
+              (((q : H) : alternatingGroup α) : Perm α) x ∈ O ↔ x ∈ O := hpresO q
+          let qO : Perm O := Equiv.Perm.subtypePerm
+            (((q : H) : alternatingGroup α) : Perm α) hqpresO
+          have hsignqO : Equiv.Perm.sign qO = 1 := by
+            have hs := Equiv.Perm.sign_subtypePerm
+              (((q : H) : alternatingGroup α) : Perm α) hqpresO (fun x hmove => by
+                by_contra hx
+                exact hmove (hqfixC x hx))
+            rw [hs]
+            exact Equiv.Perm.mem_alternatingGroup.mp ((q : H) : alternatingGroup α).2
+          let qA : alternatingGroup O :=
+            ⟨qO, Equiv.Perm.mem_alternatingGroup.mpr hsignqO⟩
+          have hqA : qA = 1 := Subsingleton.elim _ _
+          have hqfixO : ∀ x : α, x ∈ O →
+              (((q : H) : alternatingGroup α) : Perm α) x = x := by
+            intro x hx
+            have hv := congrArg (fun σ : alternatingGroup O => ((σ : Perm O) ⟨x, hx⟩).val) hqA
+            exact hv
+          have hqone : q = 1 := by
+            apply Subtype.ext
+            apply Subtype.ext
+            apply Equiv.ext
+            intro x
+            by_cases hx : x ∈ O
+            · exact hqfixO x hx
+            · exact hqfixC x hx
+          exact mul_inv_eq_one.mp hqone
+        set Q : Subgroup (Perm {x : α // x ∉ O}) := χ.range with hQdef
+        have hQcomm : IsMulCommutative Q := isMulCommutative_range χ inferInstance
+        have hcardHQ : Nat.card H = Nat.card Q :=
+          Nat.card_congr (MonoidHom.ofInjective hχinj).toEquiv
+        have hQbound : Nat.card Q ≤ a000792 (n - 2) := by
+          have h := card_le_a000792_of_isMulCommutative Q hQcomm
+          rwa [hOcompl, hk2] at h
+        rw [hcardHQ]
+        exact hQbound.trans (a000792_sub_two_le_gAlt (by omega))
+      · have hnotmem : ∀ g : H, g ∈ K → ∀ x : α, x ∉ O → g • x ∉ O := by
+          intro g hg x hx hmem
+          have h1 : g⁻¹ • g • x = g • x := hfix g⁻¹ (inv_mem hg) (g • x) hmem
+          rw [inv_smul_smul] at h1
+          exact hx (h1 ▸ hmem)
+        have hprop : ∀ g : K, ∀ x : α,
+            ((((g : K) : H) : alternatingGroup α) : Perm α) x ∉ O ↔ x ∉ O := by
+          intro g x
+          constructor
+          · intro hgx hxO
+            have h1 : ((g : H) • x) = x := hfix g g.2 x hxO
+            simp only [Subgroup.smul_def, Equiv.Perm.smul_def] at h1
+            exact hgx (by rw [h1]; exact hxO)
+          · intro hx
+            have h1 := hnotmem g g.2 x hx
+            simpa only [Subgroup.smul_def, Equiv.Perm.smul_def] using h1
+        set ψ : K →* alternatingGroup {x : α // x ∉ O} :=
+          { toFun := fun g => ⟨Equiv.Perm.subtypePerm
+                ((((g : K) : H) : alternatingGroup α) : Perm α) (hprop g), by
+              rw [Equiv.Perm.mem_alternatingGroup]
+              have hs := Equiv.Perm.sign_subtypePerm (p := fun x => x ∉ O)
+                ((((g : K) : H) : alternatingGroup α) : Perm α) (hprop g) (fun x hmove => by
+                  intro hxO
+                  have h1 : ((g : H) • x) = x := hfix g g.2 x hxO
+                  simp only [Subgroup.smul_def, Equiv.Perm.smul_def] at h1
+                  exact hmove h1)
+              exact hs.trans
+                (Equiv.Perm.mem_alternatingGroup.mp (((g : K) : H) : alternatingGroup α).2)⟩
+            map_one' := by apply Subtype.ext; rfl
+            map_mul' := fun _ _ => by apply Subtype.ext; rfl } with hψdef
+        have hψinj : Function.Injective ψ := by
+          intro g h hgh
+          have hghP : Equiv.Perm.subtypePerm
+                ((((g : K) : H) : alternatingGroup α) : Perm α) (hprop g) =
+              Equiv.Perm.subtypePerm
+                ((((h : K) : H) : alternatingGroup α) : Perm α) (hprop h) :=
+            congrArg Subtype.val hgh
+          have happ : ∀ x : α,
+              ((((g : K) : H) : alternatingGroup α) : Perm α) x =
+                ((((h : K) : H) : alternatingGroup α) : Perm α) x := by
+            intro x
+            by_cases hx : x ∈ O
+            · have h1 : ((g : H) • x) = x := hfix g g.2 x hx
+              have h2 : ((h : H) • x) = x := hfix h h.2 x hx
+              simp only [Subgroup.smul_def, Equiv.Perm.smul_def] at h1 h2
+              rw [h1, h2]
+            · have hv := congrArg
+                (fun σ : Perm {x : α // x ∉ O} => (σ ⟨x, hx⟩ : {x : α // x ∉ O}).val) hghP
+              exact hv
+          apply Subtype.ext
+          apply Subtype.ext
+          apply Subtype.ext
+          exact Equiv.ext happ
+        have hrange : IsMulCommutative ψ.range := isMulCommutative_range ψ inferInstance
+        have hcardK : Nat.card K = Nat.card ψ.range :=
+          Nat.card_congr (MonoidHom.ofInjective hψinj).toEquiv
+        have hIHapp : Nat.card ψ.range ≤ gAlt (n - k) := by
+          have hlt : n - k < n := by omega
+          exact IH (n - k) hlt {x : α // x ∉ O} hOcompl ψ.range hrange
+        calc
+          Nat.card H = k * Nat.card K := hsplit
+          _ = k * Nat.card ψ.range := by rw [hcardK]
+          _ ≤ k * gAlt (n - k) := Nat.mul_le_mul_left k hIHapp
+          _ ≤ gAlt (n - k + k) := mul_gAlt_le k (n - k) (by omega) hk2
+          _ = gAlt n := by rw [show n - k + k = n from by omega]
+
+/-- An abelian subgroup of the alternating group on a finite type has order at
+most the corresponding value of `gAlt`. -/
+theorem card_le_gAlt_of_isMulCommutative {α : Type*} [Fintype α] [DecidableEq α]
+    (H : Subgroup (alternatingGroup α)) (hH : IsMulCommutative H) :
+    Nat.card H ≤ gAlt (Nat.card α) :=
+  card_le_gAlt_aux (Nat.card α) α rfl H hH
+
+/-- **Alternating-group structure theorem.** The largest order of an abelian
+subgroup of `A_n` is `gAlt n`. -/
+theorem maxAbelianOrder_alternating_fin (n : ℕ) :
+    maxAbelianOrder ↥(alternatingGroup (Fin n)) = gAlt n := by
+  refine le_antisymm (maxAbelianOrder_le fun H hH => ?_) ?_
+  · simpa using card_le_gAlt_of_isMulCommutative H hH
+  · obtain ⟨H, hH, hcard⟩ := exists_isMulCommutative_card_gAlt n
+    have hle := le_maxAbelianOrder H hH
+    rwa [hcard] at hle
+
+/-- Exact formula for A135909: adjoining the identity to a largest commuting
+clique gives an abelian subgroup of order `gAlt n`. -/
+theorem a135909_add_one_eq_gAlt (n : ℕ) : a135909 n + 1 = gAlt n := by
+  rw [a135909_add_one, maxAbelianOrder_alternating_fin]
+
+/-- The largest abelian subgroup orders of alternating groups triple when
+three points are added, throughout the natural tail range. -/
+theorem maxAbelianOrder_alternating_add_three {n : ℕ} (hn : 6 ≤ n) :
+    maxAbelianOrder ↥(alternatingGroup (Fin (n + 3))) =
+      3 * maxAbelianOrder ↥(alternatingGroup (Fin n)) := by
+  rw [maxAbelianOrder_alternating_fin, maxAbelianOrder_alternating_fin,
+    gAlt_add_three hn]
+
+/-- Compatibility formulation of the alternating-group structure theorem:
+the largest abelian subgroup order of `A_n` is `gAlt n` for every `n`. -/
+def AltStructure : Prop :=
+  ∀ n : ℕ, maxAbelianOrder ↥(alternatingGroup (Fin n)) = gAlt n
+
+/-- The alternating-group structure statement holds unconditionally. -/
+theorem altStructure : AltStructure :=
+  maxAbelianOrder_alternating_fin
+
+/-- The `n = 3` instance of the alternating-group structure theorem. -/
+theorem altStructure_three : maxAbelianOrder ↥(alternatingGroup (Fin 3)) = gAlt 3 :=
+  maxAbelianOrder_alternating_fin 3
 
 /-- Ground truth for `a135909`: the clique number of the commuting graph of
 `A_3` on nonidentity elements is 2 (the two 3-cycles commute). -/
@@ -716,16 +1157,14 @@ example : a135909 3 = 2 := by
   rw [altStructure_three, show gAlt 3 = 3 from rfl] at h
   omega
 
-/-- **Barker's recurrence for A135909**, conditional on the alternating
-structure statement, in the range `9 < n` — the largest range in which it is
-true at all (see `a135909_claimed_range_false`). -/
-theorem a135909_recurrence (h : AltStructure) {n : ℕ} (hn : 9 < n) :
+/-- **Barker's recurrence for A135909**, proved in the range `9 < n` — the
+largest tail range in which it is true (see `a135909_claimed_range_false`). -/
+theorem a135909_recurrence {n : ℕ} (hn : 9 < n) :
     (a135909 n : ℤ) =
       a135909 (n - 1) + 3 * a135909 (n - 3) - 3 * a135909 (n - 4) := by
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 10 := ⟨n - 10, by omega⟩
   have e : ∀ k : ℕ, (a135909 k : ℤ) = (gAlt k : ℤ) - 1 := fun k => by
-    have hk := a135909_add_one k
-    rw [h k] at hk
+    have hk := a135909_add_one_eq_gAlt k
     push_cast [← hk]
     ring
   have h1 : m + 10 - 1 = m + 9 := by omega
@@ -742,18 +1181,16 @@ theorem a135909_recurrence (h : AltStructure) {n : ℕ} (hn : 9 < n) :
   ring
 
 /-- **Refutation of the claimed range.** The OEIS entry claims the recurrence
-for all `n > 6`; conditional on the alternating structure statement this is
-false — it already fails at `n = 8`, where the recurrence predicts 14 but
-`a135909 8 = 15`. -/
-theorem a135909_claimed_range_false (h : AltStructure) :
+for all `n > 6`, but it already fails at `n = 8`, where the recurrence predicts
+14 while `a135909 8 = 15`. -/
+theorem a135909_claimed_range_false :
     ¬ ∀ n : ℕ, 6 < n →
       (a135909 n : ℤ) =
         a135909 (n - 1) + 3 * a135909 (n - 3) - 3 * a135909 (n - 4) := by
   intro hall
   have h8 := hall 8 (by omega)
   have e : ∀ k : ℕ, (a135909 k : ℤ) = (gAlt k : ℤ) - 1 := fun k => by
-    have hk := a135909_add_one k
-    rw [h k] at hk
+    have hk := a135909_add_one_eq_gAlt k
     push_cast [← hk]
     ring
   rw [show (8 : ℕ) - 1 = 7 from rfl, show (8 : ℕ) - 3 = 5 from rfl,

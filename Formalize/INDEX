@@ -25,8 +25,9 @@ METHODOLOGY:
   The two are independent axes.
 
 
-FORMALIZED (campaign of 2026-08-19/20; all six files landed in
-  f061efe under Proofs/Scratch; every file passed a full vacuity +
+FORMALIZED (campaign of 2026-08-19/20; all six base files landed in
+  f061efe under Proofs/Scratch, with the A135909 proof subsequently
+  strengthened as noted below; every base file passed a full vacuity +
   foundations + style reviewer trio with all blocking fixes applied
   and rebuilt green; axioms within {propext, Classical.choice,
   Quot.sound} (+ disclosed sorryAx on the one archived converse);
@@ -42,17 +43,20 @@ FORMALIZED (campaign of 2026-08-19/20; all six files landed in
                              Burnside; OEIS comment merely stale;
                              card status/attribution corrected
   A135908 + A135909 (Barker)  Scratch/CommutingCliqueRecurrence.lean
-                             S_n recurrence proved unconditionally
-                             (found-no-prior-written-proof tier,
-                             not a priority claim); A_n
-                             conditional on AltStructure; OEIS
-                             A135909 range n > 6 REFUTED from
-                             OEIS terms (fails unconditionally at
-                             8 and 9); OEIS g.f. predicts n > 9;
-                             Lean theorem for actual A_n values is
-                             conditional on AltStructure —
-                             correction report #36
-                             (not yet an accepted OEIS change)
+                             both exact max-abelian-order formulas
+                             and corrected recurrences proved
+                             unconditionally; S_n via Bercov–Moser,
+                             A_n via explicit lower constructions
+                             and orbit induction (Vdovin 1999 is
+                             the prior literature for the A_n
+                             extremal problem); found-no-record for
+                             Barker recurrence proof only, not a
+                             priority claim. OEIS A135909 range
+                             n > 6 REFUTED from its own terms
+                             (fails unconditionally at 8 and 9);
+                             its g.f. and Lean theorem give n > 9 —
+                             correction report #36 (not yet an
+                             accepted OEIS change)
   A093678-81 (A093682 rows)   Scratch/No3APClosedForms.lean
                              rows 3-6 closed forms proved;
                              formalization tier (Odlyzko-Stanley
