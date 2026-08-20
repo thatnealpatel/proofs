@@ -1,8 +1,33 @@
 seq:     A085805
 claim:   dihedral-permanent-16m4
-status:  open
+status:  VANISHING DIRECTION PROVED 2026-08-20
+         (sorry-free, Proofs/Scratch/
+         DihedralPermanent.lean, uncommitted; full
+         reviewer trio passed): permanent = 0 for
+         every dihedral order not ≡ 4 (mod 16), for
+         the explicit textbook table family (bridge to
+         Mathlib's DihedralGroup char table NOT
+         formalized — disclosed; family certified
+         externally = true tables, orders 4-40).
+         Orders 4, 20 certified (8, -576; order 20 by
+         exact ℤ√5 kernel decide).  Nonvanishing
+         (M ≡ 1 mod 4) archived as a named Prop; order
+         36 needs ℚ(cos π/9) arithmetic, out of kernel
+         reach.  CONVENTIONS PINNED: OEIS D_k = order
+         k (data-pinned; entry never defines it;
+         cross-ref A017089 = 8n+2 is the index
+         sequence); the "Probably" comment is Yuval
+         Dekel's (Jul 24 2003, submitter); permanent
+         values are published as A086641 (7 terms,
+         a(6)-a(7) Irvine Jul 2026).  Adjacent art:
+         Schmidt–Simion 1984 (S_n vanishing criterion,
+         via A086644).
 stmt:    M
-proof:   unknown (bounded structure)
+proof:   route: two permanent involutions (column
+         scaling by the alternating linear character;
+         column permutation j ↦ M-j), reduction
+         perm = 2(P_B − P_A); verified exactly in Sage
+         to M = 10 before dispatch
 module:  Proofs/GroupTPP/CharDegrees.lean (dihedral
          degrees), DihedralTPP
 source:  OEIS A085805 comment (unattributed

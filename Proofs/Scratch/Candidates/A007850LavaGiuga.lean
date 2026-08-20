@@ -58,8 +58,10 @@ parenthetical says the same thing ("all *known* Giuga numbers satisfy
 
 ## Status
 
-Open (the `a = 1` direction).  Verified for composites with at most 8 prime
-factors per Schneider's comment.
+Open (the `a = 1` direction).  Holds for every KNOWN Giuga number: Schneider's
+comment reports the Giuga list complete through 8 prime factors (a completeness
+claim about the list, not a verification over composites), and Grau–Oller-Marcén
+(arXiv:1103.2298) confirm the thirteen known Giuga numbers satisfy `n' = n + 1`.
 -/
 import Mathlib
 
@@ -125,8 +127,10 @@ follow-up card can discharge the provable one without touching the other.
 `a = Σ_{p ∣ n} 1/p − 1/n` (Sondow's comment, restated).  So `a = 1` iff
 `Σ_{p ∣ n} 1/p = 1 + 1/n`.  With `k` prime factors, `Σ 1/p < 1 + 1/n` requires
 the primes to be small, and `Σ 1/p > 1 + 1/n` requires them to be large; the
-known Giuga numbers all sit exactly on the boundary.  Borwein–Girgensohn's
-analysis (via Schneider's comment) shows `a = 1` for `k ≤ 8` by exhaustion.
+known Giuga numbers all sit exactly on the boundary.  Schneider's exhaustive
+search (Borwein–Girgensohn's method) shows the Giuga LIST is complete for
+`k ≤ 8`; checking `n' = n + 1` on that finite list (Grau–Oller-Marcén) then
+gives `a = 1` for `k ≤ 8`.
 A proof for all `k` would need an upper bound on `Σ_{p ∣ n} 1/p` for Giuga `n`,
 which is precisely the hard part of the Giuga-conjecture circle.
 Concretely: `a ≥ 2` would need `Σ 1/p ≥ 2 + 1/n`, forcing `n` to have at least

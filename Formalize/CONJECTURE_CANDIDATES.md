@@ -113,7 +113,7 @@ uncertain, it is flagged inline.
 #### A007850 — Lava: Giuga numbers solve n' = n + 1
 - **Conjecture**: "Conjecture: Giuga numbers are the solution of the differential equation n' = n + 1, where n' is the arithmetic derivative of n." (Paolo P. Lava, Nov 16 2009)
 - **Attribution**: Paolo P. Lava, 2009.
-- **Status**: open (verified for composites with <= 8 prime factors, per entry).
+- **Status**: open (holds for every known Giuga number; Schneider's A007850 comment reports the Giuga list complete through 8 prime factors — a completeness claim about the list, not a verification over composites). LANDED 2026-08-20 as `Proofs/Scratch/GiugaDerivative.lean` (uncommitted, reviewer trio passed): forward direction formalized — NOT new math, it is Grau–Oller-Marcén's a = 1 case (arXiv:1103.2298, JIS 12.4.1); converse archived as the one intended sorry; reusable arithmetic-derivative layer built.
 - **Repo adjacency**: none direct; needs an arithmetic-derivative def (A003415), a genuinely reusable piece of infrastructure for future cards.
 - **Lean feasibility**: medium. Both predicates decidable; one direction (n' = n+1 implies Giuga) is provable from the definition via squarefreeness and the p | n/p - 1 condition — worth attempting, not just archiving. The other direction (Giuga implies n' = n+1, i.e. the multiplier a in Grau Ribas's n' = a·n + 1 is always 1) is the open content.
 - **Sanity layer**: verify 30, 858, 1722 satisfy both predicates by `native_decide`.
@@ -211,7 +211,7 @@ uncertain, it is flagged inline.
 #### A172161 — greedy Coppersmith–Winograd sequence growth
 - **Conjecture**: "Conjecture: a(n) ~ k*(3 / 2)^n for some k. - Bill McEachen, Dec 02 2022"
 - **Attribution**: Bill McEachen, 2022.
-- **Status**: open on OEIS, but likely tractable: Greathouse proved the recurrence a(n) = floor(S(n-1)/2) + 1, and the asymptotic should follow by standard recurrence analysis. This is a candidate for *proving in full*, not archiving — but verify the derivation actually closes before promising it.
+- **Status**: PROVED IN FULL 2026-08-20 (`Proofs/Scratch/GreedyCWAsymptotic.lean`, uncommitted, reviewer trio passed): both the recurrence AND the asymptotic, from the greedy definition. CORRECTION: Greathouse did NOT prove the recurrence — his `%F` line is a bare formula with no proof or reference; the greedy⟹recurrence induction (four-bad-pair double-representation invariant) was the real content and is found-no-record tier. The asymptotic given the recurrence is Odlyzko–Wilf-class, no novelty.
 - **Lean feasibility**: recurrence layer easy; the ratio-limit argument needs real analysis over a floor recurrence, medium-heavy in practice.
 - **Sanity layer**: verify the recurrence for the first 40 listed terms.
 

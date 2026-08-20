@@ -1,7 +1,25 @@
 seq:     A092482, A093682
 claim:   no3ap-closed-forms
-status:  open (rows >= 3 of A093682); rows 0-2 proved
-         in literature (Sze, per entry)
+status:  rows 3-6 LANDED 2026-08-20 (sorry-free,
+         Proofs/Scratch/No3APClosedForms.lean,
+         uncommitted; full reviewer trio passed).
+         EPISTEMIC CORRECTIONS: row 0 = Szekeres's
+         A003278 (not Sze); rows 1-5 carry OEIS
+         "proved by Lawrence Sze" credits (2004, via
+         Stephan, no located write-up) — the "rows ≥ 3
+         unproved" premise was wrong; the underlying
+         structure theorem is Odlyzko–Stanley 1978
+         (memo, proofs omitted; printed Thm 2
+         defective) with published proof in Rolnick,
+         EJC 59 (2017).  Tier: formalization, plus a
+         machine-forced OEIS data correction —
+         A093680's printed residual 19 must be 18
+         (fails at n ≡ 8 mod 16), issue
+         thatnealpatel/proofs#37 — and, as far as
+         searched, the first written-out derivation of
+         the exact A093681 periodic formula.  The
+         A092482 closed form itself was NOT attempted
+         by the campaign file (rows only).
 stmt:    M
 proof:   M-L
 module:  none

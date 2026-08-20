@@ -1,15 +1,28 @@
 seq:     A061256
-claim:   adams-watters-commuting-pairs
-status:  open; provable with effort — resolves an
-         open OEIS annotation
+claim:   commuting-pairs-euler-transform
+status:  PROVED IN FULL 2026-08-20 (sorry-free,
+         Proofs/Scratch/CommutingPairsEuler.lean,
+         uncommitted; full reviewer trio passed).
+         STATUS CORRECTION: the annotation was NEVER
+         open — it is the genus-1 case of
+         Liskovets–Mednykh 2009 (stated as A061256 on
+         p. 49/53 of Mednykh's slides, linked from the
+         entry) and a one-step Burnside corollary of
+         Britnell.  Only the OEIS comment is stale.
+         Contribution = independent machine-checked
+         proof; KNOWN tier, no first-proof claim.
 stmt:    M
 proof:   M-L
-module:  Proofs/GroupTPP/HigherCommProb.lean,
-         GroupAlgebraCenter.lean
-source:  OEIS A061256 comment ("it appears", Franklin
-         T. Adams-Watters lineage; the commuting-
-         TRIPLES statement was proved by Britnell
-         2012 per entry)
+module:  Proofs/Scratch/CommutingPairsEuler.lean
+source:  OEIS A061256 comment ("it appears").
+         ATTRIBUTION CORRECTION 2026-08-20: the PAIRS
+         claim is a blog comment by "Allan" (Secret
+         Blogging Seminar link in entry), NOT
+         Adams-Watters; Adams-Watters conjectured the
+         TRIPLES statement, proved by Britnell 2012.
+         NB `oeis show` drops %H links — the White and
+         Mednykh links that settle the status are
+         invisible to it; pin from oeis.org.
 
 CLAIM
   A061256 = Euler transform of sigma(n). Open part:

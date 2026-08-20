@@ -1,6 +1,21 @@
 seq:     A135908, A135909
 claim:   barker-commuting-clique-recurrences
-status:  open
+status:  LANDED 2026-08-20 (sorry-free,
+         Proofs/Scratch/CommutingCliqueRecurrence.lean,
+         uncommitted; full reviewer trio passed).
+         A135908 recurrence PROVED unconditionally
+         (bridge a135908 n + 1 = A000792 n,
+         Bercov–Moser).  A135909: recurrence proved
+         for n > 9 conditional on AltStructure (max
+         abelian order of A_n = gAlt; verified n ≤ 11
+         by computation, n ≤ 60 structurally; NO
+         published general A_n determination found —
+         Bercov–Moser is S_n only), and Barker's
+         claimed range n > 6 REFUTED (fails at n = 8,
+         9; contradicts his own g.f. in the same %F
+         clause) — issue thatnealpatel/proofs#36.
+         Vertex convention: three conventions in the
+         literature; file uses G∖{1} (data-pinned).
 stmt:    S
 proof:   L
 module:  Proofs/GroupTPP/CommProbBound.lean,

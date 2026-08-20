@@ -25,6 +25,57 @@ METHODOLOGY:
   The two are independent axes.
 
 
+FORMALIZED (campaign of 2026-08-19/20; ALL SIX FILES UNCOMMITTED
+  in Proofs/Scratch — commit gate is USER's; every file passed a
+  full vacuity + foundations + style reviewer trio with all
+  blocking fixes applied and rebuilt green; axioms within
+  {propext, Classical.choice, Quot.sound} (+ disclosed sorryAx on
+  the one archived converse); zero native_decide; repair ledger
+  at /tmp/proofs-campaign-ledger.md)
+
+  PROVED OUTRIGHT (sorry-free):
+  A061256 commuting pairs     Scratch/CommutingPairsEuler.lean
+                             annotation proved in full (orbit
+                             count = Euler transform of sigma);
+                             KNOWN tier — fact is Liskovets-
+                             Mednykh 2009 genus-1 + Britnell/
+                             Burnside; OEIS comment merely stale;
+                             card status/attribution corrected
+  A135908 + A135909 (Barker)  Scratch/CommutingCliqueRecurrence.lean
+                             S_n recurrence proved unconditionally
+                             (first recorded proof tier); A_n
+                             conditional on AltStructure; OEIS
+                             A135909 range n > 6 REFUTED (fails at
+                             8, 9; holds n > 9) — issue #36
+  A093678-81 (A093682 rows)   Scratch/No3APClosedForms.lean
+                             rows 3-6 closed forms proved;
+                             formalization tier (Odlyzko-Stanley
+                             1978 / Rolnick 2017); A093680 printed
+                             residual 19 CORRECTED to 18, machine-
+                             forced — issue #37
+  A172161 greedy CW           Scratch/GreedyCWAsymptotic.lean
+                             Greathouse recurrence + McEachen
+                             asymptotic BOTH PROVED from the greedy
+                             definition; found-no-record tier for
+                             the recurrence (OEIS + A120134 +
+                             References searched); asymptotic is
+                             Odlyzko-Wilf-class, no novelty claim
+  A085805 dihedral permanent  Scratch/DihedralPermanent.lean
+                             vanishing direction proved in full
+                             (explicit table family; orders not
+                             ≡ 4 mod 16); orders 4, 20 certified
+                             (8, -576 exact); nonvanishing archived
+                             as named Prop; values = A086641
+
+  PARTIALLY PROVED (open part = disclosed intended sorry):
+  A007850 Lava/Giuga          Scratch/GiugaDerivative.lean
+                             forward direction (n' = n+1 => Giuga)
+                             formalization of Grau-Oller-Marcen's
+                             a = 1 case (NOT new math; honest
+                             downgrade in header); converse = the
+                             open conjecture, ONE intended sorry;
+                             reusable arithmetic-derivative layer
+
 FORMALIZED (campaign of 2026-07-30; each item one commit,
   written by prover/postdoc lanes, reviewed by parallel
   vacuity-cop + style reviewer, fixes applied by the
@@ -368,8 +419,9 @@ BURNDOWN QUEUE
 
   HOLD (do not dispatch; reasons in file headers): A064097
   2.5·log upper bound; A267632 n = 2^j; A000001 non-coprime
-  submultiplicativity; A250109 (USER circuit-model decision);
-  A085805 (Sage computation first).
+  submultiplicativity; A250109 (USER circuit-model decision).
+  A085805 released from HOLD and landed 2026-08-20 (see
+  FORMALIZED).
 
 
 BACKLOG
@@ -377,14 +429,19 @@ BACKLOG
   The following are potentially provable.
 
 
-  A061256-adams-watters      M/M-L  Burnside + cycle index;
-                                    settles open OEIS note
+  A061256-adams-watters      → PROVED IN FULL 2026-08-20, see
+                                    FORMALIZED (annotation was
+                                    never open — card corrected)
 
-  A135908-A135909-barker-cliques  S/L  max abelian subgroup
-                                    of S_n theorem underneath
+  A135908-A135909-barker-cliques  → LANDED 2026-08-20, see
+                                    FORMALIZED (S_n proved; A135909
+                                    OEIS range refuted, issue #36)
 
-  A092482-A093682-no3ap-closed-forms  M/M-L  per-row finite-
-                                    state; rows 0-2 in lit.
+  A092482-A093682-no3ap-closed-forms  → rows 3-6 LANDED
+                                    2026-08-20, see FORMALIZED
+                                    (A093680 typo, issue #37;
+                                    A092482 closed form itself
+                                    NOT attempted)
 
   A000670-bala-mod-k         → PROVED IN FULL 2026-07-30
                                     (c37e31e), see FORMALIZED
@@ -392,8 +449,11 @@ BACKLOG
   A354741-boolean-rank-generic  → PROVED 2026-07-30, see
                                     FORMALIZED (3ec26ec)
 
-  A085805-dihedral-permanent M/?    compute first (Sage);
-                                  table def valuable per se
+  A085805-dihedral-permanent → vanishing direction PROVED
+                                  2026-08-20, see FORMALIZED
+                                  (compute-first done; nonvanishing
+                                  archived, order 36 out of kernel
+                                  reach)
 
 
 STATEMENTS
