@@ -67,9 +67,13 @@ OEIS entry itself still says "conjectured".
 
 So: **no new mathematics is claimed** — this is (as far as we can determine) the first
 *formalization*, and for A093681 the first *written-out* proof of the exact OEIS
-formula, resolving the entry's "conjectured" status; the structure theorem it rests on
-is known.  The A093682 master comment "None of these formulas have been proved" is
-outdated (Rolnick 2017), and the A093680 formula list has the typo documented above.
+formula, resolving the entry's "conjectured" status; both are found-no-record rather
+than priority claims.  The structure theorem it rests on is known.  The A093682 master
+comment "None of these formulas have been proved" is outdated (Rolnick 2017), and the
+A093680 formula list has the typo documented above.  The `19 → 18` correction is already
+forced by the entry's eighth listed term; Lean proves the corrected periodic formula for
+all indices but is not needed to detect that one-line inconsistency.  Repository issue
+#37 is a correction report, not evidence that OEIS has accepted or applied the change.
 
 ## Contents and conventions
 
@@ -634,8 +638,9 @@ theorem a93681_eq_binToTernary_add (n : ℕ) :
 
 /-- **The OEIS closed form of A093681** (pinned formula, division-free by doubling;
 the entry says "conjectured and checked up to n=1000" — as far as our search
-reached, this is the first written-out derivation of the exact periodic
-formula; the structure theorem it rests on is published, see header).  In OEIS
+reached, this is a found-no-record candidate for the first written-out
+derivation of the exact periodic formula, not a priority claim; the structure
+theorem it rests on is published, see header).  In OEIS
 1-indexing this is `2·a(n) = Sum_{k=1..n-1} (3^A007814(k) + 1) + 2·f(n)` with `f`
 16-periodic of values `fs93681`; here `a93681 n = a(n+1)`. -/
 theorem a93681_closedForm (n : ℕ) :

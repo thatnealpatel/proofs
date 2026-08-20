@@ -25,15 +25,15 @@ METHODOLOGY:
   The two are independent axes.
 
 
-FORMALIZED (campaign of 2026-08-19/20; ALL SIX FILES UNCOMMITTED
-  in Proofs/Scratch — commit gate is USER's; every file passed a
-  full vacuity + foundations + style reviewer trio with all
-  blocking fixes applied and rebuilt green; axioms within
-  {propext, Classical.choice, Quot.sound} (+ disclosed sorryAx on
-  the one archived converse); zero native_decide; repair ledger
-  at /tmp/proofs-campaign-ledger.md)
+FORMALIZED (campaign of 2026-08-19/20; all six files landed in
+  f061efe under Proofs/Scratch; every file passed a full vacuity +
+  foundations + style reviewer trio with all blocking fixes applied
+  and rebuilt green; axioms within {propext, Classical.choice,
+  Quot.sound} (+ disclosed sorryAx on the one archived converse);
+  zero native_decide; repair ledger at
+  /tmp/proofs-campaign-ledger.md)
 
-  PROVED OUTRIGHT (sorry-free):
+  PROVED RESULTS AND PROVED DIRECTIONS:
   A061256 commuting pairs     Scratch/CommutingPairsEuler.lean
                              annotation proved in full (orbit
                              count = Euler transform of sigma);
@@ -43,29 +43,40 @@ FORMALIZED (campaign of 2026-08-19/20; ALL SIX FILES UNCOMMITTED
                              card status/attribution corrected
   A135908 + A135909 (Barker)  Scratch/CommutingCliqueRecurrence.lean
                              S_n recurrence proved unconditionally
-                             (first recorded proof tier); A_n
+                             (found-no-prior-written-proof tier,
+                             not a priority claim); A_n
                              conditional on AltStructure; OEIS
-                             A135909 range n > 6 REFUTED (fails at
-                             8, 9; holds n > 9) — issue #36
+                             A135909 range n > 6 REFUTED from
+                             OEIS terms (fails unconditionally at
+                             8 and 9); OEIS g.f. predicts n > 9;
+                             Lean theorem for actual A_n values is
+                             conditional on AltStructure —
+                             correction report #36
+                             (not yet an accepted OEIS change)
   A093678-81 (A093682 rows)   Scratch/No3APClosedForms.lean
                              rows 3-6 closed forms proved;
                              formalization tier (Odlyzko-Stanley
                              1978 / Rolnick 2017); A093680 printed
-                             residual 19 CORRECTED to 18, machine-
-                             forced — issue #37
+                             residual 19 CORRECTED to 18, already
+                             forced by listed term 8 and proved for
+                             all indices — correction report #37
+                             (not yet an accepted OEIS change)
   A172161 greedy CW           Scratch/GreedyCWAsymptotic.lean
                              Greathouse recurrence + McEachen
                              asymptotic BOTH PROVED from the greedy
                              definition; found-no-record tier for
-                             the recurrence (OEIS + A120134 +
+                             the recurrence, not a priority or
+                             publication claim (OEIS + A120134 +
                              References searched); asymptotic is
                              Odlyzko-Wilf-class, no novelty claim
   A085805 dihedral permanent  Scratch/DihedralPermanent.lean
                              vanishing direction proved in full
-                             (explicit table family; orders not
-                             ≡ 4 mod 16); orders 4, 20 certified
-                             (8, -576 exact); nonvanishing archived
-                             as named Prop; values = A086641
+                             for explicit table family (bridge to
+                             Mathlib DihedralGroup character tables
+                             not formalized; not end-to-end);
+                             orders not ≡ 4 mod 16; orders 4, 20
+                             certified (8, -576 exact); nonvanishing
+                             archived as named Prop; values = A086641
 
   PARTIALLY PROVED (open part = disclosed intended sorry):
   A007850 Lava/Giuga          Scratch/GiugaDerivative.lean
@@ -74,7 +85,9 @@ FORMALIZED (campaign of 2026-08-19/20; ALL SIX FILES UNCOMMITTED
                              a = 1 case (NOT new math; honest
                              downgrade in header); converse = the
                              open conjecture, ONE intended sorry;
-                             reusable arithmetic-derivative layer
+                             whole file is not sorry-free; reusable
+                             arithmetic-derivative layer is
+                             sorry-free
 
 FORMALIZED (campaign of 2026-07-30; each item one commit,
   written by prover/postdoc lanes, reviewed by parallel

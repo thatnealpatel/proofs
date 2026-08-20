@@ -27,7 +27,10 @@
       `n/p ≡ ad n = n + 1 ≡ 1 (mod p)` — the Giuga condition.
 
   `ad_eq_succ_of_isGiuga` (archived, the ONE intended sorry): the converse is
-  the open content of the conjecture.
+  the open content of the conjecture.  Therefore this file as a whole is not
+  a completed sorry-free formalization: only the forward theorem and its
+  arithmetic-derivative support layer are complete, while `lava_conjecture`
+  inherits `sorryAx` through the archived converse.
 
   ## Novelty caveat (literature check, 2026-08-20)
 
@@ -36,8 +39,9 @@
   arXiv:1103.2298 (J. Integer Seq. 15 (2012), Article 12.4.1), prove
   "n is a Giuga number if and only if n' = a·n + 1 for some a ∈ ℕ" (their
   ℕ excludes 0 — read `a > 0`); the direction proved here is their `a = 1`
-  special case.  This file therefore contributes a first *formalization*,
-  not a first proof: Mathlib has no arithmetic derivative and no Giuga
+  special case.  This file therefore contributes a found-no-record candidate
+  for a first *formalization* of that direction, not a first proof and not a
+  priority claim: Mathlib has no arithmetic derivative and no Giuga
   numbers (`grep -ri` over `.lake/packages`, 2026-08-20), and
   google-deepmind/formal-conjectures states the Giuga-number condition
   (`isWeakGiuga_iff_prime_dvd`, sorry'd) with no arithmetic derivative —

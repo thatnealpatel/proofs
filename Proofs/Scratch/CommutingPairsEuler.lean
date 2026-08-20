@@ -28,8 +28,10 @@
   machine-checked proof importing neither.
 
   Novelty tier: KNOWN (published; the OEIS comment is merely stale).  The
-  ingredient map: orbits of commuting pairs under simultaneous conjugation
-  are isomorphism classes of ℤ²-actions on an n-point set, equivalently
+  contribution and notability are formalization engineering and reusable
+  infrastructure, not a new mathematical theorem.  The ingredient map:
+  orbits of commuting pairs under simultaneous conjugation are isomorphism
+  classes of ℤ²-actions on an n-point set, equivalently
   degree-n covers of the torus (standard covering theory); transitive
   ℤ²-sets of size d are index-d subgroups of ℤ², counted by σ(d) via Hermite
   normal form (Tad White, arXiv:1304.2830, Lemma 2 at r = 2 — local copy at

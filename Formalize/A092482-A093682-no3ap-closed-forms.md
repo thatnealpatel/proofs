@@ -2,7 +2,7 @@ seq:     A092482, A093682
 claim:   no3ap-closed-forms
 status:  rows 3-6 LANDED 2026-08-20 (sorry-free,
          Proofs/Scratch/No3APClosedForms.lean,
-         uncommitted; full reviewer trio passed).
+         landed in f061efe; full reviewer trio passed).
          EPISTEMIC CORRECTIONS: row 0 = Szekeres's
          A003278 (not Sze); rows 1-5 carry OEIS
          "proved by Lawrence Sze" credits (2004, via
@@ -12,11 +12,14 @@ status:  rows 3-6 LANDED 2026-08-20 (sorry-free,
          (memo, proofs omitted; printed Thm 2
          defective) with published proof in Rolnick,
          EJC 59 (2017).  Tier: formalization, plus a
-         machine-forced OEIS data correction —
+         formally proved correction already forced by
+         the entry's own eighth listed term —
          A093680's printed residual 19 must be 18
          (fails at n ≡ 8 mod 16), issue
-         thatnealpatel/proofs#37 — and, as far as
-         searched, the first written-out derivation of
+         thatnealpatel/proofs#37. The issue is a
+         correction report, not evidence that OEIS has
+         accepted or applied it. As far as searched,
+         this is also the first written-out derivation of
          the exact A093681 periodic formula.  The
          A092482 closed form itself was NOT attempted
          by the campaign file (rows only).

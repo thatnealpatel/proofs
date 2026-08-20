@@ -2,18 +2,27 @@ seq:     A135908, A135909
 claim:   barker-commuting-clique-recurrences
 status:  LANDED 2026-08-20 (sorry-free,
          Proofs/Scratch/CommutingCliqueRecurrence.lean,
-         uncommitted; full reviewer trio passed).
+         landed in f061efe; full reviewer trio passed).
          A135908 recurrence PROVED unconditionally
          (bridge a135908 n + 1 = A000792 n,
-         Bercov–Moser).  A135909: recurrence proved
+         Bercov–Moser); no prior written proof was found,
+         which is not a priority claim.  A135909:
          for n > 9 conditional on AltStructure (max
-         abelian order of A_n = gAlt; verified n ≤ 11
-         by computation, n ≤ 60 structurally; NO
-         published general A_n determination found —
-         Bercov–Moser is S_n only), and Barker's
-         claimed range n > 6 REFUTED (fails at n = 8,
-         9; contradicts his own g.f. in the same %F
-         clause) — issue thatnealpatel/proofs#36.
+         abelian order of A_n = gAlt; verified n ≤ 8
+         by exhaustive computation in the campaign; NO
+         published general A_n determination was found
+         in the searched sources — a found-no-record,
+         not priority, statement. Proving it would be a
+         prospective standalone result, not a result of
+         this file), and Barker's claimed range n > 6
+         REFUTED numerically and unconditionally from
+         the entry's own terms (fails at n = 8, 9;
+         contradicts his own g.f. in the same %F
+         clause). The corresponding Lean theorem about
+         actual A_n clique numbers is conditional on
+         AltStructure. Issue thatnealpatel/proofs#36 is
+         a correction report, not evidence that OEIS has
+         accepted or applied the correction.
          Vertex convention: three conventions in the
          literature; file uses G∖{1} (data-pinned).
 stmt:    S

@@ -36,13 +36,22 @@
     `a135908` takes the value 1 at `n = 2`.  All other terms agree.
   * A135909: Barker's claimed validity range `n > 6` is *false* against the
     entry's own data: at `n = 8` the recurrence predicts 14 while a(8) = 15,
-    and at `n = 9` it predicts 27 while a(9) = 26.  It holds for `n ≥ 10`
-    (and accidentally at `n = 7`).  Barker's own generating function in the
-    same formula clause already encodes `n > 9`: its numerator has degree 9
-    over a degree-4 denominator, and the nonzero numerator coefficients
-    predict exactly the observed failure set — the stated range contradicts
-    the g.f. beside it.  Both facts are recorded below, conditional on the
-    (open, here conjectured) alternating structure constant `gAlt`.
+    and at `n = 9` it predicts 27 while a(9) = 26.  This numerical refutation
+    is unconditional; it is immediate from the published terms.  The Lean
+    theorem about the actual alternating-group clique numbers is conditional
+    on `AltStructure`, as is the positive recurrence for `n > 9`.  Barker's
+    own generating function in the same formula clause already encodes
+    `n > 9`: its numerator has degree 9 over a degree-4 denominator, and the
+    nonzero numerator coefficients predict exactly the observed failure set —
+    the stated range contradicts the g.f. beside it.  Repository issue #36
+    is a correction report, not evidence that OEIS has accepted or applied
+    the change.
+
+  Novelty language is deliberately limited: no prior written proof of Barker's
+  recurrence and no general published determination of the largest abelian
+  subgroup order of `A_n` were found in the searched sources.  These are
+  found-no-record statements, not priority claims.  `AltStructure` remains an
+  open prospective result in this file.
 -/
 import Mathlib
 

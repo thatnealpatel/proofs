@@ -55,9 +55,14 @@
   of `DihedralGroup m` as defined via Mathlib's representation theory is
   NOT formalized (that bridge is a separate project); the theorems below
   are about the explicit family, which follows the standard textbook
-  character table of dihedral groups.  Ground-truth `example`s pin the
-  small cases against independently computed data (Sage/GAP character
-  tables, exact cyclotomic arithmetic).
+  character table of dihedral groups.  Consequently this is a formal proof
+  of the conjecture's vanishing direction for that explicit family, not an
+  end-to-end formal group-theoretic theorem about Mathlib's `DihedralGroup`.
+  Ground-truth `example`s pin the small cases against independently computed
+  data (Sage/GAP character tables, exact cyclotomic arithmetic).
+
+  The involutions and their possible novelty were assessed only by a
+  found-no-record literature search.  No priority claim is made.
 
   Route (verified exactly in Sage for `M ≤ 10` before formalization):
   with `U/V` the shared rotation parts of the linear rows and `W/X` their
@@ -1046,11 +1051,12 @@ theorem cosEntry_master (M : ℕ) (hM : 1 ≤ M) :
   rw [harg, Real.cos_sub, Real.cos_nat_mul_pi, Real.sin_nat_mul_pi]
   ring
 
-/-- **Vanishing over `ℝ` with the true cosine entries**: the permanent of
-the explicit character table of the dihedral group of order `4M` vanishes
-whenever `4M ≢ 4 (mod 16)`.  Together with `permanent_dihedralTableOdd`
-this settles the vanishing direction of the OEIS A085805 conjecture for the
-explicit table family. -/
+/-- **Vanishing over `ℝ` with the textbook cosine entries**: the permanent
+of the explicit table family for dihedral order `4M` vanishes whenever
+`4M ≢ 4 (mod 16)`.  Together with `permanent_dihedralTableOdd` this settles
+the vanishing direction of the OEIS A085805 conjecture for that explicit
+family.  It does not supply the separate representation-theoretic bridge to
+Mathlib's `DihedralGroup`; see the module disclosure. -/
 theorem permanent_dihedralTableEven_cos_eq_zero (M : ℕ) (hM : 1 ≤ M)
     (hM4 : M % 4 ≠ 1) :
     (dihedralTableEven (cosEntry M) M).permanent = 0 :=

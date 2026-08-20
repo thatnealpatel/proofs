@@ -2,7 +2,7 @@ seq:     A061256
 claim:   commuting-pairs-euler-transform
 status:  PROVED IN FULL 2026-08-20 (sorry-free,
          Proofs/Scratch/CommutingPairsEuler.lean,
-         uncommitted; full reviewer trio passed).
+         landed in f061efe; full reviewer trio passed).
          STATUS CORRECTION: the annotation was NEVER
          open — it is the genus-1 case of
          Liskovets–Mednykh 2009 (stated as A061256 on
@@ -25,10 +25,12 @@ source:  OEIS A061256 comment ("it appears").
          invisible to it; pin from oeis.org.
 
 CLAIM
-  A061256 = Euler transform of sigma(n). Open part:
-  a(n) equals the number of conjugacy classes of
-  commuting ordered pairs in S_n, i.e. orbits of
-  {(g,h) : gh = hg} under simultaneous conjugation.
+  A061256 = Euler transform of sigma(n). The OEIS annotation says that
+  a(n) equals the number of conjugacy classes of commuting ordered pairs
+  in S_n, i.e. orbits of {(g,h) : gh = hg} under simultaneous
+  conjugation. This fact is published, not open; the contribution here is
+  an independent machine-checked proof and reusable finite-Z²-action
+  classification infrastructure.
 
 LEAN
   Define the conjugation action of S_n on pairs

@@ -61,7 +61,8 @@
     For Greathouse's recurrence we FOUND NO RECORD of a prior proof —
     corpora searched 2026-08-20: the A172161 entry and its links, the
     A120134 entry, and this repo's References corpus.  That is a
-    found-no-record claim, not a priority claim.
+    found-no-record claim, not a priority, first-proof, or publication claim;
+    mathematical publishability has not been assessed here.
   * The asymptotic carries NO novelty claim: given the recurrence it is a
     standard floor-recurrence convergence argument (the Odlyzko–Wilf 1991
     class, Prop. 1 shape), and the constant is already recorded on
@@ -525,7 +526,8 @@ the greedy definition**: for `n > 4`,
 `a(n) = ⌊(Σ_{i<n} a(i))/2⌋ + 1`.  The `%F` line carries no proof or
 reference in the OEIS entry; for this derivation from the greedy definition
 we found no record of a prior proof (corpora searched 2026-08-20: the
-A172161 entry and links, A120134, the local References corpus). -/
+A172161 entry and links, A120134, the local References corpus).  This is a
+found-no-record statement, not a priority or publication claim. -/
 theorem greedyA_recurrence (n : ℕ) (hn : 4 < n) :
     greedyA n = (∑ i ∈ Finset.range n, greedyA i) / 2 + 1 := by
   obtain ⟨k, rfl⟩ : ∃ k, n = k + 5 := ⟨n - 5, by omega⟩
