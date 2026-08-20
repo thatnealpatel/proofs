@@ -1,0 +1,245 @@
+diff --git a/code/expand.cpp b/code/expand.cpp
+new file mode 100644
+index 0000000..c6c525a
+--- /dev/null
++++ b/code/expand.cpp
+@@ -0,0 +1,96 @@
++/****************
++    Copyright 2026 the proofs repository authors.
++    Derived from scheme.hpp and scheme.cpp, Copyright 2022 Jakob Moosbauer.
++
++    expand.cpp added 2026-08-20: writes every flip neighbor of one scheme.
++    Distributed under the same GPLv3-or-later terms as the rest of this
++    program.
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 3 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++******************/
++
++#include "scheme.hpp"
++
++// Usage: expand <filename> <n> [<m> <l>] <outdir>
++//
++// Writes the scheme and every scheme reachable by one flip (both
++// orientations) to <outdir>/vertices/<canonical-hash>.exp and appends the
++// connecting edges to <outdir>/edges.txt. Deterministic: findFlips
++// enumerates by row index, no randomness.
++int main(int argc, char* argv[]){
++  int n, m, l;
++  string filename, outdir;
++  if(argc == 4){
++    filename = argv[1];
++    n = m = l = *argv[2]-'0';
++    outdir = argv[3];
++  }
++  else if(argc == 6){
++    filename = argv[1];
++    n = *argv[2]-'0';
++    m = *argv[3]-'0';
++    l = *argv[4]-'0';
++    outdir = argv[5];
++  }
++  else{
++    cerr << "Usage: " << argv[0] << " <filename> <n> [<m> <l>] <outdir>" << endl;
++    return 1;
++  }
++  Scheme s(filename, n, m, l);
++  if(!s.check()){
++    cerr << "Opened incorrect scheme: " << filename << endl;
++    return 1;
++  }
++  string base = canonname(s);
++  s.write(outdir + "/vertices/" + base);
++  ofstream edges(outdir + "/edges.txt", ios_base::app);
++  unordered_set<string> seen;
++  vector<Flip> flips = s.findFlips();
++  for(Flip f : flips){
++    for(int o = 0; o < 2; ++o){
++      Scheme t(s);
++      if(o == 0){
++        t.flip(f.col, f.row1, f.row2);
++      }
++      else{
++        t.flip(f.col, f.row2, f.row1);
++      }
++      // Skip flips that zero out a factor: the result is not a set of
++      // nonzero rank-one terms, so it is not a flip-graph vertex.
++      bool degenerate = false;
++      for(int r = 0; r < t.rank && !degenerate; ++r){
++        for(int k = 0; k < 3; ++k){
++          if(t.rows[r][k] == 0){
++            degenerate = true;
++            break;
++          }
++        }
++      }
++      if(degenerate){
++        continue;
++      }
++      if(!t.check()){
++        cerr << "Flip produced incorrect scheme from: " << filename << endl;
++        return 1;
++      }
++      string name = canonname(t);
++      if(seen.insert(name).second){
++        t.write(outdir + "/vertices/" + name);
++        edges << base << " " << name << "\n";
++      }
++    }
++  }
++  cout << base << " neighbors: " << seen.size() << endl;
++  return 0;
++}
+diff --git a/code/main.cpp b/code/main.cpp
+index 88aca73..4a29ef0 100644
+--- a/code/main.cpp
++++ b/code/main.cpp
+@@ -59,6 +59,10 @@ int main(int argc, char* argv[]){
+   struct timespec ts;
+   clock_gettime(CLOCK_MONOTONIC, &ts);
+   long seed = (long)ts.tv_nsec;
++  if(const char* envseed = getenv("FLIP_SEED")){
++    seed = strtol(envseed,NULL,10);
++  }
++  traceinit(s);
+ 
+   
+   int steps = -1;
+diff --git a/code/makefile b/code/makefile
+index 646c4d8..fcc9a07 100644
+--- a/code/makefile
++++ b/code/makefile
+@@ -1,2 +1,7 @@
+-all: scheme.cpp scheme.hpp randompath.cpp main.cpp
+-	g++ -o flip scheme.cpp randompath.cpp main.cpp
++all: flip expand
++
++flip: scheme.cpp scheme.hpp randompath.cpp main.cpp
++	g++ -O2 -o flip scheme.cpp randompath.cpp main.cpp
++
++expand: scheme.cpp scheme.hpp expand.cpp
++	g++ -O2 -o expand scheme.cpp expand.cpp
+diff --git a/code/scheme.cpp b/code/scheme.cpp
+index 9213444..e311eef 100644
+--- a/code/scheme.cpp
++++ b/code/scheme.cpp
+@@ -151,6 +151,7 @@ void Scheme::flip(int col, int row1, int row2){
+   assume(0<=col && col<3);
+   rows[row1][plus2mod3[col]] ^= rows[row2][plus2mod3[col]];
+   rows[row2][plus1mod3[col]] ^= rows[row1][plus1mod3[col]];
++  tracestate(*this);
+ }
+ 
+ void gauss(mat* matrix, int d){
+@@ -316,6 +317,7 @@ bool Scheme::reduce(){
+ 	  rank--;
+ 	  delete[] rows[it->second];
+ 	  rows[it->second] = rows[rank];
++	  tracestate(*this);
+ 	  return true;
+ 	}
+       }
+@@ -334,6 +336,7 @@ bool Scheme::reduce(){
+ 	  rank--;
+ 	  delete[] rows[it->second];
+ 	  rows[it->second] = rows[rank];
++	  tracestate(*this);
+ 	  return true;
+ 	}
+       }
+@@ -369,3 +372,71 @@ bool operator==(const Flip& f1, const Flip& f2){
+   return(f1.row1 == f2.row1 && f1.row2 == f2.row2 && f1.col == f2.col);
+ }
+ 
++
++/****************
++    Trace instrumentation added 2026-08-20 for exporting flip-graph walk
++    datasets. Distributed under the same GPLv3-or-later terms as the rest
++    of this program.
++
++    When the FLIP_TRACE environment variable names an existing directory
++    containing a vertices/ subdirectory, every visited scheme is written to
++    vertices/<canonical-hash>.exp and every accepted transition is appended
++    to edges.txt in walk order.
++******************/
++
++#undef get
++#undef set
++#undef unset
++#include <algorithm>
++#include <array>
++
++static string tracedir;
++static ofstream traceedges;
++static unordered_set<string> traceseen;
++static string tracelast;
++
++// Canonical filename: FNV-1a over the row triples sorted lexicographically,
++// so the row order of a scheme does not affect its vertex identity.
++string canonname(const Scheme& s){
++  vector<array<mat,3>> t(s.rank);
++  for(int i = 0; i < s.rank; ++i){
++    t[i] = {s.rows[i][0], s.rows[i][1], s.rows[i][2]};
++  }
++  sort(t.begin(), t.end());
++  unsigned long long h = 1469598103934665603ULL;
++  for(auto &r : t){
++    for(int k = 0; k < 3; ++k){
++      for(int b = 0; b < 8; ++b){
++        h ^= (r[k] >> (8*b)) & 0xff;
++        h *= 1099511628211ULL;
++      }
++    }
++  }
++  stringstream stream;
++  stream << setfill('0') << setw(16) << hex << h;
++  return stream.str() + ".exp";
++}
++
++void tracestate(Scheme& s){
++  if(tracedir.empty()){
++    return;
++  }
++  string name = canonname(s);
++  if(traceseen.insert(name).second){
++    s.write(tracedir + "/vertices/" + name);
++  }
++  if(!tracelast.empty()){
++    traceedges << tracelast << " " << name << "\n";
++  }
++  tracelast = name;
++}
++
++void traceinit(Scheme& s){
++  const char* dir = getenv("FLIP_TRACE");
++  if(dir == NULL){
++    return;
++  }
++  tracedir = dir;
++  traceedges.open(tracedir + "/edges.txt", ios_base::app);
++  tracestate(s);
++}
+diff --git a/code/scheme.hpp b/code/scheme.hpp
+index 614a810..ba209ca 100644
+--- a/code/scheme.hpp
++++ b/code/scheme.hpp
+@@ -129,3 +129,9 @@ void mylog(string);
+ bool operator==(const Flip& f1, const Flip& f2);
+ 
+ #endif
++
++// Trace instrumentation, see scheme.cpp. Redeclaration outside the include
++// guard is harmless for function declarations.
++string canonname(const Scheme& s);
++void traceinit(Scheme& s);
++void tracestate(Scheme& s);

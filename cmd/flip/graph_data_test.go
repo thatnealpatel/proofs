@@ -25,6 +25,7 @@ type generatedGraph struct {
 		Type     string
 		OnPath   bool `json:"onPath"`
 		SelfLoop bool `json:"selfLoop"`
+		Flips    int  `json:"flips"`
 	}
 	Stats struct {
 		Vertices     int
@@ -32,6 +33,7 @@ type generatedGraph struct {
 		Flips        int
 		Reductions   int
 		SelfLoops    int
+		Segments     int
 		Diameter     int
 		PathDistance int
 	}
@@ -128,6 +130,127 @@ func TestGeneratedM2Graph(t *testing.T) {
 		}
 		if nodes[graph.Path[index]].path == nil || *nodes[graph.Path[index]].path != index {
 			t.Fatalf("path node %d has wrong pathIndex", index)
+		}
+	}
+}
+
+func TestGeneratedM3F2Graph(t *testing.T) {
+	data, err := staticFiles.ReadFile("static/graph-333.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var graph generatedGraph
+	if err := json.Unmarshal(data, &graph); err != nil {
+		t.Fatal(err)
+	}
+
+	if graph.Schema != "flip-graph/v1" || graph.Field != "F₂" {
+		t.Fatalf("schema and field = %q, %q", graph.Schema, graph.Field)
+	}
+	if graph.Source != "4ffbeb0d422c6cd3" || graph.Target != "b14852bcb8af10e9" {
+		t.Fatalf("endpoints = %q, %q", graph.Source, graph.Target)
+	}
+	if len(graph.Path) != 9 {
+		t.Fatalf("path has %d milestones; want 9", len(graph.Path))
+	}
+	if graph.Stats.Vertices != 85 || graph.Stats.Edges != 84 || graph.Stats.Flips != 76 ||
+		graph.Stats.Reductions != 4 || graph.Stats.SelfLoops != 0 || graph.Stats.Segments != 4 ||
+		graph.Stats.Diameter != 3 || graph.Stats.PathDistance != 8 {
+		t.Fatalf("unexpected condensed walk statistics: %+v", graph.Stats)
+	}
+	if len(graph.Nodes) != graph.Stats.Vertices || len(graph.Edges) != graph.Stats.Edges {
+		t.Fatalf("array sizes = %d nodes, %d edges", len(graph.Nodes), len(graph.Edges))
+	}
+
+	nodes := make(map[string]struct {
+		length int
+		path   *int
+	}, len(graph.Nodes))
+	lengthTwentyThree := 0
+	for _, node := range graph.Nodes {
+		if _, duplicate := nodes[node.ID]; duplicate {
+			t.Fatalf("duplicate node %q", node.ID)
+		}
+		if node.X < 0 || node.X > 1 || node.Y < 0 || node.Y > 1 {
+			t.Fatalf("node %q has non-normalized coordinates (%v, %v)", node.ID, node.X, node.Y)
+		}
+		if node.Length < 23 || node.Length > 27 {
+			t.Fatalf("node %q has length %d outside 23 through 27", node.ID, node.Length)
+		}
+		if node.Length == 23 {
+			lengthTwentyThree++
+		}
+		nodes[node.ID] = struct {
+			length int
+			path   *int
+		}{node.Length, node.PathIndex}
+	}
+	if lengthTwentyThree != 5 || nodes[graph.Target].length != 23 || nodes[graph.Source].length != 27 {
+		t.Fatalf("length-23 count and endpoint lengths = %d, %d, %d", lengthTwentyThree, nodes[graph.Source].length, nodes[graph.Target].length)
+	}
+
+	edges := make(map[string]bool, len(graph.Edges))
+	onPath := make(map[string]bool, len(graph.Path)-1)
+	reductions := 0
+	segmentFlips := 0
+	for _, edge := range graph.Edges {
+		if _, ok := nodes[edge.From]; !ok {
+			t.Fatalf("edge has unknown source %q", edge.From)
+		}
+		if _, ok := nodes[edge.To]; !ok {
+			t.Fatalf("edge has unknown target %q", edge.To)
+		}
+		key := canonicalEdge(edge.From, edge.To)
+		if edges[key] {
+			t.Fatalf("duplicate canonical edge %q", key)
+		}
+		edges[key] = true
+		if edge.SelfLoop {
+			t.Fatalf("unexpected self-loop %q in raw-scheme walk", key)
+		}
+		switch edge.Type {
+		case "reduction":
+			reductions++
+			if nodes[edge.From].length != nodes[edge.To].length+1 {
+				t.Fatalf("reduction %q is not directed long to short", key)
+			}
+		case "segment":
+			if edge.Flips < 2 {
+				t.Fatalf("segment %q elides %d flips; want at least 2", key, edge.Flips)
+			}
+			if !edge.OnPath {
+				t.Fatalf("segment %q is off the milestone path", key)
+			}
+			if nodes[edge.From].length != nodes[edge.To].length {
+				t.Fatalf("segment %q changes presentation length", key)
+			}
+			segmentFlips += edge.Flips
+		case "flip":
+			if edge.Flips != 0 {
+				t.Fatalf("flip %q carries a segment flip count", key)
+			}
+		default:
+			t.Fatalf("unknown edge type %q", edge.Type)
+		}
+		if edge.OnPath {
+			onPath[key] = true
+		}
+	}
+	if reductions != 4 || len(onPath) != 8 {
+		t.Fatalf("observed %d reductions, %d path edges", reductions, len(onPath))
+	}
+	if segmentFlips+reductions != 225 {
+		t.Fatalf("segments elide %d flips; with 4 reductions want a 225-step recorded route", segmentFlips)
+	}
+	for index := 1; index < len(graph.Path); index++ {
+		if !onPath[canonicalEdge(graph.Path[index-1], graph.Path[index])] {
+			t.Fatalf("path step %d is not marked on-path", index)
+		}
+		if nodes[graph.Path[index]].path == nil || *nodes[graph.Path[index]].path != index {
+			t.Fatalf("path node %d has wrong pathIndex", index)
+		}
+		if nodes[graph.Path[index]].length > nodes[graph.Path[index-1]].length {
+			t.Fatalf("path step %d increases presentation length", index)
 		}
 	}
 }

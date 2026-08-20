@@ -20,18 +20,26 @@ import (
 const schema = "flip-graph/v1"
 
 type config struct {
-	input      string
-	output     string
-	format     [3]int
-	field      string
-	title      string
-	scope      string
-	sourceID   string
-	targetID   string
-	repository string
-	revision   string
-	license    string
-	iterations int
+	input         string
+	output        string
+	format        [3]int
+	field         string
+	title         string
+	scope         string
+	sourceID      string
+	targetID      string
+	repository    string
+	revision      string
+	license       string
+	iterations    int
+	orbitQuotient bool
+	condense      bool
+}
+
+type segment struct {
+	a     string
+	b     string
+	flips int
 }
 
 type term struct {
@@ -87,6 +95,7 @@ type edge struct {
 	Type     string `json:"type"`
 	OnPath   bool   `json:"onPath,omitempty"`
 	SelfLoop bool   `json:"selfLoop,omitempty"`
+	Flips    int    `json:"flips,omitempty"`
 }
 
 type stats struct {
@@ -95,6 +104,7 @@ type stats struct {
 	Flips        int `json:"flips"`
 	Reductions   int `json:"reductions"`
 	SelfLoops    int `json:"selfLoops"`
+	Segments     int `json:"segments,omitempty"`
 	Diameter     int `json:"diameter"`
 	PathDistance int `json:"pathDistance"`
 }
@@ -127,6 +137,8 @@ func main() {
 	flag.StringVar(&cfg.revision, "revision", "", "source repository revision")
 	flag.StringVar(&cfg.license, "license", "", "SPDX license identifier for the source dataset")
 	flag.IntVar(&cfg.iterations, "layout-iterations", 500, "deterministic force-layout iterations")
+	flag.BoolVar(&cfg.orbitQuotient, "orbit-quotient", true, "vertices are symmetry orbits rather than raw schemes")
+	flag.BoolVar(&cfg.condense, "condense", false, "keep only reduction milestones and their neighbors, eliding same-length runs into segment edges")
 	flag.Parse()
 
 	var err error
@@ -148,6 +160,13 @@ func main() {
 	if err := writeJSON(cfg.output, graph); err != nil {
 		fatal(err)
 	}
+}
+
+func generatedNote(orbitQuotient bool) string {
+	if orbitQuotient {
+		return "Parsed from .exp representatives and deduplicated edges.txt; layout is deterministic and is not copied from the paper figure."
+	}
+	return "Parsed from .exp schemes and deduplicated edges.txt; layout is deterministic."
 }
 
 func fatal(err error) {
@@ -200,8 +219,15 @@ func build(cfg config) (graphFile, error) {
 	if err != nil {
 		return graphFile{}, err
 	}
+	var segments []segment
+	if cfg.condense {
+		schemes, pairs, segments, path, err = condense(schemes, pairs, source, target)
+		if err != nil {
+			return graphFile{}, err
+		}
+	}
 
-	nodes, edges, err := assemble(schemes, pairs, path)
+	nodes, edges, err := assemble(schemes, pairs, segments, path)
 	if err != nil {
 		return graphFile{}, err
 	}
@@ -217,7 +243,7 @@ func build(cfg config) (graphFile, error) {
 		Scope:         cfg.scope,
 		Field:         cfg.field,
 		Format:        cfg.format,
-		OrbitQuotient: true,
+		OrbitQuotient: cfg.orbitQuotient,
 		Source:        source,
 		Target:        target,
 		Path:          path,
@@ -228,7 +254,7 @@ func build(cfg config) (graphFile, error) {
 			Revision:   cfg.revision,
 			Dataset:    filepath.Base(filepath.Clean(cfg.input)),
 			License:    cfg.license,
-			Generated:  "Parsed from .exp representatives and deduplicated edges.txt; layout is deterministic and is not copied from the paper figure.",
+			Generated:  generatedNote(cfg.orbitQuotient),
 		},
 	}
 	graph.Stats = summarize(nodes, edges, pairs)
@@ -431,6 +457,81 @@ func chooseTarget(schemes map[string]*scheme, requested string) (string, error) 
 	return target, nil
 }
 
+// condense reduces the graph to its descent milestones: the source, the
+// endpoints of every reduction edge, and their direct neighbors. Runs of
+// same-length flips between consecutive milestones are replaced by segment
+// pseudo-edges carrying the shortest recorded flip count.
+func condense(schemes map[string]*scheme, pairs []pair, source, target string) (map[string]*scheme, []pair, []segment, []string, error) {
+	type reduction struct {
+		long  string
+		short string
+	}
+	var reductions []reduction
+	for _, edge := range pairs {
+		a, b := len(schemes[edge.a].terms), len(schemes[edge.b].terms)
+		if a == b {
+			continue
+		}
+		long, short := edge.a, edge.b
+		if a < b {
+			long, short = edge.b, edge.a
+		}
+		reductions = append(reductions, reduction{long: long, short: short})
+	}
+	slices.SortFunc(reductions, func(a, b reduction) int {
+		return len(schemes[b.long].terms) - len(schemes[a.long].terms)
+	})
+
+	chain := []string{source}
+	for _, r := range reductions {
+		if chain[len(chain)-1] != r.long {
+			chain = append(chain, r.long)
+		}
+		chain = append(chain, r.short)
+	}
+	if chain[len(chain)-1] != target {
+		return nil, nil, nil, nil, fmt.Errorf("reduction chain ends at %q, not target %q", chain[len(chain)-1], target)
+	}
+	for i := 1; i < len(chain); i++ {
+		difference := len(schemes[chain[i-1]].terms) - len(schemes[chain[i]].terms)
+		if difference != 0 && difference != 1 {
+			return nil, nil, nil, nil, fmt.Errorf("milestones %q and %q differ in length by %d", chain[i-1], chain[i], difference)
+		}
+	}
+
+	var segments []segment
+	for i := 1; i < len(chain); i++ {
+		a, b := chain[i-1], chain[i]
+		if len(schemes[a].terms) != len(schemes[b].terms) {
+			continue
+		}
+		route, err := shortestPath(a, b, pairs)
+		if err != nil {
+			return nil, nil, nil, nil, err
+		}
+		if flips := len(route) - 1; flips > 1 {
+			segments = append(segments, segment{a: a, b: b, flips: flips})
+		}
+	}
+
+	kept := make(map[string]bool, len(chain))
+	neighbors := adjacency(pairs)
+	for _, id := range chain {
+		kept[id] = true
+	}
+	for _, id := range chain {
+		for _, next := range neighbors[id] {
+			kept[next] = true
+		}
+	}
+	for id := range schemes {
+		if !kept[id] {
+			delete(schemes, id)
+		}
+	}
+	return schemes, filterEdges(pairs, kept), segments, chain, nil
+}
+
 func connectedComponent(source string, pairs []pair) map[string]bool {
 	adjacency := adjacency(pairs)
 	seen := map[string]bool{source: true}
@@ -502,7 +603,7 @@ func shortestPath(source, target string, pairs []pair) ([]string, error) {
 	return nil, fmt.Errorf("no path from %q to %q", source, target)
 }
 
-func assemble(schemes map[string]*scheme, pairs []pair, path []string) ([]node, []edge, error) {
+func assemble(schemes map[string]*scheme, pairs []pair, segments []segment, path []string) ([]node, []edge, error) {
 	pathIndex := make(map[string]int, len(path))
 	pathEdges := make(map[pair]bool, len(path)-1)
 	for i, id := range path {
@@ -585,6 +686,22 @@ func assemble(schemes map[string]*scheme, pairs []pair, path []string) ([]node, 
 	for id, adjacent := range neighbors {
 		byID[id].Degree = len(adjacent)
 	}
+	// Segment pseudo-edges stand for elided same-length flip runs; they do
+	// not contribute to degree or flip counts.
+	for i, run := range segments {
+		a, b := run.a, run.b
+		if b < a {
+			a, b = b, a
+		}
+		edges = append(edges, edge{
+			ID:     fmt.Sprintf("s%d", i),
+			From:   run.a,
+			To:     run.b,
+			Type:   "segment",
+			OnPath: pathEdges[pair{a: a, b: b}],
+			Flips:  run.flips,
+		})
+	}
 	return nodes, edges, nil
 }
 
@@ -596,6 +713,8 @@ func summarize(nodes []node, edges []edge, pairs []pair) stats {
 			result.Flips++
 		case "reduction":
 			result.Reductions++
+		case "segment":
+			result.Segments++
 		}
 		if edge.SelfLoop {
 			result.SelfLoops++

@@ -4,7 +4,7 @@ The topology and representative identifiers in graph-222.json are derived from
 the `222flipgraph_rank8` dataset in:
 
   Flip Graphs for Matrix Multiplication
-  Jakob Moosbauer and Michael Poole
+  Manuel Kauers and Jakob Moosbauer
   https://github.com/jakobmoosbauer/flips
   revision e31a0a0f0d2577cee5da047ca7dcae0c61992e40
   paper: https://arxiv.org/abs/2212.01175

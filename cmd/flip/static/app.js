@@ -20,7 +20,79 @@ const views = {
     footer: "Complete schoolbook component over F₂. One further length-8 orbit is isolated in the published data; no claim is made that these are every component.",
     ariaLabel: "Complete orbit flip graph component for two by two matrix multiplication over F2",
     alternativesLabel: "all orbits",
-    legend: [["path", "shortest schoolbook–Strassen path"], ["flip", "same-length flip"], ["reduction", "length-reducing edge"], ["loop", "flip within one orbit"]]
+    legend: [["path", "shortest schoolbook–Strassen path"], ["flip", "same-length flip"], ["reduction", "length-reducing edge"], ["loop", "flip within one orbit"]],
+    sourceLabel: "schoolbook",
+    targetLabel: "Strassen",
+    text: {
+      nodeNoun: "orbit",
+      nodeTitlePrefix: "Orbit",
+      sourceTitle: "Schoolbook orbit",
+      targetTitle: "Strassen orbit",
+      pathNodeKind: "shortest-path orbit",
+      offPathNodeKind: "orbit representative",
+      identityNote: "This point represents a complete symmetry orbit of presentations, not one raw scheme. Its ID names the published representative used to generate the graph.",
+      sourceNote: "All factors in the representative are coordinate vectors, which identifies schoolbook multiplication.",
+      checkpointLabel: "Shortest-path checkpoint",
+      offPathReference: "Complete component vertex",
+      targetNote: "This is the component’s unique length-7 representative.",
+      nodeNote: "Incidence counts include every deduplicated orbit edge in the published component.",
+      idNoun: "representative",
+      pathEdgePrefix: "shortest-path",
+      offPathEdgePrefix: "orbit",
+      flipExplanation: "An invertible same-length flip connects representatives in these two symmetry orbits.",
+      reductionExplanation: "A length-reducing transition connects these two presentation orbits. Direction is shown from the longer presentation to the shorter one.",
+      pathEdgeReference: "Chosen shortest route",
+      offPathEdgeReference: "Complete component transition",
+      importNote: "The importer canonicalizes endpoint order and removes duplicate rows from edges.txt; no geometry comes from the paper figure.",
+      selfLoopNoun: "its orbit",
+      selfLoopSummary: "SAME SYMMETRY ORBIT",
+      selfLoopExplanation: "The flip changes the representative scheme but symmetry canonicalization returns it to the same orbit. The self-loop is retained because it is one of the published 1,183 orbit edges.",
+      segmentExplanation: "This dashed edge stands for an elided run of recorded same-length flips between two milestones."
+    }
+  },
+  m333: {
+    key: "m333",
+    kind: "orbit",
+    url: "/graph-333.json",
+    documentTitle: "M₃ flip walk over F₂",
+    eyebrow: "EXACT 3×3 MATRIX MULTIPLICATION · F₂ · RECORDED WALK",
+    pageTitle: "A recorded descent from schoolbook to 23",
+    graphTitle: "Schoolbook 27 → 23 in four reductions, condensed to nine milestones",
+    graphDescription: "Gold nodes are milestones of a recorded flip walk: the schoolbook start and each state just before and after a length reduction, each with its sampled flip neighborhood. Dashed segments elide the recorded same-length flip runs between milestones. Hover or focus a node or transition to inspect it; activate nodes to toggle their combined highlighting, Escape clears the set. Scroll to zoom and drag empty space to pan.",
+    readingTitle: "What this recorded descent shows",
+    readingBody: "A chain of four seeded random flip walks over F₂ took schoolbook 3×3 multiplication down to a 23-term presentation. Between reductions the walk wandered through 35, 37, 72, and 77 same-length flips (shortest recorded routes, shown as dashed segments), and the milestone flip neighborhoods collapse from 162 at schoolbook to 4 at the endpoint. Vertices are raw schemes deduplicated up to term order, not symmetry orbits; the full 225-step route is archived in the exported dataset.",
+    footer: "Finite recorded walk only: not a component enumeration, an optimality proof, or a claim of rank below 23.",
+    ariaLabel: "Milestones of a recorded flip walk from schoolbook three by three matrix multiplication over F2 down to a 23-term presentation",
+    alternativesLabel: "sampled neighbors",
+    legend: [["path", "recorded descent"], ["flip", "same-length flip"], ["reduction", "length-reducing edge"], ["segment", "elided flip run"]],
+    sourceLabel: "schoolbook",
+    targetLabel: "length 23",
+    text: {
+      nodeNoun: "scheme",
+      nodeTitlePrefix: "Scheme",
+      sourceTitle: "Schoolbook scheme",
+      targetTitle: "The recorded length-23 endpoint",
+      pathNodeKind: "recorded-path state",
+      offPathNodeKind: "sampled state",
+      identityNote: "This point is one raw scheme, a complete presentation deduplicated up to term order only; no symmetry quotient is applied. Its ID is a canonical content hash.",
+      sourceNote: "All factors in this scheme are coordinate vectors, which identifies schoolbook multiplication.",
+      checkpointLabel: "Recorded-path checkpoint",
+      offPathReference: "Sampled neighbor state",
+      targetNote: "This is the endpoint of the recorded walk: 23 is the smallest length in this sample, not a tensor-rank claim.",
+      nodeNote: "Incidence counts reflect only the edges retained in this finite sample, not the state’s full degree.",
+      idNoun: "state",
+      pathEdgePrefix: "recorded-path",
+      offPathEdgePrefix: "sampled",
+      flipExplanation: "An invertible same-length flip connects these two schemes.",
+      reductionExplanation: "A length-reducing transition connects these two presentations. Direction is shown from the longer presentation to the shorter one.",
+      pathEdgeReference: "On the recorded descent",
+      offPathEdgeReference: "Sampled transition",
+      importNote: "The importer canonicalizes endpoint order and removes duplicate rows from edges.txt; the layout is a fresh deterministic embedding.",
+      selfLoopNoun: "itself",
+      selfLoopSummary: "SAME SCHEME",
+      selfLoopExplanation: "The flip returns a scheme identical up to term order, so the transition stays at this vertex.",
+      segmentExplanation: "This dashed edge stands for a recorded run of same-length flips between two milestones — the shortest route inside the recorded sample. The full run is archived in the exported dataset; only its endpoints are displayed."
+    }
   },
   m3: {
     key: "m3",
@@ -408,16 +480,17 @@ function supportSummary(histogram) {
 }
 
 function renderOrbitNode(node) {
+  const text = state.view.text;
   const isSource = node.id === state.graph.source;
   const isTarget = node.id === state.graph.target;
   const onPath = node.pathIndex != null;
-  const title = isSource ? "Schoolbook orbit" : isTarget ? "Strassen orbit" : `Orbit ${node.name}`;
-  const content = inspectorHeading(onPath ? "shortest-path orbit" : "orbit representative", title);
+  const title = isSource ? text.sourceTitle : isTarget ? text.targetTitle : `${text.nodeTitlePrefix} ${node.name}`;
+  const content = inspectorHeading(onPath ? text.pathNodeKind : text.offPathNodeKind, title);
 
   const identity = element("div", "validity-card");
   identity.append(
     element("strong", null, `LENGTH ${node.length} · OVER F₂`),
-    element("span", null, "This point represents a complete symmetry orbit of presentations, not one raw scheme. Its ID names the published representative used to generate the graph.")
+    element("span", null, text.identityNote)
   );
   content.append(identity);
 
@@ -440,40 +513,47 @@ function renderOrbitNode(node) {
 
   const reference = element("div", "reference");
   reference.append(
-    element("strong", null, onPath ? `Shortest-path checkpoint ${node.pathIndex + 1}/${state.graph.path.length}` : "Complete component vertex"),
+    element("strong", null, onPath ? `${text.checkpointLabel} ${node.pathIndex + 1}/${state.graph.path.length}` : text.offPathReference),
     element("span", null, isSource
-      ? "All factors in the representative are coordinate vectors, which identifies schoolbook multiplication."
+      ? text.sourceNote
       : isTarget
-        ? "This is the component’s unique length-7 representative."
-        : "Incidence counts include every deduplicated orbit edge in the published component."),
-    element("code", null, `representative ${node.id}`)
+        ? text.targetNote
+        : text.nodeNote),
+    element("code", null, `${text.idNoun} ${node.id}`)
   );
   content.append(reference);
 }
 
 function renderOrbitEdge(edge) {
+  const text = state.view.text;
   const from = state.nodes.get(edge.from);
   const to = state.nodes.get(edge.to);
   const loop = edge.selfLoop;
-  const title = loop ? `${from.name} ↺ its orbit` : `${from.name} ${edge.type === "reduction" ? "→" : "↔"} ${to.name}`;
-  const content = inspectorHeading(edge.onPath ? `shortest-path ${edge.type}` : `orbit ${edge.type}`, title);
+  const title = loop
+    ? `${from.name} ↺ ${text.selfLoopNoun}`
+    : `${from.name} ${edge.type === "reduction" ? "→" : edge.type === "segment" ? "⋯" : "↔"} ${to.name}`;
+  const content = inspectorHeading(edge.onPath ? `${text.pathEdgePrefix} ${edge.type}` : `${text.offPathEdgePrefix} ${edge.type}`, title);
 
-  const summary = edge.type === "reduction"
-    ? `CONTRACTION · LENGTH ${from.length} → ${to.length}`
-    : loop
-      ? `INVERTIBLE FLIP · LENGTH ${from.length} · SAME SYMMETRY ORBIT`
-      : `INVERTIBLE FLIP · LENGTH ${from.length} UNCHANGED`;
+  const summary = edge.type === "segment"
+    ? `ELIDED RUN · ${edge.flips} SAME-LENGTH FLIPS`
+    : edge.type === "reduction"
+      ? `CONTRACTION · LENGTH ${from.length} → ${to.length}`
+      : loop
+        ? `INVERTIBLE FLIP · LENGTH ${from.length} · ${text.selfLoopSummary}`
+        : `INVERTIBLE FLIP · LENGTH ${from.length} UNCHANGED`;
   content.append(element("p", `mechanic-summary ${edge.type}`, summary));
-  content.append(element("p", "mechanic-explanation", edge.type === "reduction"
-    ? "A length-reducing transition connects these two presentation orbits. Direction is shown from the longer presentation to the shorter one."
-    : loop
-      ? "The flip changes the representative scheme but symmetry canonicalization returns it to the same orbit. The self-loop is retained because it is one of the published 1,183 orbit edges."
-      : "An invertible same-length flip connects representatives in these two symmetry orbits."));
+  content.append(element("p", "mechanic-explanation", edge.type === "segment"
+    ? text.segmentExplanation
+    : edge.type === "reduction"
+      ? text.reductionExplanation
+      : loop
+        ? text.selfLoopExplanation
+        : text.flipExplanation));
 
   const reference = element("div", "reference");
   reference.append(
-    element("strong", null, edge.onPath ? "Chosen shortest route" : "Complete component transition"),
-    element("span", null, "The importer canonicalizes endpoint order and removes duplicate rows from edges.txt; no geometry comes from the paper figure."),
+    element("strong", null, edge.onPath ? text.pathEdgeReference : text.offPathEdgeReference),
+    element("span", null, text.importNote),
     element("code", null, `edge ${edge.id}`)
   );
   content.append(reference);
@@ -726,6 +806,15 @@ function draw(graph) {
     });
     bindInspectorTarget(path, descriptor("edge", edge));
     edgeLayer.append(path);
+    if (edge.type === "segment") {
+      const label = svgElement("text", {
+        x: (from.position[0] + to.position[0]) / 2,
+        y: (from.position[1] + to.position[1]) / 2 - 10,
+        class: "segment-label"
+      });
+      label.textContent = `${edge.flips} flips`;
+      edgeLayer.append(label);
+    }
   }
   svg.append(edgeLayer);
 
@@ -750,13 +839,13 @@ function draw(graph) {
       group.append(number);
       if (state.view.kind === "sample" || node.id === graph.source || node.id === graph.target) {
         const label = svgElement("text", { y: node.position[1] > 500 ? 29 : -19, class: "node-label" });
-        label.textContent = node.id === graph.source ? "schoolbook" : node.id === graph.target ? "Strassen" : node.name;
+        label.textContent = node.id === graph.source ? state.view.sourceLabel ?? node.name : node.id === graph.target ? state.view.targetLabel ?? node.name : node.name;
         group.append(label);
       }
     }
     const title = svgElement("title");
     title.textContent = state.view.kind === "orbit"
-      ? `${node.name}: length ${length} orbit, ${node.degree} distinct neighbors, ${node.reductions} reduction edges`
+      ? `${node.name}: length ${length} ${state.view.text.nodeNoun}, ${node.degree} distinct neighbors, ${node.reductions} reduction edges`
       : `${node.name}: complete length ${length} presentation, ${node.movablePairs} movable pairs, ${node.reductions} reductions`;
     group.append(title);
     bindInspectorTarget(group, descriptor("node", node));
@@ -858,6 +947,7 @@ function start() {
   });
   document.querySelector("#branches").addEventListener("change", updateSelection);
   document.querySelector("#tab-m2").addEventListener("click", () => loadGraph(views.m2));
+  document.querySelector("#tab-m333").addEventListener("click", () => loadGraph(views.m333));
   document.querySelector("#tab-m3").addEventListener("click", () => loadGraph(views.m3));
 
   loadGraph(views.m2);

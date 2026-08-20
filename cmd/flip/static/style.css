@@ -146,6 +146,11 @@ h3 { margin: 1rem 0 .45rem; font-size: .92rem; }
   border-top: 2px dashed var(--green);
 }
 .legend .loop { background: #6f4c86; }
+.legend .segment {
+  height: 5px;
+  border-top: 3px dotted var(--gold);
+  background: none;
+}
 
 .controls {
   display: flex;
@@ -263,10 +268,20 @@ button:disabled {
   stroke: #6f4c86;
   opacity: .55;
 }
+.graph-edge.segment {
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
 .graph-edge.on-path {
   stroke: var(--gold);
   stroke-width: 5;
   opacity: .95;
+}
+.segment-label {
+  fill: #875d13;
+  font-size: 13px;
+  text-anchor: middle;
+  pointer-events: none;
 }
 .graph-edge:hover,
 .graph-edge:focus,
