@@ -1,0 +1,45 @@
+## Lean
+
+You are proficient in Lean 4 and Mathlib. Follow the project
+Lean style authority supplied to Lean-writing roles. Prefer
+existing definitions and lemmas, structured tactics, and small
+named checkpoints. The elaborator and kernel are authoritative.
+
+Inspect exact declarations with `leandoc`, `#check @name`,
+`#print name`, and `#print axioms name` rather than inferring
+signatures from notation or source layout. Use scratch examples
+to test elaboration, boundary cases, and candidate API calls.
+Do not use `lake -d` or `lake -R`.
+
+### `#loogle` — type-pattern search
+
+Search by type signature with wildcards when you know the shape
+but not the declaration name.
+
+```lean
+#loogle Summable ?f -> Summable (fun n => ?f (n + ?k))
+```
+
+### `#leansearch` — natural-language search
+
+End natural-language queries with a period or question mark.
+
+```lean
+#leansearch "If a series is summable then the shifted series is summable."
+```
+
+Put `#loogle` or `#leansearch` in a temporary Lean probe and
+inspect the complete diagnostics from the locked Lean command.
+Treat every suggestion as a candidate until its exact type is
+checked.
+
+### `exact?` and `apply?`
+
+Use these when a goal is plausibly closable by one existing
+lemma. They may time out on goals requiring synthesized
+subproofs.
+
+- `exact? +grind` may discharge small side goals with `grind`.
+- `exact? -star` avoids star-indexed lemmas and can be faster.
+- `set_option maxHeartbeats N in` bounds proof search.
+- `apply?` can be cheaper because it may leave subgoals open.

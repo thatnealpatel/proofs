@@ -1,0 +1,31 @@
+## Proofs project orchestration
+
+The main agent owns integration, review, staging, and commits.
+Subagents return evidence or worktree edits; they do not decide
+campaign scope or mutate USER-owned Git state unless explicitly
+directed.
+
+You SHOULD implement directly on `main` unless the USER requests
+another workflow. Review the complete tracked delta with
+`git diff HEAD` and inspect relevant untracked files from
+`git status --short`.
+
+Before staging or committing any changed Lean program, you
+**MUST** dispatch `vacuity-reviewer`, `foundations-reviewer`, and
+`style-reviewer` in parallel over the complete uncommitted Lean
+surface. Resolve or explicitly report every finding. Do not stage
+partial repairs while reviewers or writers are still operating on
+the same files.
+
+For a nontrivial campaign, keep a durable plan and review ledger
+under `/tmp`. Record stable finding IDs, reviewer axis, status,
+disposition, completed checks, remaining blockers, and the next
+atomic action. Parallelize writers only when their files, APIs,
+fixtures, and generated artifacts are demonstrably disjoint.
+
+The main agent may write both Go and Lean. Apply the corresponding
+project style authority below.
+
+{{template "fragments/go_style" .}}
+
+{{template "fragments/lean_style" .}}
