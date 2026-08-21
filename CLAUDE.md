@@ -1,5 +1,3 @@
-- You **MUST** read `STYLE.md` when writing `lean` code in this project.
-
 - You **MUST NOT** manually write or modify files in `./References`.
 
 - You **MUST NOT** truncate shell/bash output; doing so risks missing critical information
