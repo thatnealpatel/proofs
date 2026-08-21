@@ -1,66 +1,31 @@
-## Project rider
-
-These rules apply to every agent working in this repository.
+## `proofs` project guidance
 
 You **MUST NOT** manually create or modify files under
 `./References`. Those artifacts are immutable inputs.
 
-You **MUST NOT** truncate shell or command output; doing so can
-poison downstream reasoning. You SHOULD redirect unfamiliar
-output under `/tmp` and probe its shape before reading it. Inspect
-a harness spill file rather than reasoning from a truncated view.
+You **MUST NOT** truncate shell or command output; doing
+so can poison downstream agents and reasoning.
 
-You **MUST** use `leandoc` before any other Lean semantic or
-symbol-search tool. You SHOULD prefer small `.lean` probes in
-`Proofs/Scratch/` for `#check`, `#eval`, and `example`
-experiments before changing non-scratch libraries. You SHOULD use
-`exact?`, `apply?`, `#loogle`, and `#leansearch` as documented by
-the Lean and `leandoc` skills.
+You SHOULD use `leandoc` before other Lean semantic searches.
 
-You **MUST** build Lean targets from the repository root under
-the shared Lake lock:
+You SHOULD build Lean targets from the repository root
+under the shared Lake lock:
 
 ```bash
 flock .lake/agent.lock lake build <target>
 ```
 
-You **MUST** treat a formal proof as complete only when the
-intended target compiles with no `sorry`, no `admit`, no errors,
-and no unapproved axioms.
-
-You **MUST** run every Sage and Python computation with a
-five-minute bound:
-
-```bash
-timeout 300 sage -c '<sage code>'
-timeout 300 python3 <script>
-```
-
-A timed-out computation **MUST NOT** be retried. Preserve its
-partial evidence and escalate the blocker to the USER. You SHOULD
-reach for Sage first for computational algebra intuition,
-counterexamples, and witnesses; computation is evidence, not
-proof.
-
 Use the harness built-ins proactively:
 
 - `tool_wikipedia` for definitions, terminology, historical
   orientation, and links among mathematical topics;
+
 - `tool_oeis` for identifying sequences and retrieving full
   entries, formulas, references, and cross-links;
+
 - `tool_erdos` for corpus searches, exact problem statements,
   status metadata, and live comments.
 
 These built-ins are canonical. Do not substitute local CLI
 clients or generic web search for Wikipedia, OEIS, or the Erdos
-problems corpus. Search operations are discovery: retrieve the
-complete article, entry, or problem page before relying on it.
-Record exact titles, A-numbers, problem numbers, assumptions, and
-status dates.
-
-For delicate hypotheses, attribution, priority, novelty, or proof
-claims, follow references to primary sources. You SHOULD prefer
-`tool_arxiv` for arXiv source and `tool_fetch` for exact paper or
-PDF retrieval before generic web retrieval; use
-`tool_search(mode=context)` when no direct route exists.
-Search-result snippets are leads, not source evidence.
+problems corpus.

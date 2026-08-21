@@ -1,31 +1,70 @@
-## Proofs project orchestration
+## `proofs` project workflow
 
-The main agent owns integration, review, staging, and commits.
-Subagents return evidence or worktree edits; they do not decide
-campaign scope or mutate USER-owned Git state unless explicitly
-directed.
+**Rules:**
 
-You SHOULD implement directly on `main` unless the USER requests
-another workflow. Review the complete tracked delta with
-`git diff HEAD` and inspect relevant untracked files from
-`git status --short`.
+You **MUST NOT** decline maintainer guidance
+or instructions.
 
-Before staging or committing any changed Lean program, you
-**MUST** dispatch `vacuity-reviewer`, `foundations-reviewer`, and
-`style-reviewer` in parallel over the complete uncommitted Lean
-surface. Resolve or explicitly report every finding. Do not stage
-partial repairs while reviewers or writers are still operating on
-the same files.
+You **MUST NOT** run mutating `git` commands
+while writing/editing subagents are in flight.
 
-For a nontrivial campaign, keep a durable plan and review ledger
-under `/tmp`. Record stable finding IDs, reviewer axis, status,
-disposition, completed checks, remaining blockers, and the next
-atomic action. Parallelize writers only when their files, APIs,
-fixtures, and generated artifacts are demonstrably disjoint.
+You SHOULD commit to `main` directly.
 
-The main agent may write both Go and Lean. Apply the corresponding
-project style authority below.
+You SHOULD operate autonomously in this
+project. The USER sets the agenda for a
+given session.
 
-{{template "fragments/go_style" .}}
+**Campaign Mode:**
 
-{{template "fragments/lean_style" .}}
+You SHOULD create a durable plan artifact in
+`~/x/{dir name}/campaign.md` for campaigns you
+orchestrate. It should include a review ledger
+with findings that have stable IDs, reviewer
+axis, status, and disposition.
+
+You SHOULD update the ledger before each repair;
+prefer to resume reviewers and writers so that
+each successive round converges quickly.
+
+You SHOULD dispatch writers in parallel only when
+their scopes are demonstrably disjoint and have no
+shared files, APIs, fixtures, generated artifacts,
+or sequencing dependencies. Otherwise, serialize:
+Prefer correctness over speed.
+
+Traps that require serialization include:
+
+1. cross-package exported API changes;
+2. shared intra-package tests, fixtures, or globals; and
+3. linearly scoped refactors.
+
+The orchestration loop is as follows:
+
+1. **Write.** Either yourself, single or parallel writers.
+
+2. **Review.** Either yourself or with reviewers: `git diff` is the review delta
+   along with any untracked files: `git status --short`.
+
+3. **Stage.** Once reviews finish, you **MUST** `git add <files ...>` anything
+   in your campaign scope: Do not alter unrelated state.
+
+4. **Repair.** If findings exist, go to (1).
+
+5. **Commit.** Using `{Directory}: {terse commit message}`.
+
+You SHOULD operate conservatively when running
+multiple parallel writers / review lanes. Staging
+prematurely or partially can cause subagent
+confusion. Always err on the side of caution:
+Prefer correctness over speed.
+
+You SHOULD identify when `write->review->stage->repair`
+is not converging: More than two rounds of this
+loop on the same objective is likely frivilous.
+You are authorized to commit the final diff if
+not obviously incorrect, complex, or otherwise
+requiring maintainer attention. In these cases,
+make a note in the campaign ledger to surface
+these judgement calls to the maintainer **after
+the campaign is over.** It is cheaper to repair
+after the fact than it is to block during.

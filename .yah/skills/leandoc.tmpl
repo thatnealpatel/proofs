@@ -1,42 +1,44 @@
-## Lean source discovery with `leandoc`
+## `leandoc` skill
 
-Use the installed `leandoc` command before broad greps through
-Mathlib. It searches Lean core, Std, and packages under
-`.lake/packages`.
+Use the installed `leandoc` command before broad
+`grep` or `rg` through Mathlib. It searches Lean core,
+Std, and packages under `.lake/packages` and Mathlib
+core.
 
-A single token is an exact identifier query; whitespace makes a
-BM25 concept search:
+A single token is an exact identifier query; whitespace
+makes a BM25 concept search:
 
 ```bash
 leandoc Nat.add_comm
+
 leandoc Option.get!
+
 leandoc group homomorphism
 ```
 
 The result is one JSON object with `mode`, `matches`, and
-`candidates`. It is not a top-level array. Inspect it with `jq`:
+`candidates`. It is not a top-level array. Inspect it with
+`jq`:
 
 ```bash
-leandoc group homomorphism |
-  jq -c '.matches[:5][] | {name, kind, file, line}'
+leandoc group homomorphism | jq -c '.matches[:5][] | {name, kind, file, line}'
+
 leandoc MonoidHom.map_mul | jq '.matches[0].body'
+
 leandoc Bogus.Name | jq '.candidates'
 ```
 
-Search results identify candidate names but omit bodies. Follow
-a concept search with an exact-name query to obtain the source
-body, signature, docstring, file, and line. A `generated` match
-comes only from compiled metadata and may have no body or
-signature; verify it with Lean itself.
+Search results identify candidate names but omit bodies.
+Follow a concept search with an exact-name query to obtain
+the source body, signature, docstring, file, and line. A
+`generated` match comes only from compiled metadata and may
+have no body or signature; verify it with Lean itself.
 
 Choose the smallest suitable search:
 
 - `leandoc`: exact declaration names or source concepts;
-- `#loogle`: a type-signature shape;
-- `#leansearch`: a natural-language theorem description;
-- `exact?` or `apply?`: a lemma that may close the current goal;
 - `grep`: an exact source string after indexed searches fail.
 
-Never treat an empty search, a generated-name hit, or a suggested
-proof as evidence that an API does or does not exist. Check the
-exact declaration in Lean.
+You SHOULD NOT treat an empty search, a generated-name hit,
+or a suggested proof as evidence that an API does or does not
+exist.

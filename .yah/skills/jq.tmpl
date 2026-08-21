@@ -1,0 +1,28 @@
+## `jq` skill
+
+`jq` is installed. Use it to process JSON from `goof` and
+other CLI tools; `goof` emits JSON by default.
+
+Filters compose with `|`. `.` is the input; use `.field`,
+`.[n]`, `.[:n]`, and `.[]` to access, index, slice, and
+iterate. Add `?` to optional traversal (`.items[]?`). Use
+`{id, title}` to project fields, `{id: .id[:8], model}` to
+rename, and `[filter]` to collect results into an array.
+
+Use `select(predicate)` with comparisons and functions such
+as `startswith("prefix")`, `test("regex"; "i")`, and
+`any(predicate)`. Guard nullable arrays before iterating:
+
+```bash
+cmd | jq '.[] | select(.tags != null) | select(.tags | any(startswith("net/"))) | {id, title}'
+```
+
+Use `// empty` to omit missing or null values:
+
+```bash
+cmd | jq -r '.osv.affected[]?.ecosystem_specific.imports[]?.symbols[]? // empty'
+```
+
+Use `length` to count, `-r` for raw strings, `-c` for one
+compact value per line, and `-s` to collect NDJSON inputs
+into an array.

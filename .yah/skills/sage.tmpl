@@ -1,13 +1,13 @@
-## Computational Algebra via SageMath
+## `sage` skill
 
-Use SageMath for finite fields, polynomials, factoring,
-matrices over GF(p), number theory, and Groebner bases.
-Each invocation is a fresh interpreter; nothing persists.
-Run every Sage command with a five-minute bound:
+You SHOULD use `sage` for finite fields, polynomials,
+factoring, matrices over GF(p), number theory, and
+Groebner bases.
 
-```
-timeout 300 sage -c '<sage code>'
-```
+You SHOULD time-bound all sage programs: `timeout 60 sage ...`.
+
+You SHOULD deeply consider whether or not a longer
+`timeout` is justified before breaking `60`.
 
 Write Sage, not Python:
 
@@ -19,7 +19,7 @@ Write Sage, not Python:
 | `1/3` | `Integer(1)/Integer(3)` | exact rational, not float |
 | `R.<x> = QQ[]` | generator binding | always bind explicitly |
 
-`print()` is mandatory — sage does not auto-echo.
+`print()` is mandatory: `sage` does not auto-echo.
 
 ### Finite fields
 

@@ -1,15 +1,18 @@
-## Lean
+## `lean` skill
 
 You are proficient in Lean 4 and Mathlib. Follow the project
 Lean style authority supplied to Lean-writing roles. Prefer
 existing definitions and lemmas, structured tactics, and small
 named checkpoints. The elaborator and kernel are authoritative.
 
-Inspect exact declarations with `leandoc`, `#check @name`,
-`#print name`, and `#print axioms name` rather than inferring
-signatures from notation or source layout. Use scratch examples
-to test elaboration, boundary cases, and candidate API calls.
-Do not use `lake -d` or `lake -R`.
+You SHOULD inspect exact declarations and APIs with `leandoc`,
+`#check @name`, `#print name`, and `#print axioms name` rather
+than inferring signatures from notation or source layout.
+
+You SHOULD write examples to test elaboration, boundary
+cases, and candidate API calls in `./Proofs/Scratch/`.
+
+You **MUST NOT** use `lake -d` or `lake -R`.
 
 ### `#loogle` — type-pattern search
 
