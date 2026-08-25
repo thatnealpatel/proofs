@@ -13,6 +13,7 @@ import BilinearComplexity.GroupTensorWedderburn
 import BilinearComplexity.KroneckerMatMul
 import BilinearComplexity.KoszulFlattening
 import BilinearComplexity.LadermanP7Koszul
+import BilinearComplexity.LinearElimination
 import BilinearComplexity.LinearFlattening
 import BilinearComplexity.LinearFlatteningCompression
 import BilinearComplexity.MatMulMono
@@ -26,6 +27,8 @@ import BilinearComplexity.PeelingSupport
 import BilinearComplexity.RankCalculus
 import BilinearComplexity.Scheme
 import BilinearComplexity.SchemeAction
+import BilinearComplexity.SchemeDeformation
+import BilinearComplexity.SchemeGauge
 import BilinearComplexity.SchemeFlipReduction
 import BilinearComplexity.SchemeReplacement
 import BilinearComplexity.SliceRank
