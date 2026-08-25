@@ -62,7 +62,7 @@ integrable five-term direction at this point has this construction is a separate
 bounded conjecture. A universal statement about all five-term tensor
 deformations is unsupported and likely false.
 
-**Non-universality fixture:** `/home/exedev/x/matmul-schemes/matmul-schemes/z2/4x4x4_m47_c659_iteration5551_Z2.txt` is a fourth audited rank-47 orbit; no paired-circuit conclusion for this separate presentation is implied by the rank-49 construction below.
+**Non-universality fixture:** `/home/exedev/x/tensor/data/z2/4x4x4_m47_c659_iteration5551_Z2.txt` is a fourth audited rank-47 orbit; no paired-circuit conclusion for this separate presentation is implied by the rank-49 construction below.
 
 ## Statements to establish
 

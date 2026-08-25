@@ -183,4 +183,4 @@ This task does not prove a 54-dimensional component, integrability of a normal
 tangent, absence of finite replacements, or absence of another binary point.
 Tangent rigidity on a support is not finite or global rigidity.
 
-**Rank-47 local/global fixture:** `/home/exedev/x/matmul-schemes/matmul-schemes/z2/4x4x4_m47_c659_iteration5551_Z2.txt` has Jacobian nullity and exact gauge-plus-sandwich tangent rank 139 but is globally inequivalent to the three older audited classes.
+**Rank-47 local/global fixture:** `/home/exedev/x/tensor/data/z2/4x4x4_m47_c659_iteration5551_Z2.txt` has Jacobian nullity and exact gauge-plus-sandwich tangent rank 139 but is globally inequivalent to the three older audited classes.
