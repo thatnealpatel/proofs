@@ -8,12 +8,6 @@ Every full-span GF(2) rank-47 decomposition of 4x4 matrix multiplication has Bre
 
 **Test:** For every newly discovered rank-47 class, construct the trivial tangent generators explicitly and compare their span with the exact Jacobian kernel. Any nontrivial quotient tangent refutes the conjecture.
 
-## Existence of a fourth rank-47 orbit
-
-There exists a full-span GF(2) rank-47 orbit outside the established AlphaTensor, Kauers--Moosbauer, and c680 classes.
-
-**Test:** Reject the three known orientation-canonical invariants during independent generation, then certify each survivor with the exact sandwich-equivalence solver.
-
 ## Intrinsic restriction ladder at rank 47
 
 Every full-span GF(2) rank-47 decomposition of 4x4 matrix multiplication admits:
@@ -31,7 +25,7 @@ Every full-span GF(2) rank-47 decomposition has 47 distinct projective factors i
 
 **Test:** Any new class with a repeated projective factor or a deficient complementary family refutes the conjecture and supplies an exposed ordinary-flip or linear-reduction mechanism.
 
-## Rank-48 transition barrier between known classes
+## Rank-48 transition barrier among the original three classes
 
 No pair among AlphaTensor, Kauers--Moosbauer, and c680 is connected by a valid composite path whose maximum rank is 48, with term permutations, tensor orientations, and sandwich equivalences treated as zero-cost.
 
