@@ -24,6 +24,10 @@ import BilinearComplexity.PeelingMoves
 import BilinearComplexity.PeelingSplit
 import BilinearComplexity.PeelingSupport
 import BilinearComplexity.RankCalculus
+import BilinearComplexity.Scheme
+import BilinearComplexity.SchemeAction
+import BilinearComplexity.SchemeFlipReduction
+import BilinearComplexity.SchemeReplacement
 import BilinearComplexity.SliceRank
 import BilinearComplexity.Strassen
 import BilinearComplexity.Support
