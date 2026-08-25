@@ -1,0 +1,397 @@
+{
+  "authentication": {
+    "algorithm": "SHA-256",
+    "canonicalization": "UTF-8 JSON, sort_keys=True, indent=2 for file encoding; compact separators=(',', ':') for payload",
+    "payload_sha256": "5343a5371e3d9b643f36025b7c72e2a227e8f0221e8f8ffe1f43b58be8d2d258",
+    "scope": "all top-level fields except authentication.payload_sha256"
+  },
+  "files": [
+    {
+      "bytes": 4716,
+      "id": "canonical_fixture",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/fixtures/4x4x4_m49_c680_iteration65_Z2.txt",
+      "role": "vendored canonical binary 4x4x4 length-49 presentation and sole numerical runtime input",
+      "sha256": "5fc92a6bf83fc29d9527ab100bad5d72d769178b616b31a36c3c0c0b8ad9d09d"
+    },
+    {
+      "bytes": 93348,
+      "id": "support5_census_script",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/support5_census.py",
+      "role": "support-five producer and acceptance checker",
+      "sha256": "3af318d568bd76fabea18dcaa77fc12aaad9f2bf776ff48f0235c57756a23a2f"
+    },
+    {
+      "bytes": 2171403,
+      "id": "support5_census_artifact",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/artifacts/support5_census.json",
+      "role": "support-five v4 census and certificates",
+      "sha256": "1afc16b7db176e4a480fb3c06a5b6cfe104be974bef0c5af3f48ac4d0a4c78de"
+    },
+    {
+      "bytes": 16890516,
+      "id": "support5_orbits_artifact",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/artifacts/support5_orbits-99ea851b7dec758b3e302f306f93220969df7ef26073cfc4afa384d60c71bf7b.jsonl.gz",
+      "role": "immutable content-addressed deterministic gzip singleton support stream",
+      "sha256": "99ea851b7dec758b3e302f306f93220969df7ef26073cfc4afa384d60c71bf7b"
+    },
+    {
+      "bytes": 74597,
+      "id": "stabilizer_script",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/stabilizer.py",
+      "role": "stabilizer producer and acceptance checker",
+      "sha256": "d7b5c51498d84d5645d17db8e1def4296716760aaf39fbef27cc1add7ea74995"
+    },
+    {
+      "bytes": 40627,
+      "id": "stabilizer_replayer",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/stabilizer_replay.py",
+      "role": "independent stabilizer JSON consumer and witness replayer",
+      "sha256": "e6caaec294fe2d17aaf85fe2efb7f07ec5cbb057e9c5a90d9180aea8943b2528"
+    },
+    {
+      "bytes": 2891566,
+      "id": "stabilizer_artifact",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/artifacts/stabilizer.json",
+      "role": "stabilizer v2 certificate",
+      "sha256": "0501d01822991a8d1177783fcd4600c6e93cf8c844b10b2264278f42eac3facf"
+    },
+    {
+      "bytes": 52098,
+      "id": "generic_germ_script",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/generic_germ.py",
+      "role": "generic-germ producer and acceptance checker",
+      "sha256": "4165af7a47cfba2dffe88c6501372fdadccc2d520dba4954f79f60e3bac91425"
+    },
+    {
+      "bytes": 195551,
+      "id": "generic_germ_artifact",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/artifacts/generic_germ.json",
+      "role": "generic-germ v3 certificate",
+      "sha256": "fb2ed08df59a07c8b22df9481433cd4939ad9828e038ef3952198e62bb9e9d52"
+    },
+    {
+      "bytes": 51008,
+      "id": "parameter_orbits_script",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/parameter_orbits.sage",
+      "role": "parameter-correspondence producer and acceptance checker",
+      "sha256": "e76291a3fb578ccf505c14cf7485483612b5b3b0c47e27b8932b33fd22ce8aa4"
+    },
+    {
+      "bytes": 453886,
+      "id": "parameter_orbits_artifact",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/artifacts/parameter_orbits.json",
+      "role": "parameter-orbits v2 certificate",
+      "sha256": "b50b6d6c4854095d6001edd3605d7cd9d51eaa096319b4126042ff1ac7ddcb88"
+    },
+    {
+      "bytes": 32156,
+      "id": "integration_checker",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/check_all.py",
+      "role": "relocatable cross-authentication and resource-enforced acceptance runner",
+      "sha256": "844f8ccbd215a914a1a72700bbf00ba76c8c33256d2629002ee9da14a1fee161"
+    },
+    {
+      "bytes": 6785,
+      "id": "integration_readme",
+      "location": "repository",
+      "path": "Programs/BilinearComplexity/rank49_t4/README.md",
+      "role": "bundle operation guide",
+      "sha256": "2be5f4b60bdbfd1f7dd020223899a918558ab47ecdc851f8bfa6e252ca3eb876"
+    },
+    {
+      "bytes": 36744,
+      "id": "integration_report",
+      "location": "repository",
+      "path": "Documents/rank49-deformation-t4.md",
+      "role": "self-contained computational research synthesis",
+      "sha256": "1a0d93a67e7fe03618db7fb6faa01959c710b4b57ce191a509f60c2d3fc8abc7"
+    },
+    {
+      "bytes": 7773,
+      "id": "t1_card",
+      "location": "repository",
+      "path": "Formalize/Rank49Deformation-T1-schemes-actions-replacements.md",
+      "role": "formal semantics boundary",
+      "sha256": "27af7ba52eb7ffa0ec7b3916332d6d382359db6f37949d9ca1b900a281e57ae2"
+    },
+    {
+      "bytes": 8521,
+      "id": "t2_card",
+      "location": "repository",
+      "path": "Formalize/Rank49Deformation-T2-restricted-derivatives.md",
+      "role": "restricted derivative and obstruction boundary",
+      "sha256": "58348a45264d0bc8dee4efc71e397491a07d84d2c4a0bd4e7e3a50e507a0ab37"
+    },
+    {
+      "bytes": 6966,
+      "id": "t3_card",
+      "location": "repository",
+      "path": "Formalize/Rank49Deformation-T3-paired-circuit-gm.md",
+      "role": "paired-circuit sufficient-theorem boundary",
+      "sha256": "74211bcf01994d798904613ec2126e00a3b82cd5774265054228a10c05455cf2"
+    },
+    {
+      "bytes": 14027,
+      "id": "t4_card",
+      "location": "repository",
+      "path": "Formalize/Rank49Deformation-T4-stabilizer-germ-orbits.md",
+      "role": "research specification, including stale outer-action sentence corrected by this bundle",
+      "sha256": "929e226e13bb89a2a7207e9449e0c711ee2a33439c4b47c0052879e8dcff0fe5"
+    },
+    {
+      "bytes": 98903,
+      "id": "paired_circuit_lean",
+      "location": "repository",
+      "path": "Proofs/BilinearComplexity/PairedCircuit.lean",
+      "role": "T3 Lean provenance named and digested by the parameter artifact",
+      "sha256": "2589a379ec7d9aaf1dbf8972cac0833bc39cc34ba28de1f477165981789001fa"
+    }
+  ],
+  "lanes": [
+    {
+      "acceptance_checker": {
+        "argv": [
+          "python3",
+          "Programs/BilinearComplexity/rank49_t4/support5_census.py",
+          "--check",
+          "--quiet"
+        ],
+        "enforced_limits": {
+          "memory_mib": 1024,
+          "method": "hard inherited per-process RLIMIT_AS; sampled aggregate same-process-group RSS; monitor group until empty; process-group termination",
+          "wall_seconds": 600
+        },
+        "shell_command": "python3 Programs/BilinearComplexity/rank49_t4/support5_census.py --check --quiet",
+        "working_directory": "repository root"
+      },
+      "artifacts": [
+        {
+          "file_id": "support5_census_artifact",
+          "format": "json",
+          "schema": "rank49-t4-support5-census-v4",
+          "schema_pointer": "/artifact_schema"
+        },
+        {
+          "file_id": "support5_orbits_artifact",
+          "format": "gzip_jsonl",
+          "schema": "rank49-t4-support5-singleton-orbits-v3",
+          "schema_source": "support5_census_artifact:/result/singleton_orbit_records/schema"
+        }
+      ],
+      "cross_bindings": [],
+      "expected_completion": {
+        "details": "1,906,884 supports and orbit records validated; 63 rank-229 one-dimensional normal supports",
+        "status": "PASS"
+      },
+      "name": "support5_census",
+      "provenance_inputs": [],
+      "randomness": {
+        "seeds": [],
+        "used": false
+      },
+      "resource_provenance": {
+        "observed_acceptance_peak_rss_kib": 35244,
+        "observed_acceptance_wall_seconds": 143.68
+      },
+      "runtime_inputs": [
+        "canonical_fixture"
+      ],
+      "scripts": [
+        "support5_census_script"
+      ]
+    },
+    {
+      "acceptance_checker": {
+        "argv": [
+          "python3",
+          "Programs/BilinearComplexity/rank49_t4/stabilizer.py",
+          "--check"
+        ],
+        "enforced_limits": {
+          "memory_mib": 1024,
+          "method": "hard inherited per-process RLIMIT_AS; sampled aggregate same-process-group RSS; monitor group until empty; process-group termination",
+          "wall_seconds": 300
+        },
+        "shell_command": "python3 Programs/BilinearComplexity/rank49_t4/stabilizer.py --check",
+        "working_directory": "repository root"
+      },
+      "artifacts": [
+        {
+          "file_id": "stabilizer_artifact",
+          "format": "json",
+          "schema": "proofs.rank49_t4.stabilizer.v2",
+          "schema_pointer": "/schema"
+        }
+      ],
+      "cross_bindings": [],
+      "expected_completion": {
+        "details": "producer byte comparison and invoked independent replayer; F2/F4 effective image order 1",
+        "status": "PASS"
+      },
+      "name": "stabilizer",
+      "provenance_inputs": [],
+      "randomness": {
+        "seeds": [],
+        "used": false
+      },
+      "resource_provenance": {
+        "artifact_declared_solver_limits": null,
+        "coverage": "complete finite coverage; no heuristic cap or timeout in lane",
+        "observed_acceptance_peak_rss_kib": 41408,
+        "observed_acceptance_wall_seconds": 1.76
+      },
+      "runtime_inputs": [
+        "canonical_fixture"
+      ],
+      "scripts": [
+        "stabilizer_script",
+        "stabilizer_replayer"
+      ]
+    },
+    {
+      "acceptance_checker": {
+        "argv": [
+          "python3",
+          "Programs/BilinearComplexity/rank49_t4/generic_germ.py",
+          "--check"
+        ],
+        "enforced_limits": {
+          "memory_mib": 2048,
+          "method": "hard inherited per-process RLIMIT_AS; sampled aggregate same-process-group RSS; monitor group until empty; process-group termination",
+          "wall_seconds": 600
+        },
+        "shell_command": "python3 Programs/BilinearComplexity/rank49_t4/generic_germ.py --check",
+        "working_directory": "repository root"
+      },
+      "artifacts": [
+        {
+          "file_id": "generic_germ_artifact",
+          "format": "json",
+          "schema": "BilinearComplexity.rank49_t4.generic_germ.v3",
+          "schema_pointer": "/schema"
+        }
+      ],
+      "cross_bindings": [],
+      "expected_completion": {
+        "details": "all exact rank, determinant-degree, family, and complete binary quadratic coefficient checks pass",
+        "status": "PASS"
+      },
+      "name": "generic_germ",
+      "provenance_inputs": [],
+      "randomness": {
+        "seeds": [],
+        "used": false
+      },
+      "resource_provenance": {
+        "artifact_peak_rss_mib_advisory": 1024,
+        "artifact_wall_seconds_advisory": 600,
+        "observed_acceptance_peak_rss_kib": 59908,
+        "observed_acceptance_wall_seconds": 35.91
+      },
+      "runtime_inputs": [
+        "canonical_fixture"
+      ],
+      "scripts": [
+        "generic_germ_script"
+      ]
+    },
+    {
+      "acceptance_checker": {
+        "argv": [
+          "sage",
+          "Programs/BilinearComplexity/rank49_t4/parameter_orbits.sage",
+          "--",
+          "--check"
+        ],
+        "enforced_limits": {
+          "memory_mib": 4096,
+          "method": "hard inherited per-process RLIMIT_AS; sampled aggregate same-process-group RSS; monitor group until empty; process-group termination",
+          "wall_seconds": 60
+        },
+        "shell_command": "sage Programs/BilinearComplexity/rank49_t4/parameter_orbits.sage -- --check",
+        "working_directory": "repository root"
+      },
+      "artifacts": [
+        {
+          "file_id": "parameter_orbits_artifact",
+          "format": "json",
+          "schema": "rank49-t4-parameter-orbits-v2",
+          "schema_pointer": "/schema"
+        }
+      ],
+      "cross_bindings": [
+        {
+          "artifact_file_id": "parameter_orbits_artifact",
+          "inventory_id": "paired_circuit_lean",
+          "path_pointer": "/provenance/t3_lean_provenance",
+          "sha256_pointer": "/provenance/t3_lean_provenance_sha256"
+        }
+      ],
+      "expected_completion": {
+        "details": "24 graph cells covered, diagonal field-valued R(K), all-Gm validity, family orbit counts F2:1 and F4:3",
+        "status": "PASS"
+      },
+      "name": "parameter_orbits",
+      "provenance_inputs": [
+        "paired_circuit_lean"
+      ],
+      "randomness": {
+        "seeds": [],
+        "used": false
+      },
+      "resource_provenance": {
+        "artifact_acceptance_timeout_seconds": 60,
+        "artifact_memory_limit": null,
+        "observed_acceptance_peak_rss_kib": 268108,
+        "observed_acceptance_wall_seconds": 15.76
+      },
+      "runtime_inputs": [
+        "canonical_fixture"
+      ],
+      "scripts": [
+        "parameter_orbits_script"
+      ]
+    }
+  ],
+  "publication": {
+    "artifact_json": "deterministic same-directory temporary; flush and fsync; atomic replace; parent-directory fsync",
+    "dynamic_run_data": "stdout only; excluded from deterministic lane artifacts",
+    "support_orbit": "deterministic gzip level 9, mtime 0, empty filename; fsynced mode 0444 temporary; no-overwrite hard-link publication under SHA-256 filename; existing target reused only after size and digest verification",
+    "support_pair_transactionality": "ordered durable publication, not a two-file transaction; interruption can leave only an unreferenced content-addressed stream"
+  },
+  "repository": {
+    "base_git_revision": "6866f8be63692dc918e26d75db9414325b03b78c",
+    "base_revision_role": "generation base recorded by all lane artifacts; it must exist and be an ancestor of current HEAD",
+    "git_mutation_performed_by_integration": false,
+    "head_policy": "later commits are allowed because every delivered bundle file remains authenticated by size and SHA-256",
+    "root_resolution": "resolve check_all.py and take parents[3]"
+  },
+  "schema": "rank49-t4-integration-manifest-v2",
+  "scope": {
+    "coefficient_characteristic": 2,
+    "completion": "exact accepted scoped results only; the full T4 research card is not declared complete",
+    "status_values": [
+      "PASS",
+      "TIMEOUT",
+      "RESOURCE_EXCEEDED",
+      "FAIL"
+    ]
+  },
+  "source": {
+    "original_external_locator": "/home/exedev/x/tensor/data/z2/4x4x4_m49_c680_iteration65_Z2.txt",
+    "original_external_locator_role": "provenance only; never opened by integration or lane checkers",
+    "runtime_fixture_inventory_id": "canonical_fixture"
+  }
+}
