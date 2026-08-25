@@ -14,7 +14,7 @@ gauge, matrix-multiplication sandwich isotropy, and the six cyclic/transpose
 orientations. The existing Lean development has most of the tensor and flip
 algebra, but not one stable package joining these notions.
 
-**Rank-47 action fixture:** `/home/exedev/x/matmul-schemes/matmul-schemes/z2/4x4x4_m47_c659_iteration5551_Z2.txt` is a valid 47-term identity but lies outside the KM, Alpha/c625, and c680 classes under term permutation, sandwiching, and all six outer orientations.
+**Rank-47 action fixture:** `/home/exedev/x/tensor/data/z2/4x4x4_m47_c659_iteration5551_Z2.txt` is a valid 47-term identity but lies outside the KM, Alpha/c625, and c680 classes under term permutation, sandwiching, and all six outer orientations.
 
 ## Existing Lean ground
 

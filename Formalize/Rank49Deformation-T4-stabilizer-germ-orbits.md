@@ -13,7 +13,7 @@ orbits the family actually represents.
 
 The source is
 
-`/home/exedev/x/matmul-schemes/matmul-schemes/z2/4x4x4_m49_c680_iteration65_Z2.txt`
+`/home/exedev/x/tensor/data/z2/4x4x4_m49_c680_iteration65_Z2.txt`
 
 with SHA-256
 
@@ -98,7 +98,7 @@ pencil graphs, complementary Khatri-Rao ranks, cyclic-product similarity
 invariants, and term-incidence data. A mismatch is a rejection certificate;
 matching invariants are never an equivalence certificate.
 
-**Orbit-filter fixture:** `/home/exedev/x/matmul-schemes/matmul-schemes/z2/4x4x4_m47_c659_iteration5551_Z2.txt` is rejected from each older rank-47 class by factor-rank and cyclic-product mismatches despite matching their full-span, Khatri--Rao, and Jacobian-dimension data.
+**Orbit-filter fixture:** `/home/exedev/x/tensor/data/z2/4x4x4_m47_c659_iteration5551_Z2.txt` is rejected from each older rank-47 class by factor-rank and cyclic-product mismatches despite matching their full-span, Khatri--Rao, and Jacobian-dimension data.
 
 Deliver:
 
