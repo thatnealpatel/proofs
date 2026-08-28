@@ -44,8 +44,8 @@ const (
 	testDefectOneCount           = 4
 	testDefectAtLeastTwoCount    = 0
 	testReductionCount           = 4
-	testSemanticSHA256           = "3815b52e97e44e4e31c81d2b0515982f6598fb765c832ca7d23f75229f95bfcf"
-	testCompleteOutputSHA256     = "b067dd4008f35fb8b85ab1693e9e54d5d6dc11ac3b1336e584092753332cfe49"
+	testSemanticSHA256           = "c78f1d05784c630043ffe07af611cd750991bc116e4a885844b4f7c1a405d182"
+	testCompleteOutputSHA256     = "56a8263a309f3ba0d6ed2cef605f05ba32b0dfbc8cdeca1fd24bed625fa25b89"
 	testUsage                    = "Usage: c659-plusflip-cert C659_ROOT_PATH C680_ROOT_PATH\n"
 )
 

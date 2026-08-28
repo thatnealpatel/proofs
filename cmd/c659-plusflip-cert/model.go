@@ -94,17 +94,18 @@ type runtimeBinding struct {
 }
 
 type semanticCertificate struct {
-	Schema        string                   `json:"schema"`
-	Experiment    string                   `json:"experiment"`
-	Encodings     encodingCertificate      `json:"encodings"`
-	RootSelection rootSelectionCertificate `json:"root_selection"`
-	PriorScan     priorScanBinding         `json:"prior_scan_binding"`
-	FixedPlus     plusCertificate          `json:"fixed_plus"`
-	Coverage      coverageCertificate      `json:"coverage"`
-	Attempts      []attemptCertificate     `json:"attempts"`
-	Records       []flipRecord             `json:"records"`
-	UniqueOutputs []uniqueOutput           `json:"unique_outputs"`
-	Summary       summaryCertificate       `json:"summary"`
+	Schema                string                             `json:"schema"`
+	Experiment            string                             `json:"experiment"`
+	Encodings             encodingCertificate                `json:"encodings"`
+	RootSelection         rootSelectionCertificate           `json:"root_selection"`
+	PriorScan             priorScanBinding                   `json:"prior_scan_binding"`
+	FixedPlus             plusCertificate                    `json:"fixed_plus"`
+	FixedChildInversePlus fixedChildInversePlusCertificateV4 `json:"fixed_child_inverse_plus"`
+	Coverage              coverageCertificate                `json:"coverage"`
+	Attempts              []attemptCertificate               `json:"attempts"`
+	Records               []flipRecord                       `json:"records"`
+	UniqueOutputs         []uniqueOutput                     `json:"unique_outputs"`
+	Summary               summaryCertificate                 `json:"summary"`
 }
 
 type encodingCertificate struct {
