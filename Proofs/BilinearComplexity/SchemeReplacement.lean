@@ -157,6 +157,12 @@ def resultRank (C : Certificate S) : ℕ :=
 @[simp] theorem resultRank_eq (C : Certificate S) :
     C.resultRank = r - C.removed.card + C.inserted.length := rfl
 
+/-- Every certified replacement proves a rank-at-most bound at its result rank. -/
+theorem rankLE_resultRank (C : Certificate S) :
+    RankLE S.sumTensor C.resultRank := by
+  rw [← C.sumTensor_eq]
+  exact C.output.rankLE_sumTensor
+
 /-- Conditions under which inserted evaluated terms retain the stronger `Scheme.Valid` data. -/
 structure InsertedValid (C : Certificate S) : Prop where
   /-- Every inserted rank-one tensor is nonzero. -/
@@ -1716,6 +1722,7 @@ theorem zmod2_compositionBlocks_fixture :
 #check @zmod2_compositionBlocks_fixture
 #check @Certificate.output
 #check @Certificate.sumTensor_eq
+#check @Certificate.rankLE_resultRank
 #check @Certificate.valid_output
 #check @Certificate.removed_eq_image_transported
 #check @Certificate.composite
@@ -1730,6 +1737,7 @@ theorem zmod2_compositionBlocks_fixture :
 #print axioms zmod2_rankChange_fixture
 #print axioms zmod2_compositionBlocks_fixture
 #print axioms Certificate.sumTensor_eq
+#print axioms Certificate.rankLE_resultRank
 #print axioms Certificate.valid_output
 #print axioms Certificate.removed_eq_image_transported
 #print axioms Certificate.composite
