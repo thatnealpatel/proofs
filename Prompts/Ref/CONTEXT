@@ -67,9 +67,9 @@ DISPATCH (advisor proposes, USER dispatches)
   P2 Full sandwich sweeps, 302 schemes at peak <= 29. Any
      27-copy kills the wall; all >= 28 closes the low tier.
      Cost [5 box-h, 8 box-d] (35m38s wall vs ~30s in-log:
-     re-measure one orbit). Prereqs: generalize gaugesweep
-     (hardcoded Laderman :132); fix dead-set poisoning after
-     budget abort (:292 — unsound if reused).
+     re-measure one orbit). Prereqs: implement a general
+     sandwich-orbit evaluator; ensure subset-cache state is not
+     reused after a budget abort.
   P3 <4,4,4>/F_2 Hensel survey. KM 2212.01175 S5 (corpus,
      main.tex:779): >100k rank-47 schemes fail Z_2 -> Z_4 at
      the first step (= linear system over F_2); ditto >30k
@@ -81,10 +81,9 @@ DISPATCH (advisor proposes, USER dispatches)
      limit vs technique-bound); one consumer agent first.
      >= 22 plus any rank-22 witness closes R_F2.
 
-ASSETS. cmd/minpeak, cmd/gaugesweep (audit 2026-07-22 clean
-  except dead-set flag); burnside_n3.sage (133M -> 211
-  orbits); decomp_stabilizer.sage + cache (exact vs lower-
-  bound labels). DATA hks_dataset/ + sweeps EPHEMERAL;
+ASSETS. burnside_n3.sage (133M -> 211 orbits);
+  decomp_stabilizer.sage + cache (exact vs lower-bound labels).
+  DATA hks_dataset/ + sweeps EPHEMERAL;
   refetch algebra.uni-linz.ac.at/research/matrix-
   multiplication/ (http only).
 
