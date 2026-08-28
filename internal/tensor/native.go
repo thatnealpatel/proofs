@@ -30,15 +30,19 @@ func ParseNative(r ring.Ring, reader io.Reader) (Scheme, error) {
 		return Scheme{}, fmt.Errorf("native header has %d fields, want 4", len(header))
 	}
 	values := [4]int{}
-	for i, token := range header {
+	for i, token := range header[:3] {
 		value, err := parsePositiveDecimal(token)
 		if err != nil {
 			return Scheme{}, fmt.Errorf("native header field %d: %w", i, err)
 		}
 		values[i] = value
 	}
+	termCount, err := parseNonnegativeDecimal(header[3])
+	if err != nil {
+		return Scheme{}, fmt.Errorf("native header field 3: %w", err)
+	}
+	values[3] = termCount
 	dimensions := [3]int{values[0], values[1], values[2]}
-	termCount := values[3]
 	factorSizes := [3]int{}
 	for factor := range factorSizes {
 		size, err := matrixSize(dimensions[factor], dimensions[(factor+1)%3])
@@ -88,7 +92,7 @@ func ParseNative(r ring.Ring, reader io.Reader) (Scheme, error) {
 		}
 		terms[termIndex] = term
 	}
-	return NewScheme(terms)
+	return newScheme(r, dimensions, terms)
 }
 
 func WriteNative(writer io.Writer, scheme Scheme) error {
@@ -139,6 +143,17 @@ func parsePositiveDecimal(token string) (int, error) {
 	value, err := strconv.Atoi(token)
 	if err != nil {
 		return 0, fmt.Errorf("invalid positive decimal %q", token)
+	}
+	return value, nil
+}
+
+func parseNonnegativeDecimal(token string) (int, error) {
+	if token == "0" {
+		return 0, nil
+	}
+	value, err := parsePositiveDecimal(token)
+	if err != nil {
+		return 0, fmt.Errorf("invalid nonnegative decimal %q", token)
 	}
 	return value, nil
 }
