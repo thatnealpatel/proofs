@@ -7,6 +7,10 @@ const (
 	Z3 Ring = 3
 )
 
+func (r Ring) Valid() bool {
+	return r == Z2 || r == Z3
+}
+
 func (r Ring) Normalize(x int) int {
 	modulus := r.modulus()
 	x %= modulus
