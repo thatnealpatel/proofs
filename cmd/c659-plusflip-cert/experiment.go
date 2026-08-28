@@ -56,6 +56,10 @@ func executeExperiment(c659Path, c680Path string) (semanticCertificate, error) {
 	if err != nil {
 		return semanticCertificate{}, err
 	}
+	inversePlus, err := analyzeFixedChildInversePlus(selectedRoot.Scheme, plus.Scheme)
+	if err != nil {
+		return semanticCertificate{}, fmt.Errorf("analyze exact fixed-child inverse Plus domain: %w", err)
+	}
 	attempts, records, uniqueStates, counts, err := enumerateFlips(plus.Scheme)
 	if err != nil {
 		return semanticCertificate{}, err
@@ -115,13 +119,14 @@ func executeExperiment(c659Path, c680Path string) (semanticCertificate, error) {
 			ClassRowHash:        "SHA-256 of exactly 16 little-endian uint16 rows with no header",
 			SemanticDigestInput: "compact encoding/json serialization of the semantic object only",
 		},
-		RootSelection: rootSelection,
-		PriorScan:     makePriorScanBinding(),
-		FixedPlus:     plus.Certificate,
-		Coverage:      coverage,
-		Attempts:      attempts,
-		Records:       records,
-		UniqueOutputs: uniqueOutputs,
+		RootSelection:         rootSelection,
+		PriorScan:             makePriorScanBinding(),
+		FixedPlus:             plus.Certificate,
+		FixedChildInversePlus: inversePlus,
+		Coverage:              coverage,
+		Attempts:              attempts,
+		Records:               records,
+		UniqueOutputs:         uniqueOutputs,
 		Summary: summaryCertificate{
 			AcceptedDescriptors:        accepted,
 			ReductionResultHashes:      counts.ReductionHashes,

@@ -2,7 +2,7 @@ package main
 
 const (
 	commandName                                = "c659-plusflip-cert"
-	certificateSchema                          = "patel.codes/proofs/c659-plusflip-cert/v3"
+	certificateSchema                          = "patel.codes/proofs/c659-plusflip-cert/v4"
 	c659RootRole                               = "c659"
 	c680RootRole                               = "c680"
 	c659RootID                                 = "c659_iteration5551_Z2"
@@ -22,8 +22,8 @@ const (
 	expectedSecondFlipSHA256                   = "c567254223d480d8eaecde19d24f0aa96792208c41e2101a1270937bf1fe2934"
 	expectedThirdFlipSHA256                    = "ee02607028804b19dbb6c075d2d290386dcb309cf740b826569b64550ebdddf0"
 	expectedFourthFlipSHA256                   = "cbf85f130f4bf6decd79785c85112135ab8e55a8aa745188383aeaa541171351"
-	expectedSemanticSHA256                     = "3815b52e97e44e4e31c81d2b0515982f6598fb765c832ca7d23f75229f95bfcf"
-	expectedCompleteOutputSHA256               = "b067dd4008f35fb8b85ab1693e9e54d5d6dc11ac3b1336e584092753332cfe49"
+	expectedSemanticSHA256                     = "c78f1d05784c630043ffe07af611cd750991bc116e4a885844b4f7c1a405d182"
+	expectedCompleteOutputSHA256               = "56a8263a309f3ba0d6ed2cef605f05ba32b0dfbc8cdeca1fd24bed625fa25b89"
 	expectedC659RawBytes                       = 4524
 	expectedC680RawBytes                       = 4524
 	expectedRootOrderedFactorMajorPayloadBytes = 290
