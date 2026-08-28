@@ -1,157 +1,218 @@
 # T5 — maximal-class rank-defect monotonicity
 
-**Status.** Lean proof task.
+**Status.** Complete in `Proofs/BilinearComplexity/SharedFactorReduction.lean`.
+The public umbrella `Proofs/BilinearComplexity.lean` imports the module. The
+former Scratch implementation is now a compatibility/check harness that imports
+the public API; public code does not import `Scratch`.
 
-**Goal.** Prove the field-general matrix-rank inequality that makes a maximal
-literal equal-factor class a complete pruning test for all of its subsets.
-Connect the theorem to shared-factor tensor reduction without importing any
-search procedure or binary-field assumption.
+## Guarded natural-number matrix API
 
-## Plain-language statement
+The definition itself has the signature-level hypotheses
 
-Suppose a collection of rank-one tensor terms has the same nonzero factor in
-one tensor leg. After removing that common factor, each term is a rank-one
-matrix in the other two legs.
+```lean
+{k rows cols ι : Type*} [Field k] [Fintype cols]
+```
 
-For a finite set of terms `S`, let `M_S` be the sum of those complementary
-rank-one matrices and define
+so its row type is arbitrary. The guarded rank-sum, growth, and monotonicity
+theorems additionally assume `[Fintype rows]`. All APIs use finite sets
+`Finset ι`. `matrix_rank_sum_growth` exposes `[DecidableEq ι]` because its
+statement names `G \ I`; the defect-monotonicity API constructs decidability
+internally and does not expose that instance. Zero and duplicate matrices are
+permitted.
 
-`defect(S) = |S| - rank(M_S)`.
+The public natural-number expression is
 
-If `I` is a subset of `G`, then
+```lean
+matrixRankDefectNat A s = s.card - Matrix.rank (∑ i ∈ s, A i)
+```
 
-`defect(I) <= defect(G)`.
+This definition uses truncated `Nat` subtraction. Its numerical value has the
+usual cardinality-minus-rank defect interpretation only when one has proved
 
-Thus, if the full equal-factor class `G` has defect zero, every subset of `G`
-has defect zero. Conversely, any deficient subset forces the full class to be
-deficient. A complete reduction census may therefore test each maximal literal
-equal-factor class once; it does not need a support cutoff or an enumeration of
-all subsets.
+```lean
+Matrix.rank (∑ i ∈ s, A i) ≤ s.card.
+```
 
-## Mathematical setup
+For a family satisfying `∀ i, Matrix.rank (A i) ≤ 1`,
+`matrix_rank_sum_le_card` supplies exactly that guard. The same hypothesis is
+present in all public monotonicity corollaries.
 
-Let `k` be a field, let `m` and `n` be finite index types, and let `X` be a
-finite term-index type. For vectors
+For `I ⊆ G`, the core results are
 
-`v : X -> m -> k`,
+```lean
+matrix_rank_sum_growth A hA hIG :
+  Matrix.rank (∑ i ∈ G, A i) ≤
+    Matrix.rank (∑ i ∈ I, A i) + (G \ I).card
 
-`w : X -> n -> k`,
+matrixRankDefectNat_mono A hA hIG :
+  matrixRankDefectNat A I ≤ matrixRankDefectNat A G
+```
 
-define the complementary rank-one matrix
+The operational corollaries are
+`matrixRankDefectNat_eq_zero_of_subset` and
+`matrixRankDefectNat_pos_of_subset`. The completeness claim is specifically
+about the positivity predicate `0 < matrixRankDefectNat A s`: within a fixed
+finite rank-at-most-one class `G`, some subset has positive guarded defect if
+and only if `G` itself does. The nontrivial direction is
+`matrixRankDefectNat_pos_of_subset`; the reverse uses `G` as its own subset.
+Thus positivity pruning needs no support cutoff or enumeration of proper
+subsets. No broader completeness claim about tensor reductions is made.
 
-`A_x(i,j) = v_x(i) * w_x(j)`
+`matrix_rank_vecMulVec_le_one` specializes the rank-at-most-one hypothesis to
+outer products. The proofs are field-general and do not assume characteristic
+two or nonzero summands.
 
-and, for a finite set `S` of term indices,
+## Matrix factorization and `RankLE` reconstruction
 
-`M_S = sum x in S, A_x`.
+The factorization theorem has the weaker hypotheses
 
-The target theorem is valid more generally for any family of matrices `A_x`
-with `Matrix.rank (A_x) <= 1`.
+```lean
+{k rows cols : Type*} [Field k] [Fintype cols]
+```
 
-## Statements to establish
+with no `Fintype rows` assumption:
 
-### 1. Rank growth under adjoining rank-one matrices
+```lean
+exists_eq_sum_vecMulVec_rank (A : Matrix rows cols k) :
+  ∃ v : Fin (Matrix.rank A) → rows → k,
+    ∃ w : Fin (Matrix.rank A) → cols → k,
+      A = ∑ s, Matrix.vecMulVec (v s) (w s)
+```
 
-For finite sets `I subset G`, prove
+It reconstructs a matrix using a family indexed by its matrix rank, including
+rank zero and empty-index boundary cases.
 
-`Matrix.rank (M_G) <= Matrix.rank (M_I) + |G \ I|`.
+The tensor upper-bound declarations are:
 
-The proof should expose the two ingredients:
+- `rankLE_common_first_factor_matrix`;
+- `rankLE_sum_shared_first_factor`;
+- `rankLE_sum_shared_second_factor`;
+- `rankLE_sum_shared_third_factor`.
 
-1. matrix rank is subadditive under addition;
-2. each adjoined matrix has rank at most one.
+The generic reconstruction results do **not** require the common factor to be
+nonzero. They produce `RankLE` witnesses and hence upper bounds; they do not
+assert that the displayed bound is the exact or minimal tensor rank. The
+second- and third-factor forms permute tensor modes in the proof.
 
-Do not specialize to `F_2`. The theorem should work over every field.
+## Anchored literal first-factor fiber
 
-### 2. Defect monotonicity
+Inside `BilinearComplexity.Scheme.Replacement`,
+`LiteralFirstFactorClass S` is intentionally a first-mode structure. It stores:
 
-First prove `Matrix.rank (M_S) <= |S|`, so the natural-number subtraction in
+- a fixed first factor `factor`;
+- an anchor slot `anchor : Fin r`;
+- `anchor_factor : (S.term anchor).1 = factor`;
+- `factor_ne_zero : factor ≠ 0`.
 
-`defect(S) = |S| - Matrix.rank (M_S)`
+Its full literal fiber is
 
-has its intended meaning. Then prove
+```lean
+F.slots = Finset.univ.filter fun s => (S.term s).1 = F.factor.
+```
 
-`|I| - Matrix.rank (M_I) <= |G| - Matrix.rank (M_G)`
+`anchor_mem_slots` proves that the anchor belongs to this fiber, and
+`slots_nonempty` rules out phantom empty classes. `mem_slots` characterizes the
+fiber exactly. “Full” means all slots with literal equality of the stored first
+factor; it does not mean equality up to nonzero scalar or projective
+proportionality.
 
-whenever `I subset G`.
+`complementaryMatrix` sums the second/third outer products over this full
+fiber. Its API includes:
 
-Include empty-set, singleton, duplicate-vector, and zero-vector boundary cases.
-The tensor census uses nonzero summands, but the linear-algebra theorem should
-not need that restriction.
+- `complementaryMatrix_apply`;
+- `complementaryMatrix_rank_le_card`;
+- `matrixRankDefectNat_eq_card_sub_rank`.
 
-### 3. Full-class criterion
+The nonzero-factor requirement belongs to this literal operational structure;
+it is not needed by the generic matrix factorization or generic common-factor
+`RankLE` reconstruction above.
 
-Package the two operational corollaries:
+## Noncomputably chosen first-mode certificate
 
-- `defect(G) = 0` implies `defect(I) = 0` for every `I subset G`;
-- `0 < defect(I)` for some `I subset G` implies `0 < defect(G)`.
+`exists_literalFirstFactorClass_certificate` factors the complementary matrix
+and proves existence of an exact local replacement. The public
+`LiteralFirstFactorClass.certificate` is a **noncomputably chosen witness** from
+that existence theorem rather than an algorithmic normal form. Its bookkeeping
+specification is
 
-Define a literal equal-factor class independently of the theorem: it is the
-full set of term slots whose selected factor is exactly one fixed nonzero
-vector. Maximality is not an algebraic hypothesis in the inequality; it is what
-ensures that every subset considered by the census lies inside one complete
-class.
+```lean
+certificate.removed = slots
+certificate.inserted.length = complementaryMatrix.rank
+certificate.resultRank = r - slots.card + complementaryMatrix.rank.
+```
 
-### 4. Tensor-reduction interpretation
+`certificate_local_eq` and `certificate_sumTensor_eq` prove local replacement
+and equality of represented tensor sums. `certificate_rankLE` gives the upper
+bound at the certificate's `resultRank` parameter.
 
-For terms
+These statements must be kept distinct:
 
-`u tensor v_x tensor w_x`
+- `certificate.resultRank` is the number of slots in the output scheme;
+- `RankLE S.sumTensor certificate.resultRank` is a tensor-rank upper bound;
+- neither statement proves exact or minimal tensor rank;
+- equality of `sumTensor` does not prove `Scheme.Valid` for the output.
 
-sharing the same factor `u`, identify their sum with
+The generic `Certificate.valid_output` theorem elsewhere requires both source
+validity and a separate `InsertedValid` proof. T5 does not establish
+`InsertedValid` for every chosen matrix factorization and therefore makes no
+general output-validity claim.
 
-`u tensor M_S`.
+Shortening is explicitly guarded:
 
-A factorization of `M_S` into `r = Matrix.rank (M_S)` rank-one matrices gives a
-replacement using `r` tensor terms, so positive defect gives a shorter exact
-presentation of this local sum. Keep this statement separate from the defect
-monotonicity theorem: monotonicity is a pruning theorem, while the matrix
-factorization supplies the actual replacement.
+- `certificate_resultRank_lt` assumes
+  `complementaryMatrix.rank < slots.card` and uses `slots.card ≤ r`;
+- `certificate_resultRank_lt_of_matrixRankDefectNat_pos` accepts positivity of
+  the guarded natural expression;
+- `rankLE_pred_of_complementaryMatrix_rank_lt` yields
+  `RankLE S.sumTensor (r - 1)`.
 
-Relate the result to the existing one-step dependence theorems in
-`Proofs/Scratch/GlobalRankSearch/SharedFactorReduction.lean`. Reuse those
-results where they fit, but do not weaken the new statement to dependence of
-only one complementary factor list. The census criterion uses the rank of the
-complete complementary matrix sum.
+The certificate structure and these shortening declarations are first-mode
+only. T5 does not provide second- or third-mode `Scheme.Replacement.Certificate`
+structures by symmetry.
 
-State the analogous common-second-factor and common-third-factor conclusions
-by permutation of tensor modes rather than reproving the rank inequality.
+## Asymmetric dependence compatibility API
 
-## Lean route
+The migrated dependence-based declarations are:
 
-1. Define the rank-one complementary matrix and finite-set sum.
-2. Prove rank at most one for an outer-product matrix, preferably by an explicit
-   matrix-product factorization.
-3. Prove or locate matrix-rank subadditivity over a field.
-4. Induct over `G \ I` to bound rank growth.
-5. Convert `G.card = I.card + (G \ I).card` and the rank bound into the defect
-   inequality with explicit natural-number arithmetic.
-6. Derive the full-class corollaries.
-7. Add the tensor interpretation and connect it to the existing shared-factor
-   reduction API.
+- `exists_shared_first_factor_reduction_certificate`;
+- `rankLE_sum_shared_first_factor_of_not_linearIndependent`;
+- `rankLE_sum_scalar_shared_first_factor_of_not_linearIndependent`;
+- `rankLE_sum_shared_second_factor_of_not_linearIndependent`.
 
-If `Matrix.rank` creates unnecessary cardinal arithmetic, an equivalent
-finite-dimensional linear-map formulation is acceptable, but the final public
-theorem must state the ordinary natural-number matrix-rank result used by the
-certificate programs.
+Their names describe the directions actually supplied. In particular, the
+first-factor forms assume dependence of the second-factor family, and the
+common-second-factor form assumes dependence of the first-factor family. This
+is an intentionally asymmetric compatibility API, not a six-way permutation
+family. These sufficient dependence criteria do not replace the complete
+complementary-matrix-rank computation.
 
-## Acceptance criteria
+## Boundary and fidelity checks
 
-- The main theorem assumes an arbitrary field, not characteristic two.
-- It quantifies over every subset of a declared finite class.
-- No support-size cutoff appears.
-- Matrix rank, set cardinality, and natural subtraction are connected without
-  an implicit nonnegativity assumption.
-- Tests or examples discriminate the false reversed inequality.
-- At least one example has strict inequality: adding a rank-one term increases
-  cardinality without increasing matrix rank.
-- The tensor corollary distinguishes the pruning implication from construction
-  of the shorter replacement.
-- The resulting Lean file reports its axioms and contains no campaign-specific
-  hashes, root tables, or search outputs.
+The module checks:
 
-## Non-goals
+- an empty selected matrix set;
+- singleton and duplicate nonzero rank-one matrices, including a false reverse
+  monotonicity inequality;
+- two zero matrices;
+- an end-to-end `Scheme ℚ 1 1 2 2` fixture whose terms share nonzero first and
+  second factors and have the distinct third basis vectors `[1, 0]` and
+  `[0, 1]`.
 
-Do not formalize the c659 or c680 census in this task. Do not claim that every
-rank reduction arises from a literal shared-factor class. Do not infer tensor
-rank minimality from a defect-zero census.
+For the last fixture Lean proves `S.Valid S.sumTensor`, full two-slot fiber,
+complementary matrix rank one, chosen certificate `resultRank = 1`, and
+`RankLE S.sumTensor 1`. It does not claim that the chosen output scheme is
+valid, nor that one is the exact tensor rank.
+
+`#check @...` commands audit inferred signatures, including the anchored class
+API. `#print axioms` reports only `propext`, `Classical.choice`, and
+`Quot.sound`. The module contains no `sorry`, `admit`, declared axioms, search
+tables, campaign hashes, or census outputs.
+
+## Scope and non-goals
+
+T5 proves positivity pruning for the guarded `matrixRankDefectNat` expression
+inside a full literal equal-first-factor fiber and constructs a corresponding
+first-mode replacement witness. It does not formalize the c659 or c680 census,
+classify every tensor-rank reduction, prove tensor-rank minimality, establish
+general certificate-output validity, add arbitrary lower bounds, provide all
+six dependence permutations, or begin T6.
