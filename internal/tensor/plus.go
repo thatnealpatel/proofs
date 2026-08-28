@@ -76,22 +76,5 @@ func NewPlusReplacement(scheme Scheme, p, q int) (Replacement, error) {
 }
 
 func addMatrices(first, second Matrix) (Matrix, error) {
-	if first.Ring() != second.Ring() {
-		return Matrix{}, fmt.Errorf("matrix rings differ: %d and %d", first.Ring(), second.Ring())
-	}
-	if first.Rows() != second.Rows() || first.Columns() != second.Columns() {
-		return Matrix{}, fmt.Errorf(
-			"matrix dimensions differ: %dx%d and %dx%d",
-			first.Rows(),
-			first.Columns(),
-			second.Rows(),
-			second.Columns(),
-		)
-	}
-	entries := first.Entries()
-	other := second.Entries()
-	for i := range entries {
-		entries[i] = first.Ring().Add(entries[i], other[i])
-	}
-	return NewMatrix(first.Ring(), first.Rows(), first.Columns(), entries)
+	return addScaledMatrix(first, 1, second)
 }
