@@ -1,6 +1,9 @@
 .tasks
 data
 
+.drafts
+.published
+
 .lake
 .build
 __pycache__
