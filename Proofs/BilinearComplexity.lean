@@ -32,6 +32,7 @@ import BilinearComplexity.SchemeDeformation
 import BilinearComplexity.SchemeGauge
 import BilinearComplexity.SchemeFlipReduction
 import BilinearComplexity.SchemeReplacement
+import BilinearComplexity.SharedFactorReduction
 import BilinearComplexity.SliceRank
 import BilinearComplexity.Strassen
 import BilinearComplexity.Support
