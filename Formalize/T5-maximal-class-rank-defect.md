@@ -1,9 +1,11 @@
 # T5 — maximal-class rank-defect monotonicity
 
-**Status.** Complete in `Proofs/BilinearComplexity/SharedFactorReduction.lean`.
-The public umbrella `Proofs/BilinearComplexity.lean` imports the module. The
-former Scratch implementation is now a compatibility/check harness that imports
-the public API; public code does not import `Scratch`.
+**Status.** Complete in `Proofs/BilinearComplexity/SharedFactorReduction.lean`,
+with the field-general projective-fiber extension in
+`Proofs/BilinearComplexity/ProjectiveFirstFactorFiber.lean`. The public umbrella
+`Proofs/BilinearComplexity.lean` imports both modules. The former Scratch
+implementation is now a compatibility/check harness that imports the public
+API; public code does not import `Scratch`.
 
 ## Guarded natural-number matrix API
 
@@ -127,6 +129,61 @@ The nonzero-factor requirement belongs to this literal operational structure;
 it is not needed by the generic matrix factorization or generic common-factor
 `RankLE` reconstruction above.
 
+## Full projective first-factor fiber
+
+The separate public module `ProjectiveFirstFactorFiber.lean` defines
+`BilinearComplexity.Scheme.Replacement.ProjectiveFirstFactorFiber S`. It stores
+a nonzero representative, an occupied finite slot set, and nonzero weights on
+that set. Its `mem_iff` field requires exact fullness:
+
+```lean
+s ∈ F.slots ↔
+  ∃ alpha, alpha ≠ 0 ∧
+    (S.term s).1 = alpha • F.representative.
+```
+
+The weighted complementary family and matrix are
+
+```lean
+F.weightedTerm s =
+  F.weight s • Matrix.vecMulVec (S.term s).2.1 (S.term s).2.2
+
+F.complementaryMatrix = ∑ s ∈ F.slots, F.weightedTerm s.
+```
+
+`localTensor_apply` identifies the tensor sum of the original selected terms
+with the nonzero representative times this weighted matrix. For a nonzero
+`beta`, `rescale` replaces the representative by `beta • representative` and
+each weight by `beta⁻¹ * weight`. The theorems
+`rescale_complementaryMatrix_rank` and `rescale_defect` show that this explicitly
+constructed rescaling preserves matrix rank and guarded defect.
+
+`defect_pos_of_subset` applies the general T5 monotonicity theorem to the
+weighted rank-at-most-one family: positive defect on any subset of the
+projective fiber implies positive defect on the full fiber.
+
+The converse direction uses the field-general contraction lower bound
+
+```lean
+matrix_rank_le_of_rankLE_common_first_factor
+    (u : Fin a → k) (hu : u ≠ 0)
+    (A : Matrix (Fin b) (Fin c) k)
+    (hT : RankLE (fun i j l => u i * A j l) q) :
+  A.rank ≤ q.
+```
+
+Consequently the exact local characterization is
+
+```lean
+F.defect_pos_iff_exists_shorter_rankLE :
+  0 < matrixRankDefectNat F.weightedTerm F.slots ↔
+    ∃ q < F.slots.card, RankLE F.localTensor q.
+```
+
+This is a statement about arbitrary shorter decompositions of the selected
+local tensor. It does not construct a projective replacement certificate or
+assert validity of an output scheme.
+
 ## Noncomputably chosen first-mode certificate
 
 `exists_literalFirstFactorClass_certificate` factors the complementary matrix
@@ -203,16 +260,23 @@ complementary matrix rank one, chosen certificate `resultRank = 1`, and
 `RankLE S.sumTensor 1`. It does not claim that the chosen output scheme is
 valid, nor that one is the exact tensor rank.
 
-`#check @...` commands audit inferred signatures, including the anchored class
-API. `#print axioms` reports only `propext`, `Classical.choice`, and
-`Quot.sound`. The module contains no `sorry`, `admit`, declared axioms, search
-tables, campaign hashes, or census outputs.
+The projective module additionally checks a rational two-slot full fiber whose
+first factors are proportional but not literally equal, its weighted
+complementary matrix and local tensor, and nonzero representative rescaling.
+Its `#check @...` commands audit the public signatures. `#print axioms` for the
+scaling, contraction, defect-monotonicity, and converse declarations reports
+only `propext`, `Classical.choice`, and `Quot.sound`.
+
+The modules contain no `sorry`, `admit`, declared axioms, search tables,
+campaign hashes, or census outputs.
 
 ## Scope and non-goals
 
 T5 proves positivity pruning for the guarded `matrixRankDefectNat` expression
-inside a full literal equal-first-factor fiber and constructs a corresponding
-first-mode replacement witness. It does not formalize the c659 or c680 census,
-classify every tensor-rank reduction, prove tensor-rank minimality, establish
-general certificate-output validity, add arbitrary lower bounds, provide all
-six dependence permutations, or begin T6.
+inside both full literal and full projective first-factor fibers. The literal
+API constructs a corresponding first-mode replacement witness; the projective
+API proves the weighted local `RankLE` characterization but intentionally does
+not construct a replacement certificate. Neither module formalizes the c659 or
+c680 census, classifies every tensor-rank reduction, proves tensor-rank
+minimality, establishes projective certificate-output validity, provides all
+six dependence permutations, or begins T6.
