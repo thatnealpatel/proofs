@@ -5,10 +5,11 @@ type Ring int
 const (
 	Z2 Ring = 2
 	Z3 Ring = 3
+	Z4 Ring = 4
 )
 
 func (r Ring) Valid() bool {
-	return r == Z2 || r == Z3
+	return r == Z2 || r == Z3 || r == Z4
 }
 
 func (r Ring) Normalize(x int) int {
@@ -34,7 +35,7 @@ func (r Ring) Mul(a, b int) int {
 
 func (r Ring) modulus() int {
 	switch r {
-	case Z2, Z3:
+	case Z2, Z3, Z4:
 		return int(r)
 	default:
 		panic("unsupported ring")
