@@ -89,6 +89,19 @@ func TestIntegerExtremes(t *testing.T) {
 	}
 }
 
+func TestRingValidity(t *testing.T) {
+	for _, r := range []Ring{Z2, Z3} {
+		if !r.Valid() {
+			t.Errorf("Ring(%d).Valid() = false", r)
+		}
+	}
+	for _, r := range []Ring{-3, 0, 1, 4} {
+		if r.Valid() {
+			t.Errorf("Ring(%d).Valid() = true", r)
+		}
+	}
+}
+
 func TestInvalidRingPanics(t *testing.T) {
 	for _, r := range []Ring{-3, 0, 1, 4} {
 		operations := map[string]func(){
