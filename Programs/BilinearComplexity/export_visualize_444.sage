@@ -1,10 +1,9 @@
 #!/usr/bin/env sage
-"""Generate the Tensor Gate Lens <4,4,4> certificates exactly.
+"""Generate exact <4,4,4> decomposition certificates.
 
 Run from the repository root:
 
-  timeout 300 sage Programs/BilinearComplexity/export_visualize_444.sage \
-    cmd/visualize/static
+  timeout 300 sage Programs/BilinearComplexity/export_visualize_444.sage OUTPUT_DIRECTORY
 
 The rank-49 factors are loaded from q2_strassen2.sage, including its exact
 verification and its (block, inner) -> global row-major permutation.  The
@@ -13,10 +12,10 @@ asset.  It rejects missing/duplicate entries, malformed coefficients, and
 non-4x4 matrices before doing an exhaustive exact QQ reconstruction.
 
 Appendix convention: the paper states that vec(O_j), vec(P_j), and vec(Q_j^T)
-are the U, V, W rows.  Exact candidate reconstruction confirms that the
-visualizer's row-major factors are therefore A = row-major O, B = row-major P,
+are the U, V, W rows. Exact candidate reconstruction confirms that the
+exported row-major factors are therefore A = row-major O, B = row-major P,
 and C = row-major transpose(Q).  In particular, using Q without the transpose
-does not reconstruct the visualizer target.
+does not reconstruct the declared target.
 """
 
 import itertools
@@ -36,11 +35,11 @@ REFERENCE = os.path.join(
     "arXiv-2602-13171",
     "ArXiv_version.tex",
 )
-OUTDIR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-    REPO_ROOT, "cmd", "visualize", "static"
-)
-if len(sys.argv) > 2:
-    raise SystemExit("usage: export_visualize_444.sage [output-directory]")
+if len(sys.argv) != 2:
+    raise SystemExit(
+        "usage: sage Programs/BilinearComplexity/export_visualize_444.sage OUTPUT_DIRECTORY"
+    )
+OUTDIR = os.path.abspath(sys.argv[1])
 
 
 def target_tensor(n):

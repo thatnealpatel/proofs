@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export the exact nealpatel rank-24 presentation for Tensor Gate Lens."""
+"""Export the exact nealpatel rank-24 presentation as an exact certificate."""
 
 import argparse
 import json
@@ -40,7 +40,7 @@ def main():
         if any(len(parsed[mode]) != 9 for mode in "ABC"):
             raise ValueError(f"gate {gate + 1} has a factor of incorrect width")
         # Absorb the explicit term coefficient into C, preserving a plain
-        # three-factor certificate for the visualizer.
+        # three-factor certificate.
         parsed["C"] = [coefficient * x for x in parsed["C"]]
         for mode in "ABC":
             factors[mode].append([text(x) for x in parsed[mode]])

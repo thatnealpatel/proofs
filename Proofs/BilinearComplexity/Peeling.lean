@@ -8,9 +8,8 @@
 
   KEY CONVENTION (load-bearing; j = 0 excluded).
   `peak T L` is the maximum of `nnz (residual T L j)` over `j ∈ [1, L.length]`.
-  The initial `nnz T` (j = 0) is NOT counted. This differs from the Go tool
-  `cmd/minpeak` which uses j ≥ 0. The discrepancy matters exactly when
-  `peak < nnz T` (schoolbook case).
+  The initial `nnz T` (j = 0) is NOT counted. Under the alternative convention
+  that includes j = 0, the corresponding value is `max (nnz T) (peak T L)`.
 
   The Bool layer (`peakB`, `isDecompB`) is computable via structural
   recursion on lists, all the way down to `native_decide`. Every definition

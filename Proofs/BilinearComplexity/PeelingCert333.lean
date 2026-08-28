@@ -12,9 +12,8 @@
   We certify one ordering (canonical) by `native_decide`.
 
   CONVENTION: `peak` uses the j ≥ 1 convention (see Peeling.lean header).
-  The initial `nnz(T) = 27` at j = 0 is excluded. The Go tool `cmd/minpeak`
-  uses j ≥ 0, so it reports `max(27, 26) = 27` for this same decomposition.
-  The reconciliation rule is `GoPeak = max(nnz T, LeanPeak)`.
+  The initial `nnz(T) = 27` at j = 0 is excluded. Under the convention that
+  includes j = 0, this decomposition instead has peak `max(27, 26) = 27`.
 
   AI disclosure: produced with AI assistance (see Proofs/README).
 -/

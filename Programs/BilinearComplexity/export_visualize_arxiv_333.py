@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract the three printed rank-23 <3,3,3> certificates into visualizer JSON.
+"""Extract three printed rank-23 <3,3,3> certificates into exact JSON.
 
 Usage:
   python3 Programs/BilinearComplexity/export_visualize_arxiv_333.py \

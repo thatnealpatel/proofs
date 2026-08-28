@@ -1,12 +1,11 @@
 /-
   BilinearComplexity/LadermanP7Koszul — a local six-gate Koszul certificate.
 
-  The factors below are the intrinsic/projected coordinates reconstructed from
-  `cmd/visualize/static/laderman.json` for one-based Laderman gates P6--P11.
-  Lean does not parse that JSON: the rational coordinates are stated explicitly
-  here.  This proves only that this projected six-gate tensor is incompressible
-  to five terms (also in polynomial closure).  It is not a claim about classical
-  complex border rank, the full M3 tensor, or a rank-23 lower bound.
+  The factors below are the intrinsic/projected coordinates for one-based
+  Laderman gates P6--P11. The rational coordinates are stated explicitly here.
+  This proves only that this projected six-gate tensor is incompressible to five
+  terms (also in polynomial closure). It is not a claim about classical complex
+  border rank, the full M3 tensor, or a rank-23 lower bound.
 -/
 import BilinearComplexity.BorderRank
 import BilinearComplexity.KoszulFlattening
