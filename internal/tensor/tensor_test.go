@@ -70,9 +70,46 @@ func TestNativeRectangularRoundTripAndNormalization(t *testing.T) {
 	}
 }
 
+func TestNativeRankZeroRoundTrip(t *testing.T) {
+	input := "2 3 1 0\n\n\n\n"
+	scheme, err := ParseNative(ring.Z2, strings.NewReader(input))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if scheme.TermCount() != 0 {
+		t.Fatalf("TermCount() = %d, want 0", scheme.TermCount())
+	}
+	if got, want := scheme.Dimensions(), [3]int{2, 3, 1}; got != want {
+		t.Fatalf("Dimensions() = %v, want %v", got, want)
+	}
+	if err := ValidateNonzeroTerms(scheme); err != nil {
+		t.Fatal(err)
+	}
+	if err := ValidateDistinctTensors(scheme); err != nil {
+		t.Fatal(err)
+	}
+	if err := ValidateBrent(scheme); err == nil {
+		t.Fatal("ValidateBrent accepted a rank-zero matrix-multiplication scheme")
+	}
+	var output bytes.Buffer
+	if err := WriteNative(&output, scheme); err != nil {
+		t.Fatal(err)
+	}
+	if got := output.String(); got != input {
+		t.Fatalf("WriteNative() = %q, want %q", got, input)
+	}
+	constructed, err := NewEmptyScheme(ring.Z2, [3]int{2, 3, 1})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := constructed.Dimensions(), scheme.Dimensions(); got != want {
+		t.Fatalf("NewEmptyScheme dimensions = %v, want %v", got, want)
+	}
+}
+
 func TestNativeRejectsMalformedInput(t *testing.T) {
 	inputs := []string{
-		"2 2 2 0\n\n\n\n",
+		"2 2 2 00\n\n\n\n",
 		"2 2 2 1\n1 0 0\n1 0 0 0\n1 0 0 0\n",
 		"2 2 2 1\n1 0 0 x\n1 0 0 0\n1 0 0 0\n",
 		"2 2 2 1\n1 0 0 0\n1 0 0 0\n1 0 0 0\nextra\n",

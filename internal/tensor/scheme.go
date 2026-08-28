@@ -77,8 +77,26 @@ func NewScheme(terms []RankOneTerm) (Scheme, error) {
 		return Scheme{}, fmt.Errorf("scheme must contain at least one term")
 	}
 	first := terms[0]
-	dimensions := [3]int{first.factors[0].rows, first.factors[1].rows, first.factors[2].rows}
-	r := first.factors[0].ring
+	return newScheme(
+		first.factors[0].ring,
+		[3]int{first.factors[0].rows, first.factors[1].rows, first.factors[2].rows},
+		terms,
+	)
+}
+
+func NewEmptyScheme(r ring.Ring, dimensions [3]int) (Scheme, error) {
+	return newScheme(r, dimensions, nil)
+}
+
+func newScheme(r ring.Ring, dimensions [3]int, terms []RankOneTerm) (Scheme, error) {
+	if !r.Valid() {
+		return Scheme{}, fmt.Errorf("unsupported ring %d", r)
+	}
+	for factor := range 3 {
+		if _, err := matrixSize(dimensions[factor], dimensions[(factor+1)%3]); err != nil {
+			return Scheme{}, fmt.Errorf("scheme factor %d dimensions: %w", factor, err)
+		}
+	}
 	copied := make([]RankOneTerm, len(terms))
 	for i, term := range terms {
 		if err := term.validateStructure(); err != nil {

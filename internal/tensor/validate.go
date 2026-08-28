@@ -106,12 +106,12 @@ func equalRankOneTensors(scheme Scheme, first, second int) bool {
 }
 
 func (s Scheme) validateStructure() error {
-	if len(s.terms) == 0 {
-		return fmt.Errorf("scheme must contain at least one term")
+	if !s.ring.Valid() {
+		return fmt.Errorf("unsupported ring %d", s.ring)
 	}
-	for i, dimension := range s.dimensions {
-		if dimension <= 0 {
-			return fmt.Errorf("scheme dimension %d is not positive", i)
+	for factor := range 3 {
+		if _, err := matrixSize(s.dimensions[factor], s.dimensions[(factor+1)%3]); err != nil {
+			return fmt.Errorf("scheme factor %d dimensions: %w", factor, err)
 		}
 	}
 	for i, term := range s.terms {
