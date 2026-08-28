@@ -10,7 +10,7 @@ import (
 )
 
 func TestStandardM2(t *testing.T) {
-	for _, r := range []ring.Ring{ring.Z2, ring.Z3} {
+	for _, r := range []ring.Ring{ring.Z2, ring.Z3, ring.Z4} {
 		scheme := standardM2(t, r)
 		if err := ValidateBrent(scheme); err != nil {
 			t.Errorf("ValidateBrent over %v: %v", r, err)
@@ -67,6 +67,29 @@ func TestNativeRectangularRoundTripAndNormalization(t *testing.T) {
 	}
 	if first.String() != second.String() {
 		t.Fatalf("round trip changed native text:\n%s\n%s", first.String(), second.String())
+	}
+}
+
+func TestNativeZ4RoundTripAndNormalization(t *testing.T) {
+	input := "1 1 1 1\n-1\n6\n5\n"
+	scheme, err := ParseNative(ring.Z4, strings.NewReader(input))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for factor, want := range []int{3, 2, 1} {
+		if got := scheme.Term(0).Factor(factor).At(0, 0); got != want {
+			t.Errorf("factor %d = %d, want %d", factor, got, want)
+		}
+	}
+	var output bytes.Buffer
+	if err := WriteNative(&output, scheme); err != nil {
+		t.Fatal(err)
+	}
+	if got, want := output.String(), "1 1 1 1\n3\n2\n1\n"; got != want {
+		t.Fatalf("WriteNative() = %q, want %q", got, want)
+	}
+	if _, err := ParseNative(ring.Z4, strings.NewReader(output.String())); err != nil {
+		t.Fatal(err)
 	}
 }
 
