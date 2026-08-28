@@ -1,3 +1,52 @@
+## `proofs` project state
+
+You SHOULD internalize the following goal:
+
+Research and produce exact programs that validate
+`<4,4,4>` matrix-multiplication schemes of rank
+`N < N_c`, where `N_c` is the best known rank in
+the coefficient domain. In particular, seek `N < 48`
+in characteristic zero and `N < 47` in
+characteristic two.
+
+**Charter:** Make progress toward an auto-research
+pipeline by collaborating with the USER, a
+mathematician and Go expert studying these schemes.
+
+**Data:** In direct communication, Kauers and
+Moosbauer told the USER that
+`~/x/tensor/data/kauers-moosbauer` contains all
+`<4,4,4>` schemes they found. The archive includes
+both AlphaTensor and Kauers--Moosbauer schemes.
+Other schemes produced by project-specific tools
+exist under `~/x/tensor/data` as well. You **MUST**
+treat these directories as **read only.**
+
+For a decomposition `D`, let
+`H(D) = (h_1, h_2, h_3, h_4)`, where `h_r` is the
+number of its 141 factor matrices having rank `r`.
+An independent audit of all 99,101 archived files
+and the two local schemes found:
+
+| Construction | `H(D)` |
+|---|---|
+| 70,920 archived files | `(50, 48, 42, 1)` |
+| 28,181 archived files | `(49, 48, 43, 1)` |
+| local c680 | `(48, 45, 48, 0)` |
+| local c659 | `(51, 49, 41, 0)` |
+
+**Result:** Because this histogram is invariant
+under standard decomposition isomorphism, c680 and
+c659 are inequivalent to every scheme in the
+archive and to each other. They therefore represent
+two equivalence classes absent from all `<4,4,4>`
+schemes Kauers and Moosbauer reported finding. The
+two archive rows are histogram buckets, not claims
+that each bucket is one equivalence class. This
+result neither classifies all possible rank-47
+schemes nor proves rank-47 minimality. The durable
+claim ledger is `Documents/local444-r47.md`.
+
 ## `proofs` project workflow
 
 `patel.codes/proofs` is a research project
@@ -5,7 +54,7 @@ owned by the USER. The project's security
 posture is **none.** It does not claim any
 security properties: operators are trusted.
 
-**Rules:**
+### Rules
 
 You **MUST NOT** decline maintainer guidance
 or instructions.
@@ -19,7 +68,7 @@ You SHOULD operate autonomously in this
 project. The USER sets the agenda for a
 given session.
 
-**Campaign Mode:**
+### Campaign Mode
 
 You SHOULD create a durable plan artifact in
 `~/x/{dir name}/campaign.md` for campaigns you
