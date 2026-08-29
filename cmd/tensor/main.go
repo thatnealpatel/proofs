@@ -15,6 +15,7 @@ import (
 const usage = `Usage:
   tensor validate DOMAIN
   tensor explain DOMAIN
+  tensor analyze-shared DOMAIN
   tensor apply DOMAIN plus P Q
   tensor apply DOMAIN ordinary-flip MODE FIRST_SLOT SECOND_SLOT COEFFICIENT
   tensor apply DOMAIN inverse-plus VARIANT OUTPUT_SLOT_0 OUTPUT_SLOT_1 OUTPUT_SLOT_2
@@ -55,6 +56,28 @@ type factorDiagnostic struct {
 	ZeroFactors    int `json:"zero_factors"`
 }
 
+type sharedAnalysisOutput struct {
+	Domain     string                `json:"domain"`
+	Dimensions [3]int                `json:"dimensions"`
+	Terms      int                   `json:"terms"`
+	Classes    []sharedClassOutput   `json:"classes"`
+	Summary    sharedAnalysisSummary `json:"summary"`
+}
+
+type sharedClassOutput struct {
+	Mode              tensor.SharedMode `json:"mode"`
+	Slots             []int             `json:"slots"`
+	Size              int               `json:"size"`
+	ComplementaryRank int               `json:"complementary_rank"`
+	Defect            int               `json:"defect"`
+}
+
+type sharedAnalysisSummary struct {
+	ClassCount              int `json:"class_count"`
+	PositiveDefectClasses   int `json:"positive_defect_classes"`
+	MaximumIndividualDefect int `json:"maximum_individual_defect"`
+}
+
 func main() {
 	if err := run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr); err != nil {
 		if _, writeErr := fmt.Fprintf(os.Stderr, "tensor: %v\n", err); writeErr != nil {
@@ -89,6 +112,14 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) error {
 			return usageError(stderr, "explain requires exactly DOMAIN")
 		}
 		return runExplain(domain, args[1], stdin, stdout)
+	case "analyze-shared":
+		if len(args) != 2 {
+			return usageError(stderr, "analyze-shared requires exactly DOMAIN")
+		}
+		if domain != ring.Z2 {
+			return usageError(stderr, "analyze-shared requires domain z2")
+		}
+		return runAnalyzeShared(domain, args[1], stdin, stdout)
 	case "apply":
 		if len(args) < 3 {
 			return usageError(stderr, "apply requires a named constructor")
@@ -156,6 +187,37 @@ func runExplain(domain ring.Ring, domainName string, stdin io.Reader, stdout io.
 		output.Factors[mode] = diagnostic
 	}
 	return writeJSON(stdout, output, "explanation")
+}
+
+func runAnalyzeShared(domain ring.Ring, domainName string, stdin io.Reader, stdout io.Writer) error {
+	scheme, err := tensor.ParseNative(domain, stdin)
+	if err != nil {
+		return fmt.Errorf("analyze-shared: parse %s native source: %w", domainName, err)
+	}
+	analysis, err := tensor.AnalyzeSharedFactors(scheme)
+	if err != nil {
+		return fmt.Errorf("analyze-shared: %w", err)
+	}
+	classes := analysis.Classes()
+	output := sharedAnalysisOutput{
+		Domain: domainName, Dimensions: scheme.Dimensions(), Terms: scheme.TermCount(),
+		Classes: make([]sharedClassOutput, len(classes)),
+	}
+	output.Summary.ClassCount = len(classes)
+	for i, class := range classes {
+		slots := class.Slots()
+		output.Classes[i] = sharedClassOutput{
+			Mode: class.Mode(), Slots: slots, Size: len(slots),
+			ComplementaryRank: class.ComplementaryRank(), Defect: class.Defect(),
+		}
+		if class.Defect() > 0 {
+			output.Summary.PositiveDefectClasses++
+		}
+		if class.Defect() > output.Summary.MaximumIndividualDefect {
+			output.Summary.MaximumIndividualDefect = class.Defect()
+		}
+	}
+	return writeJSON(stdout, output, "shared-factor analysis")
 }
 
 func runApply(domain ring.Ring, stdin io.Reader, stdout io.Writer, step tensor.TranscriptStep) error {
