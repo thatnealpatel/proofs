@@ -16,6 +16,112 @@ const (
 	SharedThird
 )
 
+type SharedFactorAnalysis struct {
+	classes []SharedFactorClass
+}
+
+type SharedFactorClass struct {
+	mode              SharedMode
+	slots             []int
+	complementaryRank int
+	defect            int
+}
+
+func AnalyzeSharedFactors(scheme Scheme) (SharedFactorAnalysis, error) {
+	if err := scheme.validateStructure(); err != nil {
+		return SharedFactorAnalysis{}, fmt.Errorf("shared-factor analysis source scheme: %w", err)
+	}
+	if scheme.ring != ring.Z2 {
+		return SharedFactorAnalysis{}, fmt.Errorf("shared-factor analysis requires ring Z2, got %d", scheme.ring)
+	}
+
+	classes := make([]SharedFactorClass, 0)
+	for mode := SharedFirst; mode <= SharedThird; mode++ {
+		classIndexes := make(map[string]int)
+		modeClasses := make([]SharedFactorClass, 0)
+		for slot, term := range scheme.terms {
+			factor := term.factors[int(mode)]
+			if matrixIsZero(factor) {
+				continue
+			}
+			key := factorKey(factor)
+			index, ok := classIndexes[key]
+			if !ok {
+				index = len(modeClasses)
+				classIndexes[key] = index
+				modeClasses = append(modeClasses, SharedFactorClass{mode: mode})
+			}
+			modeClasses[index].slots = append(modeClasses[index].slots, slot)
+		}
+		for _, class := range modeClasses {
+			if len(class.slots) < 2 {
+				continue
+			}
+			leftFactors, _ := sharedComplementaryFactorization(scheme, class.mode, class.slots)
+			class.complementaryRank = len(leftFactors)
+			class.defect = len(class.slots) - class.complementaryRank
+			if class.defect < 0 {
+				return SharedFactorAnalysis{}, fmt.Errorf("shared-factor class at mode %d and slot %d has rank %d above size %d", class.mode, class.slots[0], class.complementaryRank, len(class.slots))
+			}
+			if class.defect > 0 {
+				replacement, err := NewSharedFactorReduction(scheme, class.mode, class.slots)
+				if err != nil {
+					return SharedFactorAnalysis{}, fmt.Errorf("validate shared-factor class at mode %d and slot %d: %w", class.mode, class.slots[0], err)
+				}
+				if len(replacement.insertedTerms) != class.complementaryRank {
+					return SharedFactorAnalysis{}, fmt.Errorf("validate shared-factor class at mode %d and slot %d: replacement rank is %d, want %d", class.mode, class.slots[0], len(replacement.insertedTerms), class.complementaryRank)
+				}
+			}
+			classes = append(classes, class)
+		}
+	}
+	return SharedFactorAnalysis{classes: classes}, nil
+}
+
+func (a SharedFactorAnalysis) Classes() []SharedFactorClass {
+	classes := make([]SharedFactorClass, len(a.classes))
+	for i, class := range a.classes {
+		classes[i] = class.clone()
+	}
+	return classes
+}
+
+func (c SharedFactorClass) Mode() SharedMode {
+	return c.mode
+}
+
+func (c SharedFactorClass) Slots() []int {
+	return append([]int(nil), c.slots...)
+}
+
+func (c SharedFactorClass) ComplementaryRank() int {
+	return c.complementaryRank
+}
+
+func (c SharedFactorClass) Defect() int {
+	return c.defect
+}
+
+func (c SharedFactorClass) ReductionStep() (SharedFactorReductionStep, bool) {
+	if c.defect <= 0 {
+		return SharedFactorReductionStep{}, false
+	}
+	return SharedFactorReductionStep{Mode: c.mode, Slots: append([]int(nil), c.slots...)}, true
+}
+
+func (c SharedFactorClass) clone() SharedFactorClass {
+	c.slots = append([]int(nil), c.slots...)
+	return c
+}
+
+func factorKey(factor Matrix) string {
+	key := make([]byte, len(factor.entries))
+	for i, entry := range factor.entries {
+		key[i] = byte(entry)
+	}
+	return string(key)
+}
+
 func NewSharedFactorReduction(scheme Scheme, mode SharedMode, slots []int) (Replacement, error) {
 	if err := scheme.validateStructure(); err != nil {
 		return Replacement{}, fmt.Errorf("shared-factor source scheme: %w", err)
@@ -42,9 +148,7 @@ func NewSharedFactorReduction(scheme Scheme, mode SharedMode, slots []int) (Repl
 	}
 
 	sharedMode := int(mode)
-	complementaryModes := [3][2]int{{1, 2}, {0, 2}, {0, 1}}
-	leftMode := complementaryModes[sharedMode][0]
-	rightMode := complementaryModes[sharedMode][1]
+	leftMode, rightMode := sharedComplementaryModes(mode)
 	shared := scheme.terms[removed[0]].factors[sharedMode]
 	if matrixIsZero(shared) {
 		return Replacement{}, fmt.Errorf("shared factor at mode %d is zero", mode)
@@ -55,9 +159,7 @@ func NewSharedFactorReduction(scheme Scheme, mode SharedMode, slots []int) (Repl
 		}
 	}
 
-	rows := sharedFactorRows(scheme, removed, leftMode, rightMode)
-	rightWidth := len(scheme.terms[removed[0]].factors[rightMode].entries)
-	leftFactors, rightFactors := factorGF2Rows(rows, rightWidth)
+	leftFactors, rightFactors := sharedComplementaryFactorization(scheme, mode, removed)
 	if len(leftFactors) >= len(removed) {
 		return Replacement{}, fmt.Errorf("shared-factor matrix is not rank deficient: rank %d for %d slots", len(leftFactors), len(removed))
 	}
@@ -101,6 +203,18 @@ func matrixIsZero(matrix Matrix) bool {
 		}
 	}
 	return true
+}
+
+func sharedComplementaryModes(mode SharedMode) (int, int) {
+	modes := [3][2]int{{1, 2}, {0, 2}, {0, 1}}
+	return modes[int(mode)][0], modes[int(mode)][1]
+}
+
+func sharedComplementaryFactorization(scheme Scheme, mode SharedMode, slots []int) ([][]int, [][]int) {
+	leftMode, rightMode := sharedComplementaryModes(mode)
+	rows := sharedFactorRows(scheme, slots, leftMode, rightMode)
+	rightWidth := len(scheme.terms[slots[0]].factors[rightMode].entries)
+	return factorGF2Rows(rows, rightWidth)
 }
 
 func sharedFactorRows(scheme Scheme, slots []int, leftMode, rightMode int) []big.Int {

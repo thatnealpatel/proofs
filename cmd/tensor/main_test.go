@@ -271,6 +271,29 @@ func TestParseApplyStepRejectsIncompatibleDomainsAndAliases(t *testing.T) {
 	}
 }
 
+func TestRunAnalyzeSharedExactJSON(t *testing.T) {
+	const source = "1 2 1 3\n1 0 1 0 1 0\n1 0 0 1 1 0\n1 1 1\n"
+	var stdout, stderr bytes.Buffer
+	if err := run([]string{"analyze-shared", "z2"}, strings.NewReader(source), &stdout, &stderr); err != nil {
+		t.Fatal(err)
+	}
+	const want = "{\n  \"domain\": \"z2\",\n  \"dimensions\": [\n    1,\n    2,\n    1\n  ],\n  \"terms\": 3,\n  \"classes\": [\n    {\n      \"mode\": 0,\n      \"slots\": [\n        0,\n        1,\n        2\n      ],\n      \"size\": 3,\n      \"complementary_rank\": 1,\n      \"defect\": 2\n    },\n    {\n      \"mode\": 1,\n      \"slots\": [\n        0,\n        2\n      ],\n      \"size\": 2,\n      \"complementary_rank\": 0,\n      \"defect\": 2\n    },\n    {\n      \"mode\": 2,\n      \"slots\": [\n        0,\n        1,\n        2\n      ],\n      \"size\": 3,\n      \"complementary_rank\": 1,\n      \"defect\": 2\n    }\n  ],\n  \"summary\": {\n    \"class_count\": 3,\n    \"positive_defect_classes\": 3,\n    \"maximum_individual_defect\": 2\n  }\n}\n"
+	if stdout.String() != want || stderr.Len() != 0 {
+		t.Fatalf("analyze-shared stdout=%q stderr=%q", stdout.String(), stderr.String())
+	}
+}
+
+func TestRunAnalyzeSharedEmptyClassesAreArray(t *testing.T) {
+	const source = "1 1 1 1\n1\n1\n1\n"
+	var stdout, stderr bytes.Buffer
+	if err := run([]string{"analyze-shared", "z2"}, strings.NewReader(source), &stdout, &stderr); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(stdout.String(), "\"classes\": []") || stderr.Len() != 0 {
+		t.Fatalf("analyze-shared stdout=%q stderr=%q", stdout.String(), stderr.String())
+	}
+}
+
 func TestRunPreflightFailuresDoNotReadNativeInput(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "z2-trace.json")
 	file, err := os.Create(path)
@@ -293,6 +316,8 @@ func TestRunPreflightFailuresDoNotReadNativeInput(t *testing.T) {
 	}{
 		{name: "missing command", args: nil},
 		{name: "invalid domain", args: []string{"validate", "Z2"}},
+		{name: "incompatible analyzer", args: []string{"analyze-shared", "z3"}},
+		{name: "analyzer extra argument", args: []string{"analyze-shared", "z2", "extra"}},
 		{name: "incompatible constructor", args: []string{"apply", "z3", "plus", "0", "1"}},
 		{name: "duplicate constructor slots", args: []string{"apply", "z2", "plus", "0", "0"}},
 		{name: "invalid mode", args: []string{"apply", "z3", "ordinary-flip", "fourth", "0", "1", "1"}},
