@@ -30,9 +30,12 @@ concrete path with path-specific vertices, target-fiber preservation, and the
 altitude bound $|D\cup E|$. It deliberately does not claim compilation into
 KM/Arai moves. The parity-to-box equivalence, weighted quotient, Graver
 projection, and KM/Arai compilation remain deferred with explicit prerequisites.
-The available dimension-two report omitted source-schema classification and
-path compilation, and no dimension-three adversarial report was available; no
-compilation conjecture was promoted.
+At tensor commit `65f82da`, the dimension-two report still omits
+source-schema classification but now includes bounded path certificates for all
+six $2\leftrightarrow3$ classes under provisional algebraic moves. Exploratory
+dimension-three evidence is also available, but no deterministic report or
+source-faithful compilation statement has yet stabilized; no compilation
+conjecture was promoted.
 
 ## Ownership
 
@@ -322,7 +325,7 @@ This campaign does not initially attempt to:
 | CMF-005 | Graver projection | blocked | Make no circuit-projection claim until slack conformality is proved. |
 | CMF-006 | Move comparison | accepted | Compare local edges and costs, not universal equivalence closures. |
 | CMF-007 | Altitude | accepted | Concrete abstract-circuit paths have path-specific vertices and altitude at most $|D\cup E|$; no compiled bound is claimed. |
-| CMF-008 | Implementation fidelity | blocked | Source-faithful recognizers require the recorded legality and invariant audits. |
+| CMF-008 | Implementation fidelity | handed off | The source contract is complete; the tensor track must still audit and rename its recognizers before they are KM/Arai operations. |
 | CMF-009 | Computational provenance | accepted | Treat tensor reports as conjecture-forming evidence only. |
 | CMF-010 | Weighted quotient | deferred | Address after concrete move semantics and bottleneck paths are fixed. |
 
@@ -352,15 +355,18 @@ The campaign reaches its first stable milestone when:
 4. **Deliberately deferred:** the parity-to-box equivalence awaits the explicit
    coordinate enumeration, subset/indicator equivalence, bit hypotheses, and
    integer quotient/bound lemmas listed in the source contract.
-5. **Partially available and reviewed:** the dimension-two report establishes
-   census evidence only; its metadata explicitly omits schema classification
-   and path compilation.
-6. **Blocked by missing external evidence:** no dimension-three adversarial
-   report was available. Since no candidate compilation theorem was
-   formalized, this blocks only the next compilation campaign, not the closed
-   elementary circuit tranche.
+5. **Partially available and reviewed:** the dimension-two version-3 report
+   preserves the circuit census and records bounded provisional algebraic paths
+   for all six $2\leftrightarrow3$ classes, of length two or three and altitude
+   three. Its metadata still explicitly omits source-schema classification.
+6. **Exploratory evidence available:** the tensor track reports that a temporary
+   dimension-three computation tested 1,265,670 disjoint support-five
+   $2\leftrightarrow3$ relations and found provisional paths of length two or
+   three and altitude three for all of them. A deterministic committed report
+   and source-faithful move classification remain pending. This affects only the
+   next compilation campaign, not the closed elementary circuit tranche.
 
 The first stable deliverable is therefore closed at the elementary circuit
-boundary. Any successor campaign must begin with source-faithful executable
-move predicates and the missing support-five compilation/adversarial reports,
-not with `SupportFiveClassificationGoal` on the current multiset scaffold.
+boundary. The tensor track can now continue with source-faithful KM/Arai
+recognizers and a durable dimension-three report; Lean compilation work should
+resume only after that produces a precise statement.

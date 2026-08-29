@@ -262,10 +262,25 @@ carrier. It reports:
 - symmetry-orbit counts: $0,0,1,1,2$;
 - 14 orientation orbits after identifying converse.
 
-The report's own metadata says
+At tensor commit `65f82da`, report schema version 3 says
 `schema_classification_included=false` and
-`path_compilation_included=false`. It therefore supplies circuit-census
-evidence, not a source-schema classification or a circuit-to-KM/Arai
-compilation theorem. No factor-dimension-three adversarial report was available
-for this campaign, so no compilation conjecture was promoted to a formal
-statement.
+`path_compilation_included=true`. For each of the six $2\leftrightarrow3$
+orientation classes `O009`--`O014`, its provisional
+`algebraic_split_reduction_flip` system records a found path certificate of
+length two or three and minimum altitude three.
+
+These certificates are bounded computational evidence, not KM/Arai
+compilations. The report labels the move formulas provisional, does not classify
+them against the source schemas, and states that its `LocalState` is squarefree
+rather than occurrence-aware: it omits duplicate-producing moves,
+duplicate-cancellation reductions, production slot identity, and production
+rank-capacity behavior. Its separate
+`current_z2_squarefree_projection_*` systems must not be identified with either
+source carrier.
+
+A temporary factor-dimension-three computation communicated by the tensor track
+examined 1,265,670 disjoint support-five $2\leftrightarrow3$ relations and found
+provisional algebraic paths of length two or three and altitude three for all of
+them. That result is exploratory until reproduced by a deterministic committed
+report, and the moves still require formula-by-formula source classification.
+No source-faithful compilation conjecture is therefore promoted here.
