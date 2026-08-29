@@ -19,6 +19,21 @@ The relation-algebra statement from
 `Plans/SymbolicCompletenessTheorem.md` is retained only as a short derived
 proposition. It is not the mathematical centerpiece of this campaign.
 
+## Campaign status
+
+The foundational tranche closed on 2026-06-17. Its durable source audit is
+`Documents/CircuitMoveSourceContract.md`, and its verified Lean boundary is
+`Proofs/BilinearComplexity/BinaryCircuit.lean`.
+
+The closed tranche proves the abstract finite-set circuit decomposition, a
+concrete path with path-specific vertices, target-fiber preservation, and the
+altitude bound $|D\cup E|$. It deliberately does not claim compilation into
+KM/Arai moves. The parity-to-box equivalence, weighted quotient, Graver
+projection, and KM/Arai compilation remain deferred with explicit prerequisites.
+The available dimension-two report omitted source-schema classification and
+path compilation, and no dimension-three adversarial report was available; no
+compilation conjecture was promoted.
+
 ## Ownership
 
 This campaign exclusively owns changes under `~/p/proofs`, including plans,
@@ -301,13 +316,13 @@ This campaign does not initially attempt to:
 | ID | Reviewer axis | Status | Disposition |
 |---|---|---|---|
 | CMF-001 | Novelty | accepted | Demote $Q_n=\operatorname{Rel}(X_n)$ to a derived proposition. |
-| CMF-002 | Source fidelity | open | Audit exact KM/Arai move definitions and connectivity proofs. |
-| CMF-003 | Carrier semantics | open | Separate the binary finite-set model from the generic multiset scaffold. |
+| CMF-002 | Source fidelity | accepted with gaps | Exact KM/Arai contract is recorded in `Documents/CircuitMoveSourceContract.md`; source proof gaps remain explicit. |
+| CMF-003 | Carrier semantics | accepted | `BinaryCircuit.lean` is a separate abstract finite-set `ZMod 2`-module boundary. |
 | CMF-004 | Graver terminology | accepted | Use box-constrained fiber language; keep circuits primary. |
 | CMF-005 | Graver projection | blocked | Make no circuit-projection claim until slack conformality is proved. |
 | CMF-006 | Move comparison | accepted | Compare local edges and costs, not universal equivalence closures. |
-| CMF-007 | Altitude | open | Distinguish circuit altitude from compiled KM/Arai altitude. |
-| CMF-008 | Implementation fidelity | open | Require a separate source-versus-executable audit. |
+| CMF-007 | Altitude | accepted | Concrete abstract-circuit paths have path-specific vertices and altitude at most $|D\cup E|$; no compiled bound is claimed. |
+| CMF-008 | Implementation fidelity | blocked | Source-faithful recognizers require the recorded legality and invariant audits. |
 | CMF-009 | Computational provenance | accepted | Treat tensor reports as conjecture-forming evidence only. |
 | CMF-010 | Weighted quotient | deferred | Address after concrete move semantics and bottleneck paths are fixed. |
 
@@ -324,3 +339,28 @@ The campaign reaches its first stable milestone when:
    unsupported generalizations;
 6. candidate compilation theorems have survived factor-dimension-three
    adversarial testing before substantial formalization begins.
+
+### Milestone disposition
+
+1. **Complete:** the primary-source contract and unresolved-condition ledger are
+   in `Documents/CircuitMoveSourceContract.md`.
+2. **Complete:** the binary carrier is a separate abstract `Finset` boundary;
+   no generic multiset identification is made.
+3. **Complete:** the cycle, recursive disjoint decomposition, concrete toggle
+   path, target-fiber preservation, and path-specific altitude results build
+   without `sorry` in `BinaryCircuit.lean`.
+4. **Deliberately deferred:** the parity-to-box equivalence awaits the explicit
+   coordinate enumeration, subset/indicator equivalence, bit hypotheses, and
+   integer quotient/bound lemmas listed in the source contract.
+5. **Partially available and reviewed:** the dimension-two report establishes
+   census evidence only; its metadata explicitly omits schema classification
+   and path compilation.
+6. **Blocked by missing external evidence:** no dimension-three adversarial
+   report was available. Since no candidate compilation theorem was
+   formalized, this blocks only the next compilation campaign, not the closed
+   elementary circuit tranche.
+
+The first stable deliverable is therefore closed at the elementary circuit
+boundary. Any successor campaign must begin with source-faithful executable
+move predicates and the missing support-five compilation/adversarial reports,
+not with `SupportFiveClassificationGoal` on the current multiset scaffold.
