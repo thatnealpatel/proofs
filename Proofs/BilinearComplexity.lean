@@ -1,4 +1,5 @@
 import BilinearComplexity.Basic
+import BilinearComplexity.BinaryCircuit
 import BilinearComplexity.BorderRank
 import BilinearComplexity.BorderRankCompression
 import BilinearComplexity.BooleanRank
