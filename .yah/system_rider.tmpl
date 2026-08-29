@@ -1,52 +1,3 @@
-## `proofs` project state
-
-You SHOULD internalize the following goal:
-
-Research and produce exact programs that validate
-`<4,4,4>` matrix-multiplication schemes of rank
-`N < N_c`, where `N_c` is the best known rank in
-the coefficient domain. In particular, seek `N < 48`
-in characteristic zero and `N < 47` in
-characteristic two.
-
-**Charter:** Make progress toward an auto-research
-pipeline by collaborating with the USER, a
-mathematician and Go expert studying these schemes.
-
-**Data:** In direct communication, Kauers and
-Moosbauer told the USER that
-`~/x/tensor/data/kauers-moosbauer` contains all
-`<4,4,4>` schemes they found. The archive includes
-both AlphaTensor and Kauers--Moosbauer schemes.
-Other schemes produced by project-specific tools
-exist under `~/x/tensor/data` as well. You **MUST**
-treat these directories as **read only.**
-
-For a decomposition `D`, let
-`H(D) = (h_1, h_2, h_3, h_4)`, where `h_r` is the
-number of its 141 factor matrices having rank `r`.
-An independent audit of all 99,101 archived files
-and the two local schemes found:
-
-| Construction | `H(D)` |
-|---|---|
-| 70,920 archived files | `(50, 48, 42, 1)` |
-| 28,181 archived files | `(49, 48, 43, 1)` |
-| local c680 | `(48, 45, 48, 0)` |
-| local c659 | `(51, 49, 41, 0)` |
-
-**Result:** Because this histogram is invariant
-under standard decomposition isomorphism, c680 and
-c659 are inequivalent to every scheme in the
-archive and to each other. They therefore represent
-two equivalence classes absent from all `<4,4,4>`
-schemes Kauers and Moosbauer reported finding. The
-two archive rows are histogram buckets, not claims
-that each bucket is one equivalence class. This
-result neither classifies all possible rank-47
-schemes nor proves rank-47 minimality. The durable
-claim ledger is `Documents/local444-r47.md`.
-
 ## `proofs` project workflow
 
 `patel.codes/proofs` is a research project
@@ -80,45 +31,46 @@ You SHOULD update the ledger before each repair;
 prefer to resume reviewers and writers so that
 each successive round converges quickly.
 
-You SHOULD dispatch writers in parallel only when
-their scopes are demonstrably disjoint and have no
-shared files, APIs, fixtures, generated artifacts,
-or sequencing dependencies. Otherwise, serialize:
-Prefer correctness over speed.
+During a campaign, the orchestartion loop takes a phase
+that is one of `WRITE`, `REVIEW`, `STAGE_REQUIRED`, `REPAIR`,
+or `COMMIT`:
 
-Traps that require serialization include:
+1. **`WRITE`.** Either yourself, single or `wait=false` writers.
 
-1. cross-package exported API changes;
-2. shared intra-package tests, fixtures, or globals; and
-3. linearly scoped refactors.
+2. **`REVIEW`.** Review the canonical delta: `git diff` plus
+   every untracked file reported by `git status --short`. Wait
+   for every required review lane to return.
 
-The orchestration loop is as follows:
+3. **Stage gate.** The instant the final required reviewer
+   returns, the campaign enters `STAGE_REQUIRED`.
 
-1. **Write.** Either yourself, single or parallel writers.
+   While in `STAGE_REQUIRED`:
 
-2. **Review.** Either yourself or with reviewers: `git diff` is the review delta
-   along with any untracked files: `git status --short`.
+   - The next command that mutates the repository **MUST**
+     be `git add -- <all reviewed files ...>`.
 
-3. **Stage.** Once reviews finish, you **MUST** `git add <files ...>` anything
-   in your campaign scope: Do not alter unrelated state.
+   - You **MUST** stage the reviewed files even when reviewers
+     found defects, tests fail, or repairs are already obvious.
 
-4. **Repair.** If findings exist, go to (1).
+   - You **MUST NOT** edit files, run formatters, apply reviewer
+     findings, start another writer, or begin another review
+     before staging: Failing to do so poisons the campaign.
 
-5. **Commit.** Using `{Directory}: {terse commit message}`.
+   - Updating files outside of the current project is allowed,
+     but they do NOT satisfy the stage gate.
 
-You SHOULD operate conservatively when running
-multiple parallel writers / review lanes. Staging
-prematurely or partially can cause subagent
-confusion. Always err on the side of caution:
-Prefer correctness over speed.
+   Staging files records the exact reviewed checkpoint; it does
+   **not** mean the change is approved or ready to commit.
 
-You SHOULD identify when `write->review->stage->repair`
-is not converging: More than two rounds of this
-loop on the same objective is likely frivilous.
-You are authorized to commit the final diff if
-not obviously incorrect, complex, or otherwise
-requiring maintainer attention. In these cases,
-make a note in the campaign ledger to surface
-these judgement calls to the maintainer **after
-the campaign is over.** It is cheaper to repair
-after the fact than it is to block during.
+4. **`REPAIR`.** After the stage gate is satisfied, record each
+   finding and disposition in the ledger. If findings require
+   changes, repair them on top of the staged checkpoint. Once
+   finished, return to **Step 2.** The next review covers the
+   new unstaged delta and any new untracked files: After that
+   review, **Step 3** applies again without exception.
+
+5. **`COMMIT`.** Using `internal/{pkg}: #NNN`, `all: #NNN`,
+   `Proofs/{Module}: ` with a terse message. You SHOULD use a
+   follow on paragraph line breaked at 60 cols when the diff
+   is non-trivial and requires elucidation of the `WHY`. This
+   should be infrequent.
