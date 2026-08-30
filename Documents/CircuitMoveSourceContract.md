@@ -254,33 +254,130 @@ that would require a separate slack-coordinate conformality theorem.
 
 ## Computational evidence reviewed
 
-The read-only factor-dimension-two report under `~/x/tensor` exhaustively
-enumerates squarefree nonempty circuits through support five in its 27-element
-carrier. It reports:
+The source contract above was committed at proofs commit `6e3a9e5`. The tensor
+track subsequently implemented independent source-schema recognizers against
+that fixed contract. Code and assertions committed at tensor `89c0a84` and
+`fc3baea` reproducibly generate the evidence below with, respectively,
 
-- raw circuit counts by supports $1$ through $5$: $0,0,27,81,243$;
+```text
+go run ./cmd/localrelation circuits
+go run ./cmd/localrelation dimension-three
+```
+
+The generated JSON is not a tracked artifact, and the absolute `contract_path`
+in its metadata is machine-local; `contract_commit=6e3a9e5` is the durable
+contract provenance. These deterministic finite computations are evidence, not
+proofs in this repository.
+
+### Factor dimension two
+
+Code at tensor commit `89c0a84` reproducibly generates
+`tensor.localrelation.circuits` schema version 4 for the 27 normalized nonzero
+pure tensors in $(\mathbb F_2^2)^{\otimes3}$. Here factor dimension two means
+three abstract local factor spaces $\mathbb F_2^2$, not $2\times2$
+matrix-multiplication spaces. The report retains the exhaustive squarefree
+circuit census through support five:
+
+- raw circuit counts by supports 1 through 5: $0,0,27,81,243$;
 - symmetry-orbit counts: $0,0,1,1,2$;
-- 14 orientation orbits after identifying converse.
+- 14 orientation orbits after identifying converse;
+- six $2\leftrightarrow3$ classes `O009`--`O014`.
 
-At tensor commit `65f82da`, report schema version 3 says
-`schema_classification_included=false` and
-`path_compilation_included=true`. For each of the six $2\leftrightarrow3$
-orientation classes `O009`--`O014`, its provisional
-`algebraic_split_reduction_flip` system records a found path certificate of
-length two or three and minimum altitude three.
+The report now has `schema_classification_included=true`. It uses independently
+named KM finite-set and Arai multiset states, applies and replays each recognized
+formula, and preserves the carrier distinction. Commit `89c0a84` implements,
+tests, and replays those audited schemas; `fc3baea` later adds differential
+agreement over the complete embedded factor-dimension-two disjoint exact
+$2\leftrightarrow3$ slice for direct KM Reduction and Arai Plus. Its direct
+classification of the six $2\leftrightarrow3$ representatives is:
 
-These certificates are bounded computational evidence, not KM/Arai
-compilations. The report labels the move formulas provisional, does not classify
-them against the source schemas, and states that its `LocalState` is squarefree
-rather than occurrence-aware: it omits duplicate-producing moves,
-duplicate-cancellation reductions, production slot identity, and production
-rank-capacity behavior. Its separate
-`current_z2_squarefree_projection_*` systems must not be identified with either
-source carrier.
+- `O009` and `O011`: direct KM Reduction from the three-term side to the
+  two-term side; the displayed converse is only weak reverse-Reduction
+  traversal;
+- `O014`: direct Arai Plus from the two-term side to the three-term side;
+- `O010`, `O012`, and `O013`: no direct audited source-formula match.
 
-A temporary factor-dimension-three computation communicated by the tensor track
-examined 1,265,670 disjoint support-five $2\leftrightarrow3$ relations and found
-provisional algebraic paths of length two or three and altitude three for all of
-them. That result is exploratory until reproduced by a deterministic committed
-report, and the moves still require formula-by-formula source classification.
-No source-faithful compilation conjecture is therefore promoted here.
+All six have conditional local KM weak-edge path certificates of local altitude
+three—maximum represented local-set cardinality three—and respective lengths
+$1,3,1,2,2,2$. Except for the forced one-edge cases, these are replayed
+witnesses rather than globally shortest-path claims. Each KM certificate emits
+the union of its path terms as forbidden ambient terms. A full-scheme reading
+still requires the report's injective factor-space embedding and one omitted
+context that both completes the embedded local source to an actual
+matrix-multiplication scheme and avoids that entire forbidden set. Subject to
+those hypotheses, a lifted path has full-scheme altitude $|C|+3$, not three.
+The provisional `algebraic_*` and `current_z2_squarefree_projection_*` systems
+remain separately labeled and are not promoted.
+
+### Factor dimension three
+
+Code at tensor commit `fc3baea` reproducibly generates
+`tensor.localrelation.dimension_three` schema version 1 for the 343 normalized
+nonzero pure tensors in $(\mathbb F_2^3)^{\otimes3}$. Here factor dimension
+three means three abstract local factor spaces $\mathbb F_2^3$, not
+$3\times3$ matrix-multiplication spaces. It exhaustively enumerates every
+two-term set, every three-term set in a pair-containing evaluation fiber, and
+every disjoint exact $2\leftrightarrow3$ pairing. The report records:
+
+- 58,653 pair states in 43,561 evaluation fibers;
+- 1,282,134 matching triple states;
+- 1,265,670 disjoint exact oriented relations;
+- all 1,265,670 passing the explicit inclusion-minimality test;
+- 126,567 underlying support-five circuits, with ten $2\leftrightarrow3$
+  orientations per circuit.
+
+Direct conditional local formulas cover only part of the census:
+
+- KM Reduction: 203,742 relations and 222,264 descriptors, directed from triple
+  to pair; the converse is only weak traversal;
+- Arai Plus: 222,264 relations and 444,528 descriptors, directed from pair to
+  triple;
+- overlap between those direct classes: zero;
+- neither direct formula: 839,664 relations.
+
+The report also constructs the exact raw, unquotiented, arity-at-most-three
+local KM weak graph over the union of pair-containing evaluation fibers. In the
+Plan's proposed terminology this finite induced graph is
+`BoundedGeneratedKMGraph 3`, distinct from the unrestricted
+`GeneratedKMLocalWeak` edge relation. Its 1,341,130 nodes and 2,478,861 unique
+weak edges are processed one fiber at a time, with maximum fiber size 130.
+Every enumerated relation is reachable at local altitude three, meaning maximum
+raw-state arity three. Exact BFS distances **inside this bounded raw graph** are
+203,742 at length one, 777,924 at length two, and 284,004 at length three.
+These are not distances in KM's symmetry quotient and not globally shortest
+paths in an unbounded or full-scheme graph.
+Split transitions in this graph are implementation-generated legality-checked
+identities based on KM's prose, not edges of a formally source-defined Split
+relation.
+
+The outside-pair-factor-span census has no mask-7 example: every enumerated
+relation has some factor position in which all three right factors lie in the
+span of the two left factors. This absence is finite-carrier evidence only. It
+proves neither structural impossibility of mask 7 nor a lift to larger factor
+dimensions.
+
+Unlike the dimension-two class report, the dimension-three aggregate report
+emits no per-relation path and no ambient context certificate. Full-scheme KM
+applicability remains conditional on an injective embedding and one context
+that completes the embedded local source to an actual matrix-multiplication
+scheme while avoiding every vertex term on the selected path. Only direct Arai
+Plus is classified; no Arai Reduction, path, or connectivity conclusion is
+present.
+
+### Relation to the repository-proved boundary
+
+For an inclusion-minimal disjoint equality $D\leftrightarrow E$, the abstract
+`CircuitMove` layer regards $D\triangle E$ as one circuit and hence the endpoint
+change as one abstract toggle. The tensor reports study a different question:
+whether that one abstract edge can be replaced by legal local KM/Arai edges,
+possibly through tensors outside $D\cup E$.
+
+Thus the dimension-three result is evidence for compilation of a finite subclass
+of abstract circuit edges, not new evidence for the already proved circuit
+decomposition theorem. The specifically constructed same-fiber restricted path
+in `BinaryCircuit.lean` has bound $|D\cup E|$ because its vertices stay in the
+endpoint union; an arbitrary abstract `CircuitPath` need not. A compiled KM path
+needs a separate context-lifting theorem based on the union of its own path
+vertices. Until the normalized pure-tensor carrier, typed local move relations,
+finite compilation theorem, and context-lifting lemma are proved, no KM/Arai
+claim follows from the abstract Lean theorem.
