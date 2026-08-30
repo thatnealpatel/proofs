@@ -15,17 +15,8 @@ under the shared Lake lock:
 flock .lake/agent.lock lake build <target>
 ```
 
-Use the harness built-ins proactively:
+You SHOULD use `tool_wikipedia` in order to ground your
+epistemic state in the discipline you are working in.
 
-- `tool_wikipedia` for definitions, terminology, historical
-  orientation, and links among mathematical topics;
-
-- `tool_oeis` for identifying sequences and retrieving full
-  entries, formulas, references, and cross-links;
-
-- `tool_erdos` for corpus searches, exact problem statements,
-  status metadata, and live comments.
-
-These built-ins are canonical. Do not substitute local CLI
-clients or generic web search for Wikipedia, OEIS, or the Erdos
-problems corpus.
+You SHOULD use `prover` agents instead of `writer` when
+the implementation resides in a `.lean` file.
