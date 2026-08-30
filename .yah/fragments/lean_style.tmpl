@@ -37,6 +37,16 @@
   downstream `#print axioms` (lean4#7463).
 - You **MUST** prefer `decide` to `native_decide`; use `native_decide` only when kernel reduction
   is infeasible, and note the enlarged trust surface at the use site.
+- You **MUST** isolate expensive, stable proof-producing computations (`bv_decide`, large
+  `decide`, or heavily expanded finite checks) in their own Lean module before developing the
+  semantic bridge around them. Lean caches at module granularity, not theorem granularity: freeze
+  the expensive module, build its `.olean` once with `flock .lake/agent.lock lake build
+  Module.Name`, and put changing downstream proofs in a separate module that imports it. Iterate
+  with `lake build` on the downstream module so Lake reuses the unchanged dependency; repeatedly
+  running `lake env lean Path/To/Combined.lean` re-elaborates every theorem in that source file.
+- You **MUST NOT** edit the frozen computation module merely to add downstream bridge lemmas;
+  doing so invalidates its `.olean` and pays the expensive check again. A clean build still checks
+  the computation once, so report and optimize that cold-build cost separately if it is excessive.
 - You **MUST NOT** use `partial def` for anything a theorem mentions; it is opaque to the logic
   and theorems about it reduce to inhabitation.
 - You **MUST NOT** define local notation overriding standard operators, instances that reverse
