@@ -1,0 +1,385 @@
+# Matrix Multiplication Research Frontier
+
+## Purpose
+
+This is the canonical plan for the exact matrix-multiplication and binary-circuit
+research program. It replaces the former circuit-move, symbolic-completeness,
+and rank-47 plans. The immediate objective is not a large architecture or a
+headline connectivity theorem. It is the shortest dependency chain from the
+existing formal circuit layer and finite tensor evidence to a dimension-free
+pair-to-triple structural theorem, typed local moves, and replayable finite
+certificates.
+
+The executable exploration repository at `/home/exedev/x/tensor` is a
+read-only evidence source for this plan. Its computations generate candidate
+theorems and finite certificates; they are not proofs.
+
+`Documents/CircuitMoveSourceContract.md` remains the authority for what the
+Kauers--Moosbauer and Arai--Ichikawa--Hukushima sources actually define or
+prove.
+
+## Status vocabulary
+
+Every claim in this plan has one of the following statuses.
+
+- **Repository-proved:** checked by Lean in a committed file in this repository.
+- **Experimental Lean checkpoint:** elaborated successfully in the current
+  worktree but intentionally excluded from the present plan/document commit;
+  it is not part of the repository-proved boundary.
+- **Deterministic computational evidence:** reproducible finite computation,
+  with the tested carrier and bounds stated explicitly.
+- **Source assertion:** attributed to a primary source and subject to the
+  source-contract qualifications.
+- **Conjecture:** a falsifiable mathematical claim not yet proved.
+- **Blocked target:** a desired theorem whose named prerequisites are absent.
+
+A checked report is still computational evidence. A source theorem is not a
+Lean theorem. A bounded raw-graph path is not an unrestricted or full-scheme
+connectivity result.
+
+## Current proved and audited boundary
+
+### Repository-proved
+
+- `Proofs/BilinearComplexity/BinaryCircuit.lean` proves the abstract
+  finite-set binary-cycle decomposition, the constructed circuit-toggle path,
+  target-fiber preservation, and the path-specific altitude bound
+  $|D\cup E|$. It does not compile a circuit toggle into KM or Arai moves.
+- `Proofs/BilinearComplexity/ParityBox.lean` proves the selected-entry
+  parity-to-bounded-integer-box equivalence with explicit slack and indicator
+  data. It does not establish a Graver projection theorem.
+- The existing `BilinearComplexity.Scheme` development is an ordered concrete
+  matrix-multiplication representation. It is not definitionally the finite-set
+  KM carrier or the occurrence-aware Arai carrier.
+
+### Experimental Lean checkpoint
+
+`Proofs/BilinearComplexity/PairTripleSpan.lean` is intentionally untracked and
+is not part of the present commit. It currently type-checks supporting binary
+linear algebra: distinct nonzero vectors are independent; suitable coordinate
+pairs expose rank two; a sum of two pure matrices with independent factor pairs
+has matrix rank at least two; a binary rank-one point in the resulting plane is
+one of its endpoints; and the final five-index two-block partition is
+contradictory under its explicit hypotheses. These are experimental supporting
+lemmas, not repository-proved results. The final pair-to-triple factor-span
+theorem is not stated or proved.
+
+### Audited source boundary
+
+The exact carrier assumptions, directionality, legality gaps, and move formulas
+are recorded in `Documents/CircuitMoveSourceContract.md`. In particular:
+
+- KM schemes are finite sets of nonzero rank-one tensors;
+- KM Reduction is directed and rank-decreasing in general, not intrinsically a
+  $3\to2$ operation;
+- KM's prose Split does not supply a complete formal executable relation;
+- reversing a Reduction is weak traversal, not a directed Reduction;
+- Arai moves use occurrence-sensitive multiset semantics;
+- generated Split identities and Arai Split/Plus must not be identified merely
+  because their displayed tensors look similar.
+
+## Governing carrier split
+
+The local normalized carrier in factor dimension $d$ should be
+
+$$
+L_d=(\mathbb F_2^d\setminus\{0\})^3,
+$$
+
+with coordinate evaluation into the three-dimensional tensor array. Over
+$\mathbb F_2$ there is no nontrivial scalar refactorization, so the intended
+carrier theorem is that normalized triples evaluate injectively to distinct
+nonzero pure tensors. The first instances must prove
+
+$$
+|L_2|=27,
+\qquad
+|L_3|=343.
+$$
+
+The following representations remain physically and semantically separate.
+
+1. `BilinearComplexity.CircuitMove.State d`: finite subsets of the normalized
+   local carrier, used for KM-style local states and `BinaryCircuit`.
+2. Arai states: occurrence-aware multisets with their own move relations.
+3. Existing `BilinearComplexity.Scheme`: ordered full
+   matrix-multiplication schemes.
+
+An explicit multiplicity-one embedding from a finite set to a multiset is
+harmless. What is forbidden is an implicit carrier identification or automatic
+transfer of a move theorem across that embedding.
+
+The first carrier implementation should use coordinate evaluation. Do not
+force a coordinate-array/`TensorProduct` equivalence into the carrier layer
+unless the structural proof actually needs both models.
+
+## Immediate structural tranche
+
+Begin with only the conceptual modules **Carrier**, **FiveCircuit**, and
+**SpanDrop**. The untracked experimental `PairTripleSpan.lean` checkpoint may
+hold supporting matrix lemmas while this boundary stabilizes, but it must not be
+cited as a repository result. Do not create the previously proposed large file
+tree. Add a reusable Segre or projective-ruling layer only if the completed
+proof genuinely exposes reusable projective geometry.
+
+### 1. Carrier
+
+Prove, in dependency order:
+
+1. normalization and decidable equality for nonzero factor triples;
+2. coordinate evaluation and its compatibility with addition;
+3. nonzeroness and injectivity of evaluation over $\mathbb F_2$;
+4. the counts 27 and 343;
+5. the instantiation of `BinaryCircuit` by evaluated carrier terms.
+
+No full $4\times4$ pure-tensor carrier should be materialized: it would have
+$(2^{16}-1)^3$ normalized triples.
+
+### 2. Automatic five-circuit lemma
+
+For disjoint sides $D,E$ with $|D|=2$, $|E|=3$, five pairwise distinct nonzero
+binary vectors, and equal evaluations, prove that $D\cup E$ is automatically a
+circuit.
+
+The intended short proof is independent of tensor structure. The five terms
+sum to zero. If a proper nonempty subrelation summed to zero, its complement
+would also sum to zero, so one of the two zero subsets would have cardinality
+at most two. A singleton cannot sum to zero because its term is nonzero. Two
+distinct vectors cannot sum to zero over $\mathbb F_2$. Thus no additional
+inclusion-minimality hypothesis should be needed.
+
+Pairwise distinctness is expected to suffice, but this remains a target until
+its Lean statement lands.
+
+### 3. Pair-to-triple span drop
+
+The central structural conjecture is:
+
+> If two distinct nonzero pure tensors equal the sum of three further pairwise
+> distinct nonzero pure tensors over $\mathbb F_2$, then in at least one factor
+> position all three factors on the triple side lie in the span of the two
+> factors on the pair side.
+
+Equivalently, the outside-pair-factor-span mask cannot be 7. This is the
+candidate dimension-free explanation of the finite dimension-three census.
+The anticipated factor-profile list must be an output of this proof, not an
+input to the roadmap.
+
+The locally elaborated, uncommitted route in `PairTripleSpan.lean` uses matrix
+flattening:
+
+1. distinct nonzero factor pairs over `ZMod 2` are linearly independent;
+2. the sum of two outer products whose two factor pairs are independent has
+   matrix rank at least two;
+3. consequently, the binary plane spanned by the two pure matrices has no
+   third nonzero rank-at-most-one point;
+4. once the five terms are assigned to the two possible pure endpoints, the
+   two nonempty zero-sum coefficient blocks partition five indices, forcing a
+   block of size two and contradicting blockwise injectivity.
+
+The remaining blocked step is to organize this ruling simultaneously across
+factor flattenings and derive the required two-value partition from a
+hypothetical mask-7 relation. The quotient/Segre route remains an alternative,
+not an architectural commitment.
+
+## Typed move layer
+
+Only after the structural tranche stabilizes, define the concrete local move
+relations.
+
+### KM finite-set semantics
+
+- Define directed KM Reduction for every legal rank-decreasing instance.
+- Define an explicitly **implementation-generated Split** relation with all
+  nonzero, distinctness, collision, and finite-set legality checks.
+- Define ordinary source Flip separately.
+- Define `GeneratedKMLocalWeak` as the weak symmetrization needed for traversal,
+  including reverse traversal of directed Reduction.
+- Prove evaluation preservation, endpoint cardinalities, collision freedom,
+  and directionality for every relation.
+
+Do not call generated Split a formally source-defined KM Split.
+
+### Arai multiset semantics
+
+Define Arai Split, Flip, and Plus on the separate occurrence-aware carrier.
+Prove the literal Plus-as-Split-then-Flip identity with multiplicities and all
+source preconditions. The KM compilation chain must not depend on an Arai
+connectivity theorem.
+
+### Existing ordered schemes
+
+Bridge to ordered `Scheme` only through explicit enumeration and replacement
+data. Changing cardinalities require coherent order data across adjacent
+vertices; “enumerate each finite set” is not enough for a path theorem.
+
+## Finite evidence and certification targets
+
+### Dimension two
+
+Tensor commit `89c0a84` is deterministic computational evidence for the
+complete support-at-most-five census in the 27-term normalized carrier. It
+classifies six $2\leftrightarrow3$ orientation classes and records conditional
+local KM weak paths of lengths $1,3,1,2,2,2$, all with local altitude three.
+
+The first finite formal target is a typed theorem for this exact carrier and
+bounded graph. It should be proved either by structural reduction or by a
+small replayable certificate checked inside Lean.
+
+### Dimension three
+
+Tensor commit `fc3baea` is deterministic computational evidence for the
+343-term normalized carrier. It enumerates:
+
+- 58,653 pair states in 43,561 evaluation fibers;
+- 1,282,134 matching triple states;
+- 1,265,670 disjoint exact oriented $2\leftrightarrow3$ relations;
+- 126,567 underlying support-five circuits.
+
+All enumerated relations pass the computational minimality test and are
+connected at local altitude three in the raw arity-at-most-three graph, with
+reported distances one through three. No mask-7 example occurs.
+
+This report does **not** emit orbit-coverage certificates or a path for each
+relation. Therefore orbit formalization is not the current proof route. A
+formal dimension-three theorem may use raw or chunked certificates until a
+verified quotient exists.
+
+### Trust boundary
+
+Certificate files are untrusted data. A repository theorem may depend on a
+small typed checker that reconstructs carrier elements, replays every named
+edge, checks endpoints and evaluations, and verifies the stated altitude and
+length. “Verified” JSON, unchecked hashes, aggregate counts, and successful
+external BFS are not proof terms.
+
+`BoundedGeneratedKMGraph d` must mean the induced raw graph on squarefree
+arity-one-through-three states in the union of pair-containing evaluation
+fibers. It is distinct from:
+
+- unrestricted `GeneratedKMLocalWeak`;
+- the KM symmetry quotient;
+- an Arai move graph;
+- a full matrix-multiplication target fiber.
+
+## Context and full-scheme bridge
+
+A local path can be lifted only after proving rule-specific context transport
+for every named edge. A predicate such as
+
+$$
+\operatorname{Disjoint}(C,\operatorname{pathSupport}(p))
+$$
+
+is necessary but not sufficient by itself.
+
+A valid lift must provide:
+
+1. factorwise injective maps into ambient matrix spaces;
+2. injectivity and cardinality preservation of the induced tensor map;
+3. a context $C$ completing the embedded local source to the exact
+   matrix-multiplication target;
+4. avoidance by $C$ of the union of **all** path vertices, not only endpoints;
+5. legality of each named move after adjoining $C$;
+6. coherent ordered enumeration/replacement data when producing `Scheme`s.
+
+If the local path has altitude three, the lifted full-scheme altitude is
+
+$$
+|C|+3,
+$$
+
+not three. Arbitrary local linear automorphisms do not preserve a fixed
+matrix-multiplication target; covariance must transport the target, embedding,
+and context, or restrict to a target-preserving subgroup.
+
+After this bridge, prove generic dependent path substitution for one abstract
+circuit toggle. Global compilation still requires a compiler for every circuit
+class produced by the abstract decomposition; support-five evidence alone does
+not provide that.
+
+## Conditional symbolic consequence
+
+For a finite move graph already proved connected, singleton edge relations and
+singleton identity tests generate every relation under composition and finite
+union. Hence a statement of the form
+
+$$
+Q_n=\operatorname{Rel}(X_n)
+$$
+
+is routine relation-algebra infrastructure conditional on a proved named-move
+connectivity theorem. It is not a headline matrix-multiplication theorem, does
+not imply an efficient symbolic representation, and should not be developed
+before the connectivity and carrier semantics exist.
+
+Weighted relations, quotient paths, Kleene structure, or bottleneck semantics
+are later infrastructure. Any quotient theorem must lift concrete paths while
+preserving the entire altitude sequence; ordinary reachability preservation is
+insufficient. The former coarse $r n^4$ altitude claim is discarded.
+
+## Rank-47 conjectural frontier
+
+The following independent M4 questions remain conjectures. They are retained
+because each is directly falsifiable on a newly discovered full-span rank-47
+scheme; none is evidence for the local support-five compilation theorem.
+
+1. **Infinitesimal rigidity.** Every full-span rank-47 decomposition over
+   $\mathbb F_2$ has Brent-Jacobian kernel equal to the 139-dimensional tangent
+   space generated by term rescalings and infinitesimal sandwich action.
+2. **Restriction ladder.** Every such decomposition admits an intrinsic
+   compatible rank-2 idempotent restriction with exactly seven surviving terms
+   and a rank-3 restriction with at most 24 surviving terms.
+3. **Native irredundancy.** Every such decomposition has 47 distinct
+   projective factors in each leg and full rank 47 in each complementary
+   Khatri--Rao family.
+4. **Original-class rank-48 barrier.** No two of AlphaTensor,
+   Kauers--Moosbauer, and c680 are connected by a certified composite path of
+   maximum rank 48, modulo term permutations, tensor orientations, and sandwich
+   equivalence.
+
+Tests must construct exact witnesses: tangent generators and Jacobian kernels,
+all compatible idempotent triples, factor/Khatri--Rao ranks, or persisted
+parent-and-move certificates. Failed random search is not evidence for a
+barrier.
+
+## Explicitly rejected directions and nonclaims
+
+- Do not create the speculative 20-file architecture before structural and
+  move APIs stabilize.
+- Do not claim a profile classification or dimension-free compilation theorem
+  before proving it.
+- Do not use nonexistent dimension-three orbit certificates.
+- Do not identify abstract circuit toggles, generated KM weak paths, Arai
+  multiset moves, bounded raw graphs, or context-lifted full schemes.
+- Do not infer Arai connectivity from direct Plus classifications.
+- Do not infer a full-scheme theorem from local altitude-three evidence.
+- Do not claim bounded-rank connectivity from source-stated unbounded weak
+  connectivity.
+- Do not assert a Graver projection without a slack-conformality proof.
+- Do not materialize the full relation algebra or the M4 pure-tensor carrier.
+- Do not force coordinate tensors and `TensorProduct` into one carrier API
+  without a proof-driven need.
+
+## Dependency-ordered next work
+
+1. Finish and review the normalized coordinate carrier, including counts and
+   the `BinaryCircuit` instantiation.
+2. Land the automatic five-circuit theorem.
+3. Complete the pair-to-triple span-drop theorem using the verified matrix-plane
+   lemmas, or isolate the precise remaining counterexample shape.
+4. Let that proof derive the admissible factor profiles.
+5. Define typed KM finite-set moves and prove their local legality and
+   preservation laws; keep Arai in a separate tranche.
+6. Specify the typed certificate format and certify the dimension-two bounded
+   theorem.
+7. Certify dimension three with raw or chunked replay, unless the structural
+   theorem makes the census unnecessary.
+8. Prove rule-specific context transport, then the full-scheme bridge and
+   dependent path substitution.
+9. Develop relation-algebra or quotient infrastructure only when a proved
+   named-move connectivity result needs it.
+
+A fresh session should begin at item 1 or 2 while treating the untracked
+`PairTripleSpan.lean` file only as an experimental checkpoint for item 3. It
+should not begin by designing later graph, quotient, or full-scheme APIs.

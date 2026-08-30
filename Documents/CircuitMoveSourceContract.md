@@ -2,8 +2,8 @@
 
 ## Scope and status
 
-This document is the source-fidelity boundary for the circuit-move campaign in
-`Plans/CircuitMoveFormalization.md`. It separates statements in the primary
+This document is the source-fidelity boundary for the circuit-move program in
+`Plans/MatrixMultiplication.md`. It separates statements in the primary
 sources from routine consequences, gaps in those arguments, and results proved
 in this repository.
 
@@ -222,25 +222,25 @@ This is an abstract **circuit-toggle** theorem only. It proves no compilation
 into KM Reduction/Flip/Split or Arai Plus, no KM/Arai altitude bound, no
 support-five classification, and no weighted-quotient lifting theorem.
 
-## Parity-to-box technical deferral
+## Parity-to-box proved boundary
 
-The arithmetic statement remains mathematically supported but is not included
-in the present Lean tranche. A faithful formal theorem requires the following
-explicit data and bridges:
+`Proofs/BilinearComplexity/ParityBox.lean` type-checks, without `sorry`, a
+standalone selected-entry parity-to-box theorem. Given finite carrier and row
+types, `ZMod 2` coefficients and targets, integer lifts with the required cast
+compatibility, and literal-bit hypotheses on selected entries and targets, it
+proves:
 
-1. finite row and column index types and an integer matrix
-   $A:\operatorname{Fin}(d)\to\operatorname{Fin}(N)\to\mathbb Z$;
-2. predicates proving every $A_{ij}$ and target representative $m_i$ is
-   exactly `0` or `1`;
-3. an enumeration of the finite tensor configuration and a coordinate
-   equivalence to $\mathbb F_2^d$;
-4. an equivalence between finite subsets and binary indicator vectors;
-5. a proof that subset evaluation corresponds to $Ax\equiv m\pmod 2$;
-6. integer divisibility lemmas defining
-   $z_i=((Ax)_i-m_i)/2$ and proving
-   $0\le z_i\le\lfloor N/2\rfloor$.
+1. equality modulo two is equivalent to an integer equation with even slack;
+2. selected parity equations are equivalent to rowwise integer equations;
+3. each slack is uniquely determined and lies between zero and half the
+   selected-set cardinality;
+4. the integer membership indicator lies in the box $[0,1]$ and converts a
+   selected sum to a full-carrier sum; and
+5. the selected parity equations are equivalent to the full-carrier bounded
+   formulation with $x$ explicitly equal to that membership indicator and
+   slack bounded by half the ambient carrier cardinality.
 
-Once fixed, the intended codomain is the box-constrained integer fiber
+Thus the proved codomain is the box-constrained integer fiber
 
 $$
 [A\mid-2I](x,z)=m,
@@ -248,7 +248,10 @@ $$
 \qquad 0\le z_i\le\left\lfloor\frac N2\right\rfloor.
 $$
 
-It is not an unrestricted nonnegative toric fiber. No claim is made that an
+The file does not yet construct a normalized tensor carrier, its coordinate
+enumeration, or the concrete incidence matrix for matrix multiplication; those
+are instantiation obligations for the carrier tranche. The displayed fiber is
+not an unrestricted nonnegative toric fiber. No claim is made that an
 applicable Graver element of this signed matrix projects to a binary circuit;
 that would require a separate slack-coordinate conformality theorem.
 
