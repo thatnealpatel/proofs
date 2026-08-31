@@ -5,10 +5,10 @@
 This is the canonical plan for the exact matrix-multiplication and binary-circuit
 research program. It replaces the former circuit-move, symbolic-completeness,
 and rank-47 plans. The immediate objective is not a large architecture or a
-headline connectivity theorem. It is the shortest dependency chain from the
-existing formal circuit layer and finite tensor evidence to a dimension-free
-pair-to-triple structural theorem, typed local moves, and replayable finite
-certificates.
+headline connectivity theorem. The dimension-free pair-to-triple span theorem
+has now landed; the next objective is the shortest dependency chain from that
+theorem and the existing formal circuit layer to a complete pruned local
+candidate generator, typed local moves, and replayable finite certificates.
 
 The executable exploration repository at `/home/exedev/x/tensor` is a
 read-only evidence source for this plan. Its computations generate candidate
@@ -48,21 +48,16 @@ connectivity result.
 - `Proofs/BilinearComplexity/ParityBox.lean` proves the selected-entry
   parity-to-bounded-integer-box equivalence with explicit slack and indicator
   data. It does not establish a Graver projection theorem.
+- `Proofs/BilinearComplexity/PairTripleSpan.lean` proves the dimension-free
+  binary pair-to-triple span-drop theorem `pair_triple_span_drop`: for five
+  injectively represented nonzero pure tensors satisfying a two-equals-three
+  relation, all three factors on the triple side lie in the original pair span
+  in at least one mode. Its target-independent restriction is not yet connected
+  to the normalized finite-set carrier, an executable candidate generator, a
+  legal local move, or an ordered full scheme.
 - The existing `BilinearComplexity.Scheme` development is an ordered concrete
   matrix-multiplication representation. It is not definitionally the finite-set
   KM carrier or the occurrence-aware Arai carrier.
-
-### Experimental Lean checkpoint
-
-`Proofs/BilinearComplexity/PairTripleSpan.lean` is intentionally untracked and
-is not part of the present commit. It currently type-checks supporting binary
-linear algebra: distinct nonzero vectors are independent; suitable coordinate
-pairs expose rank two; a sum of two pure matrices with independent factor pairs
-has matrix rank at least two; a binary rank-one point in the resulting plane is
-one of its endpoints; and the final five-index two-block partition is
-contradictory under its explicit hypotheses. These are experimental supporting
-lemmas, not repository-proved results. The final pair-to-triple factor-span
-theorem is not stated or proved.
 
 ### Audited source boundary
 
@@ -113,14 +108,13 @@ The first carrier implementation should use coordinate evaluation. Do not
 force a coordinate-array/`TensorProduct` equivalence into the carrier layer
 unless the structural proof actually needs both models.
 
-## Immediate structural tranche
+## Immediate local-search tranche
 
-Begin with only the conceptual modules **Carrier**, **FiveCircuit**, and
-**SpanDrop**. The untracked experimental `PairTripleSpan.lean` checkpoint may
-hold supporting matrix lemmas while this boundary stabilizes, but it must not be
-cited as a repository result. Do not create the previously proposed large file
-tree. Add a reusable Segre or projective-ruling layer only if the completed
-proof genuinely exposes reusable projective geometry.
+The structural theorem is complete, but its search interpretation is not yet a
+repository theorem. Keep the next tranche limited to **Carrier**,
+**FiveCircuit**, and **PrunedPairTriple**. Do not create the previously proposed
+large file tree or begin the full-scheme bridge before the local generator has a
+precise completeness theorem and measured finite behavior.
 
 ### 1. Carrier
 
@@ -151,36 +145,23 @@ inclusion-minimality hypothesis should be needed.
 Pairwise distinctness is expected to suffice, but this remains a target until
 its Lean statement lands.
 
-### 3. Pair-to-triple span drop
+### 3. Complete pruned pair-to-triple generator
 
-The central structural conjecture is:
+For a fixed ordered pair of normalized pure tensors, define the three candidate
+loci in which every replacement factor in one chosen mode belongs to the span
+of that pair's factors. Define the pruned candidate space as their union,
+retaining all nonzero, distinctness, disjointness, and equal-evaluation checks.
 
-> If two distinct nonzero pure tensors equal the sum of three further pairwise
-> distinct nonzero pure tensors over $\mathbb F_2$, then in at least one factor
-> position all three factors on the triple side lie in the span of the two
-> factors on the pair side.
+Prove that every collision-free binary two-to-three relation from the pair is
+present in that union by applying `pair_triple_span_drop`. This is a local
+completeness theorem only: it does not establish move legality, context
+transport, or a global matrix-multiplication search reduction.
 
-Equivalently, the outside-pair-factor-span mask cannot be 7. This is the
-candidate dimension-free explanation of the finite dimension-three census.
-The anticipated factor-profile list must be an output of this proof, not an
-input to the roadmap.
-
-The locally elaborated, uncommitted route in `PairTripleSpan.lean` uses matrix
-flattening:
-
-1. distinct nonzero factor pairs over `ZMod 2` are linearly independent;
-2. the sum of two outer products whose two factor pairs are independent has
-   matrix rank at least two;
-3. consequently, the binary plane spanned by the two pure matrices has no
-   third nonzero rank-at-most-one point;
-4. once the five terms are assigned to the two possible pure endpoints, the
-   two nonempty zero-sum coefficient blocks partition five indices, forcing a
-   block of size two and contradicting blockwise injectivity.
-
-The remaining blocked step is to organize this ruling simultaneously across
-factor flattenings and derive the required two-value partition from a
-hypothetical mask-7 relation. The quotient/Segre route remains an alternative,
-not an architectural commitment.
+Then compare the complete generator with unrestricted exhaustive enumeration
+in dimensions two and three. Record raw candidate and surviving-relation
+counts. Record orbit reductions only after specifying and verifying the acting
+group and coverage map; the existing dimension-three report does not contain
+an orbit-coverage certificate.
 
 ## Typed move layer
 
@@ -366,20 +347,24 @@ barrier.
 1. Finish and review the normalized coordinate carrier, including counts and
    the `BinaryCircuit` instantiation.
 2. Land the automatic five-circuit theorem.
-3. Complete the pair-to-triple span-drop theorem using the verified matrix-plane
-   lemmas, or isolate the precise remaining counterexample shape.
-4. Let that proof derive the admissible factor profiles.
-5. Define typed KM finite-set moves and prove their local legality and
+3. Define the three span-constrained pair-to-triple loci and their union as an
+   executable local candidate generator.
+4. Prove generator completeness from `pair_triple_span_drop`, with explicit
+   nonzero, injectivity, disjointness, and equal-evaluation hypotheses.
+5. Compare unrestricted and pruned enumeration in dimensions two and three;
+   report orbit reductions only with a verified action and coverage map.
+6. Define typed KM finite-set moves and prove their local legality and
    preservation laws; keep Arai in a separate tranche.
-6. Specify the typed certificate format and certify the dimension-two bounded
+7. Specify the typed certificate format and certify the dimension-two bounded
    theorem.
-7. Certify dimension three with raw or chunked replay, unless the structural
-   theorem makes the census unnecessary.
-8. Prove rule-specific context transport, then the full-scheme bridge and
-   dependent path substitution.
-9. Develop relation-algebra or quotient infrastructure only when a proved
-   named-move connectivity result needs it.
+8. Certify dimension three with raw or chunked replay, unless the structural
+   generator makes that census unnecessary.
+9. Prove rule-specific context transport, then the ordered full-scheme bridge
+   with coherent `Fin` enumeration/replacement data and dependent path
+   substitution.
+10. Develop relation-algebra or quotient infrastructure only when a proved
+    named-move connectivity result needs it.
 
-A fresh session should begin at item 1 or 2 while treating the untracked
-`PairTripleSpan.lean` file only as an experimental checkpoint for item 3. It
-should not begin by designing later graph, quotient, or full-scheme APIs.
+A fresh session should begin at item 1 or 2. It should not begin by designing
+later graph, quotient, or full-scheme APIs, and it should not treat the proved
+local span restriction as an implemented global search reduction.
