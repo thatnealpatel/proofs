@@ -37,18 +37,18 @@ type checkpointRecord struct {
 
 // censusRecord is a record from the survivors-census shards.
 type censusRecord struct {
-	ID                   [2]int  `json:"id"`
-	Order                int     `json:"order"`
-	Tier                 string  `json:"tier"`
-	Action               string  `json:"action"`
-	NDirectFactors       int     `json:"n_direct_factors"`
-	HasAbelianFactor     bool    `json:"has_abelian_factor"`
-	AbelianFactorOrders  []int   `json:"abelian_factor_orders"`
+	ID                    [2]int   `json:"id"`
+	Order                 int      `json:"order"`
+	Tier                  string   `json:"tier"`
+	Action                string   `json:"action"`
+	NDirectFactors        int      `json:"n_direct_factors"`
+	HasAbelianFactor      bool     `json:"has_abelian_factor"`
+	AbelianFactorOrders   []int    `json:"abelian_factor_orders"`
 	NonabelianComplements [][2]int `json:"nonabelian_complements"`
-	ExtraspecialType     string  `json:"extraspecial_type"`
-	T3bP                 int     `json:"t3b_p"`
-	T3bK                 int     `json:"t3b_k"`
-	T3bCapRational       string  `json:"t3b_cap_rational"`
+	ExtraspecialType      string   `json:"extraspecial_type"`
+	T3bP                  int      `json:"t3b_p"`
+	T3bK                  int      `json:"t3b_k"`
+	T3bCapRational        string   `json:"t3b_cap_rational"`
 }
 
 // survivor merges checkpoint and census data for ranking.
@@ -75,9 +75,9 @@ type survivor struct {
 
 // anchor represents a known rho_0 value for validation.
 type anchor struct {
-	ID      [2]int
-	Rho0    float64
-	Source  string
+	ID     [2]int
+	Rho0   float64
+	Source string
 }
 
 func main() {

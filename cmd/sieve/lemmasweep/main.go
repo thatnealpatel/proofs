@@ -14,9 +14,10 @@
 // backward-compatible with the Sage prototype's output.
 //
 // Modes:
-//   --toy          all nonabelian groups order <= 16 (seconds)
-//   --dry-run      population breakdown + projected runtime
-//   (default)      full sweep over all available exported groups
+//
+//	--toy          all nonabelian groups order <= 16 (seconds)
+//	--dry-run      population breakdown + projected runtime
+//	(default)      full sweep over all available exported groups
 //
 // Mathematical reference: Pf3 (.tasks/f5exp/docs/Pf3-abelian-factor.md)
 package main
@@ -40,16 +41,16 @@ import (
 
 func main() {
 	var (
-		toyMode   = flag.Bool("toy", false, "toy mode: nonabelian groups order <= 16")
-		dataDir   = flag.String("data-dir", "", "path to exported JSON data")
-		output    = flag.String("output", "", "output JSONL path")
-		lemmaD    = flag.Bool("lemma-d", false, "also run Lemma D probe")
-		dryRun    = flag.Bool("dry-run", false, "print population stats and exit")
-		targetID  = flag.String("target-id", "", "run only this SmallGroup ID (e.g. 6_1)")
-		limit     = flag.Int("limit", 0, "stop after N groups (0 = no limit)")
-		workers   = flag.Int("workers", 0, "parallel workers (0 = NumCPU)")
-		budget    = flag.Duration("budget", 10*time.Minute, "per-group time budget")
-		popFile   = flag.String("population", "", "population JSONL listing target IDs")
+		toyMode  = flag.Bool("toy", false, "toy mode: nonabelian groups order <= 16")
+		dataDir  = flag.String("data-dir", "", "path to exported JSON data")
+		output   = flag.String("output", "", "output JSONL path")
+		lemmaD   = flag.Bool("lemma-d", false, "also run Lemma D probe")
+		dryRun   = flag.Bool("dry-run", false, "print population stats and exit")
+		targetID = flag.String("target-id", "", "run only this SmallGroup ID (e.g. 6_1)")
+		limit    = flag.Int("limit", 0, "stop after N groups (0 = no limit)")
+		workers  = flag.Int("workers", 0, "parallel workers (0 = NumCPU)")
+		budget   = flag.Duration("budget", 10*time.Minute, "per-group time budget")
+		popFile  = flag.String("population", "", "population JSONL listing target IDs")
 	)
 	flag.Parse()
 
@@ -385,14 +386,14 @@ func printDryRun(targets []target) {
 // SweepRecord is one output JSONL record, schema-compatible with the
 // Sage prototype's output.
 type SweepRecord struct {
-	GroupID    [2]int       `json:"group_id"`
-	Order     int          `json:"order"`
+	GroupID   [2]int        `json:"group_id"`
+	Order     int           `json:"order"`
 	LemmaM    *LemmaMResult `json:"lemma_m,omitempty"`
 	LemmaD    *LemmaDResult `json:"lemma_d,omitempty"`
-	Violation bool         `json:"VIOLATION,omitempty"`
-	DFailure  bool         `json:"D_FAILURE,omitempty"`
-	ElapsedS  float64      `json:"elapsed_s"`
-	Error     string       `json:"error,omitempty"`
+	Violation bool          `json:"VIOLATION,omitempty"`
+	DFailure  bool          `json:"D_FAILURE,omitempty"`
+	ElapsedS  float64       `json:"elapsed_s"`
+	Error     string        `json:"error,omitempty"`
 }
 
 // LemmaMResult holds Lemma M probe output.
@@ -512,10 +513,10 @@ func probeLemmaM(ctx context.Context, g *tpp.Group, workers int) *LemmaMResult {
 	}
 
 	var (
-		mu          sync.Mutex
-		checked     int
-		dead        int
-		violations  []map[string]any
+		mu         sync.Mutex
+		checked    int
+		dead       int
+		violations []map[string]any
 	)
 
 	// Fan out work across goroutines.
@@ -877,9 +878,9 @@ func probeLemmaD(ctx context.Context, g *tpp.Group, workers int) *LemmaDResult {
 				if wit < maxSig {
 					mu.Lock()
 					fails = append(fails, map[string]any{
-						"members":              [3]int{sS.Order, sT.Order, sU.Order},
-						"max_eligible_sigma":   maxSig,
-						"best_inside_witness":  wit,
+						"members":             [3]int{sS.Order, sT.Order, sU.Order},
+						"max_eligible_sigma":  maxSig,
+						"best_inside_witness": wit,
 					})
 					mu.Unlock()
 				}
