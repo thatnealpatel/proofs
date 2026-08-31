@@ -36,11 +36,15 @@ func allSubsets(n int) []subset {
 	return out
 }
 
-// runCounting prints both sides of identity (A) in detail for small n,
-// showing exactly which objects each side counts.
+// runCounting prints both sides of
+// identity (A) in detail for small n,
+// showing exactly which objects each side
+// counts.
 //
-// Formula side: for each k=1..n, nonempty S ⊆ {1,...,k} with k | sum(S).
-// Combinatorial side: nonempty S ⊆ {1,...,n} with |S| | sum(S).
+// Formula side: for each k=1..n, nonempty
+// S ⊆ {1,...,k} with k | sum(S).
+// Combinatorial side: nonempty S ⊆
+// {1,...,n} with |S| | sum(S).
 func runCounting(_ []string) {
 	for n := 1; n <= 6; n++ {
 		fmt.Printf("\n===== n = %d =====\n", n)
@@ -63,7 +67,8 @@ func runCounting(_ []string) {
 			}
 		}
 
-		// Combinatorial side: nonempty S ⊆ {1,...,n} with |S| | sum(S)
+		// Combinatorial side: nonempty S ⊆
+		// {1,...,n} with |S| | sum(S)
 		type combEntry struct {
 			s    subset
 			mean int // sum/|S|
@@ -87,8 +92,10 @@ func runCounting(_ []string) {
 			fmt.Printf("  %s  |S|=%d  sum=%d  mean=%d\n", e.s, e.s.size, e.s.sum, e.mean)
 		}
 
-		// Check: do the (size, mean) pairs on the formula side match
-		// the (k, q) pairs? i.e., is there a bijection by (k ↔ mean, |S| ↔ ???)?
+		// Check: do the (size, mean) pairs on
+		// the formula side match the (k, q)
+		// pairs? i.e., is there a bijection by
+		// (k ↔ mean, |S| ↔ ???)?
 		fmt.Println("Formula (k, q) pairs:")
 		fPairs := make(map[[2]int]int)
 		for _, e := range fEntries {
