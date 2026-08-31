@@ -5,8 +5,8 @@ import "fmt"
 // runPerk verifies the per-k identity that decomposes (A) into n
 // independent single-k statements:
 //
-//   #{nonempty S ⊆ {1,...,k} : k | sum(S)}
-//     = #{S ⊆ {1,...,k} : k ∈ S, |S| | sum(S)}
+//	#{nonempty S ⊆ {1,...,k} : k | sum(S)}
+//	  = #{S ⊆ {1,...,k} : k ∈ S, |S| | sum(S)}
 //
 // If this holds for each k, then summing over k=1..n and using the
 // fact that "k ∈ S with S ⊆ {1,...,k}" partitions subsets by max(S)
@@ -17,8 +17,8 @@ import "fmt"
 func runPerk(_ []string) {
 	fmt.Printf("%4s  %10s  %10s  %5s\n", "k", "mod-k", "max=k+mean", "match")
 	for k := 1; k <= 22; k++ {
-		modK := 0    // nonempty S ⊆ {1,...,k} with k | sum(S)
-		maxK := 0    // S ⊆ {1,...,k} with k ∈ S and |S| | sum(S)
+		modK := 0 // nonempty S ⊆ {1,...,k} with k | sum(S)
+		maxK := 0 // S ⊆ {1,...,k} with k ∈ S and |S| | sum(S)
 		for mask := 1; mask < (1 << k); mask++ {
 			s, sz := 0, 0
 			hasK := false

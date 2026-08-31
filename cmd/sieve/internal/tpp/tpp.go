@@ -194,25 +194,25 @@ func (g *Group) TPPBruteCheck(s, t, u *Subgroup) bool {
 
 // BucketTriple holds the order-triple for a search bucket.
 type BucketTriple struct {
-	Product int // oS * oT * oU
+	Product    int // oS * oT * oU
 	OS, OT, OU int
 }
 
 // Result holds the search result for a single target group.
 type Result struct {
-	ID                 string    `json:"id"`
-	Description        string    `json:"description"`
-	Order              int       `json:"order"`
-	Rho0Exact          string    `json:"rho0_exact"`
-	Rho0Float          float64   `json:"rho0_float"`
-	AchievingTriple    [3]int    `json:"achieving_triple_type"`
-	ExpectedRho0       string    `json:"expected_rho0"`
-	Category           string    `json:"category"`
-	Stats              Stats     `json:"search_stats"`
-	RuntimeSeconds     float64   `json:"runtime_seconds"`
-	TimedOut           bool      `json:"timed_out"`
-	Semantics          string    `json:"semantics"` // "exact" or "lower_bound"
-	Error              string    `json:"error,omitempty"`
+	ID              string  `json:"id"`
+	Description     string  `json:"description"`
+	Order           int     `json:"order"`
+	Rho0Exact       string  `json:"rho0_exact"`
+	Rho0Float       float64 `json:"rho0_float"`
+	AchievingTriple [3]int  `json:"achieving_triple_type"`
+	ExpectedRho0    string  `json:"expected_rho0"`
+	Category        string  `json:"category"`
+	Stats           Stats   `json:"search_stats"`
+	RuntimeSeconds  float64 `json:"runtime_seconds"`
+	TimedOut        bool    `json:"timed_out"`
+	Semantics       string  `json:"semantics"` // "exact" or "lower_bound"
+	Error           string  `json:"error,omitempty"`
 }
 
 // Stats holds search statistics.

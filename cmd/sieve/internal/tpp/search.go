@@ -46,8 +46,8 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 	type classInfo struct {
 		order    int
 		isNormal bool
-		repIdx   int    // subgroup index of representative
-		members  []int  // all subgroup indices in this class
+		repIdx   int   // subgroup index of representative
+		members  []int // all subgroup indices in this class
 	}
 	classes := make([]classInfo, nC)
 	for c := 0; c < nC; c++ {
@@ -136,7 +136,7 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 	// Build the work queue: one work item per (classS, classT, classU).
 	type workItem struct {
 		cS, cT, cU int
-		product     int
+		product    int
 	}
 	var work []workItem
 	for _, ot := range triples {

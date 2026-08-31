@@ -28,9 +28,9 @@ type jsonGroup struct {
 		IsNormal bool  `json:"is_normal"`
 	} `json:"subgroups"`
 	Abelianization []struct {
-		DerivedOrder      int                `json:"derived_order"`
-		AbelianInvariants []int              `json:"abelian_invariants"`
-		ExponentVectors   map[string][]int   `json:"exponent_vectors"`
+		DerivedOrder      int              `json:"derived_order"`
+		AbelianInvariants []int            `json:"abelian_invariants"`
+		ExponentVectors   map[string][]int `json:"exponent_vectors"`
 	} `json:"abelianization"`
 }
 
