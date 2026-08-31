@@ -63,15 +63,15 @@ type beta0Result struct {
 	Rho0Float   float64 `json:"rho0_float"`
 
 	// Witness triple details.
-	WitnessOrders  [3]int    `json:"witness_orders"`            // (|S|, |T|, |U|)
-	WitnessClasses [3]int    `json:"witness_classes"`            // (classS, classT, classU)
-	WitnessCopies  [3]int    `json:"witness_copies,omitempty"`   // (copy index within class for S, T, U)
-	WitnessElts    [3][]int  `json:"witness_elements,omitempty"` // element index lists
+	WitnessOrders  [3]int   `json:"witness_orders"`             // (|S|, |T|, |U|)
+	WitnessClasses [3]int   `json:"witness_classes"`            // (classS, classT, classU)
+	WitnessCopies  [3]int   `json:"witness_copies,omitempty"`   // (copy index within class for S, T, U)
+	WitnessElts    [3][]int `json:"witness_elements,omitempty"` // element index lists
 
-	Semantics      string  `json:"semantics"` // "exact", "lower_bound", "error"
-	Threshold      int64   `json:"threshold,omitempty"`
-	HuntKill       bool    `json:"hunt_kill,omitempty"`
-	BruteRecheck   bool    `json:"brute_recheck,omitempty"`
+	Semantics    string `json:"semantics"` // "exact", "lower_bound", "error"
+	Threshold    int64  `json:"threshold,omitempty"`
+	HuntKill     bool   `json:"hunt_kill,omitempty"`
+	BruteRecheck bool   `json:"brute_recheck,omitempty"`
 
 	NCandidates    int64   `json:"n_candidates"`
 	NTPPChecks     int64   `json:"n_tpp_checks"`

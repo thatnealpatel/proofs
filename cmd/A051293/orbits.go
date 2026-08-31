@@ -5,19 +5,22 @@ import "fmt"
 // runOrbits explores the orbit structure of per_k_identity under rotation.
 //
 // For each k, the identity equates:
-//   LHS: {nonempty S ⊆ {1,...,k} : k | sum(S)}
-//   RHS: {S ⊆ {1,...,k} : k ∈ S, |S| | sum(S)}
+//
+//	LHS: {nonempty S ⊆ {1,...,k} : k | sum(S)}
+//	RHS: {S ⊆ {1,...,k} : k ∈ S, |S| | sum(S)}
 //
 // A natural bijection via rotation does NOT exist. The identity holds
 // by double-counting: define for each nonempty S ⊆ {0,...,k-1}:
 //
-//   α(k,S) = #{r < k : k | (sum(S) + |S|·r)}
-//   β(k,S) = #{j < |S| : |S| | (sum(S) + k·j)}
+//	α(k,S) = #{r < k : k | (sum(S) + |S|·r)}
+//	β(k,S) = #{j < |S| : |S| | (sum(S) + k·j)}
 //
 // Both equal gcd(|S|,k) when gcd(|S|,k) | sum(S), else 0.
 // Summing over all nonempty S:
-//   ∑ α = k·|LHS|   (rotation uniformity)
-//   ∑ β = k·|RHS|    (host decomposition)
+//
+//	∑ α = k·|LHS|   (rotation uniformity)
+//	∑ β = k·|RHS|    (host decomposition)
+//
 // Since α = β pointwise, |LHS| = |RHS|.
 func runOrbits(_ []string) {
 	for k := 1; k <= 16; k++ {

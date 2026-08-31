@@ -46,15 +46,15 @@ import (
 
 func main() {
 	var (
-		toyMode       = flag.Bool("toy", false, "toy mode: order <= 32 targets only, cross-validate TPP")
-		dataDir       = flag.String("data-dir", "", "path to exported JSON data (default: forge/out/tpp-data/)")
-		output        = flag.String("output", "", "output JSONL path (default: forge/out/rho0/rho0-results.jsonl)")
-		targetBudget  = flag.Duration("target-budget", 2*time.Hour, "per-target time budget")
-		globalBudget  = flag.Duration("global-budget", 0, "global time budget (0 = unlimited)")
-		workers       = flag.Int("workers", 0, "workers per target (0 = NumCPU)")
-		targetID      = flag.String("target-id", "", "run only this target ID")
-		dryRun        = flag.Bool("dry-run", false, "print manifest and projections, then exit")
-		pilot         = flag.String("pilot", "", "run one target and project total runtime")
+		toyMode      = flag.Bool("toy", false, "toy mode: order <= 32 targets only, cross-validate TPP")
+		dataDir      = flag.String("data-dir", "", "path to exported JSON data (default: forge/out/tpp-data/)")
+		output       = flag.String("output", "", "output JSONL path (default: forge/out/rho0/rho0-results.jsonl)")
+		targetBudget = flag.Duration("target-budget", 2*time.Hour, "per-target time budget")
+		globalBudget = flag.Duration("global-budget", 0, "global time budget (0 = unlimited)")
+		workers      = flag.Int("workers", 0, "workers per target (0 = NumCPU)")
+		targetID     = flag.String("target-id", "", "run only this target ID")
+		dryRun       = flag.Bool("dry-run", false, "print manifest and projections, then exit")
+		pilot        = flag.String("pilot", "", "run one target and project total runtime")
 	)
 	flag.Parse()
 
@@ -256,12 +256,12 @@ func runTarget(ctx context.Context, dataDir string, m tpp.ManifestEntry, budget 
 	g, err := tpp.LoadGroup(path)
 	if err != nil {
 		return tpp.Result{
-			ID:          m.ID,
-			Description: m.Description,
-			Category:    m.Category,
+			ID:           m.ID,
+			Description:  m.Description,
+			Category:     m.Category,
 			ExpectedRho0: m.ExpRho0,
-			Error:       err.Error(),
-			Semantics:   "error",
+			Error:        err.Error(),
+			Semantics:    "error",
 		}
 	}
 
