@@ -1,5 +1,7 @@
-// Command beta0probe computes exact beta_0(G) for finite groups using the
-// bitset TPP engine in internal/tpp, or hunts for threshold-exceeding triples.
+// Command beta0probe computes exact
+// beta_0(G) for finite groups using the
+// bitset TPP engine in internal/tpp, or
+// hunts for threshold-exceeding triples.
 //
 // Two modes:
 //
@@ -13,26 +15,40 @@
 //
 // Exhaustiveness argument for exact mode:
 //
-// The search visits every (classS, classT, classU) triple. For each, S is
-// fixed to the class representative (TPP is conjugation-invariant), and T, U
-// range over ALL subgroups in their classes. Order triples whose product <=
-// current best are skipped (monotone pruning: they provably cannot be the
-// maximum). Neumann Obs 3.1 pruning is a NECESSARY condition for TPP — no
-// valid triple is excluded. The Murthy non-normality pruning excludes normal
-// subgroups, which is correct (Murthy26 Prop 2.19(2): all three members of a
-// nontrivial TPP triple are non-normal). No early size cutoff is applied
-// beyond these provably sound filters. In contrast, the Sage prototype's
-// flawed s_max^3 > |G| cutoff missed the 972 achiever on A_6 and returned 900
-// (Pf3 section 5): this Go engine has no such cutoff.
+// The search visits every (classS,
+// classT, classU) triple. For each, S
+// is fixed to the class representative
+// (TPP is conjugation-invariant), and T,
+// U range over ALL subgroups in their
+// classes. Order triples whose product
+// <= current best are skipped (monotone
+// pruning: they provably cannot be the
+// maximum). Neumann Obs 3.1 pruning is
+// a NECESSARY condition for TPP — no
+// valid triple is excluded. The Murthy
+// non-normality pruning excludes normal
+// subgroups, which is correct (Murthy26
+// Prop 2.19(2): all three members of a
+// nontrivial TPP triple are non-normal).
+// No early size cutoff is applied beyond
+// these provably sound filters. In
+// contrast, the Sage prototype's flawed
+// s_max^3 > |G| cutoff missed the 972
+// achiever on A_6 and returned 900 (Pf3
+// section 5): this Go engine has no such
+// cutoff.
 //
 // Usage:
 //
 //	beta0probe exact --data path/to/group.json [--output results.jsonl] [--target-budget 2h] [--workers N]
 //	beta0probe hunt  --data path/to/group.json --threshold 120 [--output results.jsonl] [--target-budget 2h]
 //
-// Input: single group JSON file produced by export_tpp.sage.
-// Output: JSONL records (one per run) to --output. Checkpoint/resume skips
-// IDs already present. Progress prints at least every 30s.
+// Input: single group JSON file produced
+// by export_tpp.sage. Output: JSONL
+// records (one per run) to --output.
+// Checkpoint/resume skips IDs already
+// present. Progress prints at least every
+// 30s.
 package main
 
 import (
@@ -52,7 +68,8 @@ import (
 	"patel.codes/proofs/cmd/sieve/internal/tpp"
 )
 
-// beta0Result holds the detailed result for a single target.
+// beta0Result holds the detailed result
+// for a single target.
 type beta0Result struct {
 	ID          string  `json:"id"`
 	Description string  `json:"description"`
@@ -348,8 +365,10 @@ func runHunt(ctx context.Context, g *tpp.Group, workers int, threshold int64, cr
 	// In hunt mode, only consider triples with product > threshold.
 	work, totalCandidates := buildWorkItems(classes, orderMap, nG, threshold)
 
-	// Hunt: we want the first triple that beats the threshold.
-	// Start bestProduct at the threshold so the engine skips anything <= it.
+	// Hunt: we want the first triple that
+	// beats the threshold. Start bestProduct
+	// at the threshold so the engine skips
+	// anything <= it.
 	var bestProduct atomic.Int64
 	bestProduct.Store(threshold)
 
@@ -498,7 +517,8 @@ func buildOrderMap(classes []classInfo) map[int][]int {
 }
 
 func buildWorkItems(classes []classInfo, orderMap map[int][]int, nG int64, minProduct int64) ([]workItem, int64) {
-	// Minimum product threshold: at least nG (trivial), or minProduct if higher.
+	// Minimum product threshold: at least nG
+	// (trivial), or minProduct if higher.
 	cutoff := nG
 	if minProduct > cutoff {
 		cutoff = minProduct

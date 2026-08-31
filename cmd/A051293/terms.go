@@ -52,8 +52,9 @@ func runTerms(args []string) {
 	}
 }
 
-// computeB computes b(k) for k=1..N in parallel.
-// b(k) = (1/k) * Sum_{d|k, d odd} 2^(k/d) * phi(d)
+// computeB computes b(k) for k=1..N in
+// parallel. b(k) = (1/k) * Sum_{d|k, d
+// odd} 2^(k/d) * phi(d)
 func computeB(N int) []*big.Int {
 	bs := make([]*big.Int, N+1)
 	workers := runtime.GOMAXPROCS(0)

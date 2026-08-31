@@ -71,7 +71,8 @@ func TestAbelianLatticeZ2xZ4(t *testing.T) {
 }
 
 func TestAbelianLatticeZ2xZ2xZ3(t *testing.T) {
-	// Z/2 x Z/2 x Z/3 has 10 subgroups (validated against GAP).
+	// Z/2 x Z/2 x Z/3 has 10 subgroups
+	// (validated against GAP).
 	lat := AbelianLattice([]int{2, 2, 3})
 	if len(lat) != 10 {
 		t.Fatalf("Z/2 x Z/2 x Z/3: got %d subgroups, want 10", len(lat))
@@ -119,7 +120,8 @@ func TestAddPacked(t *testing.T) {
 }
 
 func TestAbelianSubgroupClosure(t *testing.T) {
-	// Every subgroup must contain the identity and be closed under addition.
+	// Every subgroup must contain the
+	// identity and be closed under addition.
 	invs := []int{2, 3}
 	lat := AbelianLattice(invs)
 	zero := packVec([]int{0, 0}, invs)

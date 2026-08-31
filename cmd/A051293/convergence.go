@@ -18,8 +18,9 @@ func runConvergence(args []string) {
 		}
 	}
 
-	// A000670 (Fubini numbers): coefficients of the conjectured expansion
-	// a(n) ~ (2^(n+1)/n) * Sum_{k>=0} fubini[k] / n^k
+	// A000670 (Fubini numbers): coefficients of the
+	// conjectured expansion a(n) ~ (2^(n+1)/n) *
+	// Sum_{k>=0} fubini[k] / n^k
 	fubini := [...]int64{1, 1, 3, 13, 75, 541, 4683}
 	maxOrder := len(fubini) - 1
 
@@ -44,8 +45,9 @@ func runConvergence(args []string) {
 			continue
 		}
 
-		// ratio = a(k) * k / 2^(k+1)
-		// precision must exceed bit-length of a(k) for exact conversion
+		// ratio = a(k) * k / 2^(k+1) precision
+		// must exceed bit-length of a(k) for
+		// exact conversion
 		prec := uint(k + 128)
 
 		an := new(big.Float).SetPrec(prec).SetInt(a)

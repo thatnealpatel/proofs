@@ -11,27 +11,32 @@ import (
 
 // SearchConfig controls the search for a single target.
 type SearchConfig struct {
-	// CrossValidate enables brute-force cross-validation of every TPP
-	// result against the set-based checker (mandatory in toy mode).
+	// CrossValidate enables brute-force
+	// cross-validation of every TPP result
+	// against the set-based checker
+	// (mandatory in toy mode).
 	CrossValidate bool
-	// Progress callback, called at most every ProgressInterval.
+	// Progress callback, called at most
+	// every ProgressInterval.
 	Progress func(msg string)
 	// ProgressInterval controls how often Progress is called.
 	ProgressInterval time.Duration
-	// Workers is the number of parallel goroutines per target.
-	// 0 means runtime.NumCPU().
+	// Workers is the number of parallel
+	// goroutines per target. 0 means
+	// runtime.NumCPU().
 	Workers int
 }
 
 // Search computes rho_0(G) by exhaustive subgroup triple search.
 //
 // Search-space reduction: TPP is invariant under simultaneous
-// conjugation (S,T,U) -> (S^g, T^g, U^g). So for each candidate
-// we fix S to a class representative. T and U range over ALL subgroups
-// in their conjugacy classes (mixed conjugation does NOT preserve TPP).
+// conjugation (S,T,U) -> (S^g, T^g, U^g). So for each candidate we fix
+// S to a class representative. T and U range over ALL subgroups in
+// their conjugacy classes (mixed conjugation does NOT preserve TPP).
 //
-// The search enumerates order-triple buckets in descending product order,
-// with early break once the remaining product cannot beat the current best.
+// The search enumerates order-triple buckets in descending product
+// order, with early break once the remaining product cannot beat the
+// current best.
 func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 	t0 := time.Now()
 	nC := len(g.Classes)
@@ -72,7 +77,8 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 		orderMap[o] = append(orderMap[o], c)
 	}
 
-	// Build order-triple buckets, pruning by Neumann at the order level.
+	// Build order-triple buckets, pruning
+	// by Neumann at the order level.
 	type orderTriple struct {
 		product    int
 		oS, oT, oU int
@@ -82,12 +88,15 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 		for oT := range orderMap {
 			for oU := range orderMap {
 				prod := oS * oT * oU
-				// Only interesting if product > |G| (ratio > 1) or we might
-				// need to confirm ratio = 1 exactly. Include all products >= |G|.
+				// Only interesting if product > |G|
+				// (ratio > 1) or we might need to
+				// confirm ratio = 1 exactly. Include
+				// all products >= |G|.
 				if int64(prod) < nG {
 					continue
 				}
-				// Neumann Obs 3.1: |X|(|Y|+|Z|-1) <= |G| for all rotations.
+				// Neumann Obs 3.1: |X|(|Y|+|Z|-1) <=
+				// |G| for all rotations.
 				if int64(oS)*int64(oT+oU-1) > nG {
 					continue
 				}
@@ -111,7 +120,9 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 		cS := orderMap[ot.oS]
 		cT := orderMap[ot.oT]
 		cU := orderMap[ot.oU]
-		// For each class-triple: S rep x all T-class members x all U-class members.
+		// For each class-triple: S rep x
+		// all T-class members x all U-class
+		// members.
 		for _, cs := range cS {
 			for _, ct := range cT {
 				for _, cu := range cU {
@@ -133,7 +144,8 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 	timedOut := false
 	var searchErr error
 
-	// Build the work queue: one work item per (classS, classT, classU).
+	// Build the work queue: one work item
+	// per (classS, classT, classU).
 	type workItem struct {
 		cS, cT, cU int
 		product    int
@@ -149,7 +161,8 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 		}
 	}
 
-	// Sort work items by descending product for early termination.
+	// Sort work items by descending product
+	// for early termination.
 	sort.Slice(work, func(i, j int) bool {
 		return work[i].product > work[j].product
 	})
@@ -182,9 +195,12 @@ func Search(ctx context.Context, g *Group, cfg SearchConfig) Result {
 			rho.String(), tppChecks.Load()))
 	}
 
-	// Process work items. Use a single goroutine for simplicity and
-	// correctness first; parallelism is across targets in the main loop.
-	// Within a target, the work items are independent so we can parallelize.
+	// Process work items. Use a single
+	// goroutine for simplicity and
+	// correctness first; parallelism is
+	// across targets in the main loop.
+	// Within a target, the work items are
+	// independent so we can parallelize.
 	workers := cfg.Workers
 	if workers <= 0 {
 		workers = 1

@@ -6,7 +6,8 @@ import (
 	"math/big"
 )
 
-// fubiniExact computes fubini(n) exactly using the recurrence.
+// fubiniExact computes fubini(n) exactly
+// using the recurrence.
 func fubiniExact(n int) *big.Int {
 	if n == 0 {
 		return big.NewInt(1)
@@ -20,8 +21,9 @@ func fubiniExact(n int) *big.Int {
 	return s
 }
 
-// runTailbound verifies the key identity and bound needed to close
-// the last sorry in A051293.lean:
+// runTailbound verifies the key identity
+// and bound needed to close the last
+// sorry in A051293.lean:
 //
 //	Identity:  ∑_{m=0}^i C(i,m)·fubini(m) = 2·fubini(i)  for i ≥ 1
 //	Bound:     |∑_{j<n} j^i/2^j - 2·fubini(i)| ≤ 4·fubini(i)·n^i/2^n
@@ -30,7 +32,8 @@ func fubiniExact(n int) *big.Int {
 //
 //	fubini(i) = ∑_{m=0}^{i-1} C(i,m)·fubini(m)
 //
-// so the full sum ∑_{m=0}^i = fubini(i) + C(i,i)·fubini(i) = 2·fubini(i).
+// so the full sum ∑_{m=0}^i = fubini(i)
+// + C(i,i)·fubini(i) = 2·fubini(i).
 func runTailbound(_ []string) {
 	fmt.Println("=== Identity: sum_{m=0}^i C(i,m)*fubini(m) vs 2*fubini(i) ===")
 	for i := 0; i <= 10; i++ {

@@ -1,9 +1,12 @@
-// Package tpp implements bitset-based TPP (triple product property) search
-// over precomputed finite group data.
+// Package tpp implements bitset-based TPP
+// (triple product property) search over
+// precomputed finite group data.
 //
-// Mathematical background: rho_0(G) = beta_0(G)/|G| where
-// beta_0(G) = max |S||T||U| over subgroup triples (S,T,U) satisfying
-// the triple product property (Murthy convention, arXiv:2602.15796
+// Mathematical background: rho_0(G) =
+// beta_0(G)/|G| where beta_0(G) = max
+// |S||T||U| over subgroup triples (S,T,U)
+// satisfying the triple product property
+// (Murthy convention, arXiv:2602.15796
 // eqs 2.5-2.6).
 //
 // TPP for subgroups S, T, U of G:
@@ -12,13 +15,17 @@
 //
 // where TU = {tu : t in T, u in U} and 1 = identity.
 //
-// The brute-force O(|S||T||U|) checker verifies: for all (s,t,u) in
-// SxTxU, stu = 1 implies s = t = u = 1.
+// The brute-force O(|S||T||U|) checker
+// verifies: for all (s,t,u) in SxTxU, stu
+// = 1 implies s = t = u = 1.
 //
-// Search-space reduction: TPP is invariant under simultaneous
-// conjugation (S,T,U) -> (S^g, T^g, U^g), so the maximum is attained
-// with S fixed to a class representative; T and U range over ALL
-// subgroups in their conjugacy classes.
+// Search-space reduction: TPP is
+// invariant under simultaneous
+// conjugation (S,T,U) -> (S^g, T^g,
+// U^g), so the maximum is attained with
+// S fixed to a class representative; T
+// and U range over ALL subgroups in their
+// conjugacy classes.
 //
 // Pruning (citations in Murthy26, Neumann):
 //   - Neumann Obs 3.1: |S|(|T|+|U|-1) <= |G|, all three rotations.
@@ -30,8 +37,10 @@ import (
 	"math/bits"
 )
 
-// Bitset represents a subset of group elements as a packed bit array.
-// Element i is in the set iff bit i of Words[i/64] is set.
+// Bitset represents a subset of group
+// elements as a packed bit array.
+// Element i is in the set iff bit i of
+// Words[i/64] is set.
 type Bitset struct {
 	Words []uint64
 }
@@ -84,8 +93,8 @@ func (b *Bitset) Intersects(other *Bitset) bool {
 	return false
 }
 
-// IntersectsExcluding returns true if b and other share a set bit
-// other than element 0 (the identity).
+// IntersectsExcluding returns true if b and other share a
+// set bit other than element 0 (the identity).
 func (b *Bitset) IntersectsExcluding(other *Bitset) bool {
 	if len(b.Words) == 0 {
 		return false
@@ -103,8 +112,10 @@ func (b *Bitset) IntersectsExcluding(other *Bitset) bool {
 	return false
 }
 
-// Group holds the precomputed multiplication table and subgroup data
-// for a finite group, loaded from the Sage exporter's JSON output.
+// Group holds the precomputed
+// multiplication table and subgroup data
+// for a finite group, loaded from the
+// Sage exporter's JSON output.
 type Group struct {
 	ID          string
 	Description string
@@ -112,16 +123,19 @@ type Group struct {
 	ExpRho0     string // expected rho_0 as string rational, or ""
 	N           int    // group order
 
-	// Table[i*N+j] = index of element i * element j. Element 0 = identity.
+	// Table[i*N+j] = index of element i *
+	// element j. Element 0 = identity.
 	Table []uint16
 	// Inv[i] = index of element i's inverse.
 	Inv []uint16
 
 	// Subgroups indexed by a flat subgroup ID.
 	Subgroups []Subgroup
-	// Classes[c] = list of subgroup indices in conjugacy class c.
+	// Classes[c] = list of subgroup indices
+	// in conjugacy class c.
 	Classes [][]int
-	// ClassRep[c] = index of the representative subgroup for class c.
+	// ClassRep[c] = index of the
+	// representative subgroup for class c.
 	ClassRep []int
 }
 
@@ -134,13 +148,16 @@ type Subgroup struct {
 	IsRep    bool // true if this is the class representative
 	IsNormal bool
 
-	// Abelianization data (Fg5: lemma sweep).
-	// DerivedOrder is |H'| where H' = [H,H].
+	// Abelianization data (Fg5: lemma
+	// sweep). DerivedOrder is |H'| where H'
+	// = [H,H].
 	DerivedOrder int
-	// AbelianInvariants of H/H' (GAP AbelianInvariants ordering).
+	// AbelianInvariants of H/H' (GAP
+	// AbelianInvariants ordering).
 	AbelianInvariants []int
-	// ExponentVectors maps element index -> exponent vector in H/H'.
-	// The vector has len(AbelianInvariants) components.
+	// ExponentVectors maps element index ->
+	// exponent vector in H/H'. The vector
+	// has len(AbelianInvariants) components.
 	ExponentVectors map[uint16][]int
 }
 
@@ -149,11 +166,13 @@ func (g *Group) Mul(a, b uint16) uint16 {
 	return g.Table[int(a)*g.N+int(b)]
 }
 
-// TPPSetCheck checks TPP(S,T,U) using the set characterization:
+// TPPSetCheck checks TPP(S,T,U) using the set
+// characterization:
 //
 //	TPP(S,T,U)  <=>  S cap TU = {1}  AND  T cap U = {1}
 //
-// This is O(|T||U|) to build TU plus O(nWords) for the intersection tests.
+// This is O(|T||U|) to build TU plus O(nWords) for the
+// intersection tests.
 func (g *Group) TPPSetCheck(s, t, u *Subgroup) bool {
 	// Fast check: T cap U = {1}.
 	if t.Elts.IntersectsExcluding(&u.Elts) {
@@ -173,8 +192,8 @@ func (g *Group) TPPSetCheck(s, t, u *Subgroup) bool {
 	return !s.Elts.IntersectsExcluding(&tu)
 }
 
-// TPPBruteCheck checks TPP(S,T,U) by brute force:
-// for all (s,t,u) in SxTxU, stu = 1 => s = t = u = 1.
+// TPPBruteCheck checks TPP(S,T,U) by brute force: for
+// all (s,t,u) in SxTxU, stu = 1 => s = t = u = 1.
 // Returns true iff TPP holds.
 func (g *Group) TPPBruteCheck(s, t, u *Subgroup) bool {
 	for _, si := range s.EltList {
@@ -226,7 +245,8 @@ type Stats struct {
 	NCandidates    int64 `json:"n_candidates"`
 }
 
-// Rational represents a non-negative rational number p/q in lowest terms.
+// Rational represents a non-negative
+// rational number p/q in lowest terms.
 type Rational struct {
 	P, Q int64
 }

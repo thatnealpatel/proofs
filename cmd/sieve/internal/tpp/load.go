@@ -9,7 +9,8 @@ import (
 	"strconv"
 )
 
-// jsonGroup is the on-disk JSON format written by export_tpp.sage.
+// jsonGroup is the on-disk JSON format
+// written by export_tpp.sage.
 type jsonGroup struct {
 	ID          string  `json:"id"`
 	Description string  `json:"description"`
@@ -34,7 +35,8 @@ type jsonGroup struct {
 	} `json:"abelianization"`
 }
 
-// LoadGroup loads a group from a JSON file produced by export_tpp.sage.
+// LoadGroup loads a group from a JSON file
+// produced by export_tpp.sage.
 func LoadGroup(path string) (*Group, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -162,7 +164,8 @@ func LoadGroup(path string) (*Group, error) {
 	}, nil
 }
 
-// jsonManifestEntry is one entry in the exporter's manifest.json.
+// jsonManifestEntry is one entry in the
+// exporter's manifest.json.
 type jsonManifestEntry struct {
 	ID          string  `json:"id"`
 	Description string  `json:"description"`
@@ -178,7 +181,8 @@ type ManifestEntry struct {
 	ExpRho0     string
 }
 
-// LoadManifest reads the manifest.json file from the data directory.
+// LoadManifest reads the manifest.json file from the data
+// directory.
 func LoadManifest(dataDir string) ([]ManifestEntry, error) {
 	path := filepath.Join(dataDir, "manifest.json")
 	data, err := os.ReadFile(path)
@@ -207,7 +211,8 @@ func LoadManifest(dataDir string) ([]ManifestEntry, error) {
 	return result, nil
 }
 
-// GroupPath returns the expected JSON file path for a target ID.
+// GroupPath returns the expected JSON file
+// path for a target ID.
 func GroupPath(dataDir, id string) string {
 	return filepath.Join(dataDir, id+".json")
 }

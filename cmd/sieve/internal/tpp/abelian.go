@@ -1,15 +1,22 @@
-// Abelian subgroup lattice enumeration for the lemma sweep engine.
+// Abelian subgroup lattice enumeration
+// for the lemma sweep engine.
 //
-// For a finite abelian group A = Z/d1 x Z/d2 x ... x Z/dk specified by
-// invariant tuple (d1, ..., dk), enumerate ALL subgroups. Each subgroup
-// is returned as its order and the set of elements (packed exponent
-// vectors reduced mod invariants).
+// For a finite abelian group A =
+// Z/d1 x Z/d2 x ... x Z/dk specified
+// by invariant tuple (d1, ..., dk),
+// enumerate ALL subgroups. Each subgroup
+// is returned as its order and the set
+// of elements (packed exponent vectors
+// reduced mod invariants).
 //
-// The algorithm generates subgroups by closure: compute cyclic
-// subgroups for every element, then iteratively combine pairs by
-// adding generators until fixed point.
+// The algorithm generates subgroups by
+// closure: compute cyclic subgroups for
+// every element, then iteratively combine
+// pairs by adding generators until fixed
+// point.
 //
-// This replaces the GAP ConjugacyClassesSubgroups(AbelianGroup(invs))
+// This replaces the GAP
+// ConjugacyClassesSubgroups(AbelianGroup(invs))
 // call in the Sage prototype.
 package tpp
 
@@ -19,15 +26,18 @@ import (
 	"sort"
 )
 
-// AbelianSubgroup is one subgroup of a finite abelian group,
-// represented as an order and a set of exponent-vector keys.
+// AbelianSubgroup is one subgroup of a
+// finite abelian group, represented as
+// an order and a set of exponent-vector
+// keys.
 type AbelianSubgroup struct {
 	Order    int
 	Elements map[uint64]struct{} // set of packed exponent vectors
 }
 
-// AbelianLattice enumerates all subgroups of Z/d1 x ... x Z/dk.
-// For empty invs (trivial group), returns a single trivial subgroup.
+// AbelianLattice enumerates all subgroups of Z/d1
+// x ... x Z/dk. For empty invs (trivial group),
+// returns a single trivial subgroup.
 func AbelianLattice(invs []int) []AbelianSubgroup {
 	k := len(invs)
 	if k == 0 {
@@ -98,8 +108,9 @@ func AbelianLattice(invs []int) []AbelianSubgroup {
 		addSub(sub)
 	}
 
-	// Phase 2: combine existing subgroups with additional generators
-	// until stable.
+	// Phase 2: combine existing subgroups
+	// with additional generators until
+	// stable.
 	for {
 		changed := false
 		subs := make([]*AbelianSubgroup, 0, len(registry))
@@ -139,9 +150,11 @@ func AbelianLattice(invs []int) []AbelianSubgroup {
 	return result
 }
 
-// packVec packs an exponent vector into a uint64 key.
-// Each component is reduced mod its invariant and packed into a byte.
-// Supports up to 8 components with invariant <= 255.
+// packVec packs an exponent vector into a
+// uint64 key. Each component is reduced
+// mod its invariant and packed into a
+// byte. Supports up to 8 components with
+// invariant <= 255.
 func packVec(v []int, invs []int) uint64 {
 	var packed uint64
 	for i, e := range v {
@@ -154,7 +167,8 @@ func packVec(v []int, invs []int) uint64 {
 	return packed
 }
 
-// unpackVec unpacks a uint64 key back to an exponent vector.
+// unpackVec unpacks a uint64 key back to an
+// exponent vector.
 func unpackVec(packed uint64, invs []int) []int {
 	v := make([]int, len(invs))
 	for i := range invs {
@@ -163,8 +177,8 @@ func unpackVec(packed uint64, invs []int) []int {
 	return v
 }
 
-// addPacked adds two packed exponent vectors mod invariants,
-// returning the packed result.
+// addPacked adds two packed exponent vectors mod
+// invariants, returning the packed result.
 func addPacked(a, b uint64, invs []int) uint64 {
 	var r uint64
 	for i, d := range invs {
@@ -177,7 +191,8 @@ func addPacked(a, b uint64, invs []int) uint64 {
 	return r
 }
 
-// enumElements enumerates all elements of Z/d1 x ... x Z/dk.
+// enumElements enumerates all elements
+// of Z/d1 x ... x Z/dk.
 func enumElements(invs []int) [][]int {
 	total := 1
 	for _, d := range invs {
@@ -200,10 +215,11 @@ func enumElements(invs []int) [][]int {
 	return result
 }
 
-// PackExponentVec packs a raw exponent vector (from the export data)
-// into the same uint64 key format used by AbelianLattice.
-// The vector is reduced mod the corresponding invariants.
-// Panics if len(v) > 8 or any invariant > 255 (packing overflow).
+// PackExponentVec packs a raw exponent vector (from
+// the export data) into the same uint64 key format
+// used by AbelianLattice. The vector is reduced mod
+// the corresponding invariants. Panics if len(v) >
+// 8 or any invariant > 255 (packing overflow).
 func PackExponentVec(v []int, invs []int) uint64 {
 	if len(v) > 8 {
 		panic(fmt.Sprintf("PackExponentVec: %d components exceeds uint64 packing limit of 8", len(v)))

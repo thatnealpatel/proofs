@@ -1,17 +1,27 @@
-// Command lemmasweep runs the Lemma M / Lemma D kill-test sweep over
-// precomputed group data, verifying the Pf3 abelian-factor conjecture
-// rho_0(A x G) = rho_0(G) for all finite abelian A.
+// Command lemmasweep runs the Lemma
+// M / Lemma D kill-test sweep over
+// precomputed group data, verifying the
+// Pf3 abelian-factor conjecture rho_0(A
+// x G) = rho_0(G) for all finite abelian
+// A.
 //
-// A SINGLE VIOLATION kills the conjecture: the engine surfaces it
-// immediately with a loud banner, flushes the violation record, and
-// exits nonzero.
+// A SINGLE VIOLATION kills the
+// conjecture: the engine surfaces it
+// immediately with a loud banner, flushes
+// the violation record, and exits
+// nonzero.
 //
-// Input: JSON files under --data-dir produced by forge/export_tpp.sage
-// (with abelianization extension). The target list is SmallGroup IDs
-// read from a population JSONL or enumerated from the data dir.
+// Input: JSON files under --data-dir
+// produced by forge/export_tpp.sage (with
+// abelianization extension). The target
+// list is SmallGroup IDs read from a
+// population JSONL or enumerated from the
+// data dir.
 //
-// Output: JSONL records to --output with per-group results, schema
-// backward-compatible with the Sage prototype's output.
+// Output: JSONL records to --output
+// with per-group results, schema
+// backward-compatible with the Sage
+// prototype's output.
 //
 // Modes:
 //
@@ -19,7 +29,8 @@
 //	--dry-run      population breakdown + projected runtime
 //	(default)      full sweep over all available exported groups
 //
-// Mathematical reference: Pf3 (.tasks/f5exp/docs/Pf3-abelian-factor.md)
+// Mathematical reference: Pf3
+// (.tasks/f5exp/docs/Pf3-abelian-factor.md)
 package main
 
 import (
@@ -228,7 +239,8 @@ func buildTargets(toyMode bool, dataDir, popFile, targetID string) ([]target, er
 		return loadPopulation(popFile)
 	}
 
-	// Scan data dir for available exported files matching SmallGroup pattern.
+	// Scan data dir for available exported
+	// files matching SmallGroup pattern.
 	entries, err := os.ReadDir(dataDir)
 	if err != nil {
 		return nil, fmt.Errorf("read data dir %s: %w", dataDir, err)
@@ -262,8 +274,9 @@ func buildTargets(toyMode bool, dataDir, popFile, targetID string) ([]target, er
 }
 
 func parseID(id string) (order, idx int, err error) {
-	// Handle formats: "6_1", "ctrl_6_1", etc.
-	// For lemma sweep we only care about plain "order_idx" format.
+	// Handle formats: "6_1", "ctrl_6_1",
+	// etc. For lemma sweep we only care
+	// about plain "order_idx" format.
 	parts := strings.Split(id, "_")
 	if len(parts) == 2 {
 		order = parseInt(parts[0])
@@ -383,8 +396,9 @@ func printDryRun(targets []target) {
 // Per-group processing
 // ---------------------------------------------------------------------------
 
-// SweepRecord is one output JSONL record, schema-compatible with the
-// Sage prototype's output.
+// SweepRecord is one output JSONL record,
+// schema-compatible with the Sage
+// prototype's output.
 type SweepRecord struct {
 	GroupID   [2]int        `json:"group_id"`
 	Order     int           `json:"order"`
@@ -474,9 +488,11 @@ func probeLemmaM(ctx context.Context, g *tpp.Group, workers int) *LemmaMResult {
 	// Compute beta0 using full TPP search.
 	beta0 := computeBeta0(g)
 
-	// Precompute abelianization data: for each subgroup, its derived
-	// order, invariants, and per-element exponent vectors are already
-	// loaded in g.Subgroups[i].
+	// Precompute abelianization data: for
+	// each subgroup, its derived order,
+	// invariants, and per-element exponent
+	// vectors are already loaded in
+	// g.Subgroups[i].
 
 	// Lattice cache.
 	var latMu sync.Mutex
@@ -596,7 +612,8 @@ func probeLemmaM(ctx context.Context, g *tpp.Group, workers int) *LemmaMResult {
 							// Concatenate exponent vectors.
 							v := concatVecs(svec, tvec, uvec, lenSInvs, lenTInvs, invs)
 
-							// Check if v is zero (all components zero mod invariants).
+							// Check if v is zero (all
+							// components zero mod invariants).
 							allZero := true
 							for ci, c := range v {
 								r := c % invs[ci]
@@ -691,9 +708,11 @@ func probeLemmaD(ctx context.Context, g *tpp.Group, workers int) *LemmaDResult {
 
 	beta0 := computeBeta0(g)
 
-	// Build subgroup containment: for each subgroup i, which other
-	// subgroups are sub-subgroups of i?
-	// A subgroup j is a subsubgroup of i iff j.Elts is a subset of i.Elts.
+	// Build subgroup containment: for each
+	// subgroup i, which other subgroups are
+	// sub-subgroups of i? A subgroup j is
+	// a subsubgroup of i iff j.Elts is a
+	// subset of i.Elts.
 	subsubs := make([][]int, n)
 	for i := 0; i < n; i++ {
 		var contained []int
@@ -781,8 +800,10 @@ func probeLemmaD(ctx context.Context, g *tpp.Group, workers int) *LemmaDResult {
 		fails    []map[string]any
 	)
 
-	// Process triples sequentially (Lemma D has heavier per-triple work
-	// due to max_inside, and the tpp cache benefits from sequential access).
+	// Process triples sequentially (Lemma
+	// D has heavier per-triple work due to
+	// max_inside, and the tpp cache benefits
+	// from sequential access).
 	for iS := 0; iS < n; iS++ {
 		select {
 		case <-ctx.Done():
@@ -907,8 +928,10 @@ func probeLemmaD(ctx context.Context, g *tpp.Group, workers int) *LemmaDResult {
 // Helpers
 // ---------------------------------------------------------------------------
 
-// computeBeta0 computes beta_0(G) by exhaustive TPP search over all
-// subgroup triples, matching the prototype semantics exactly.
+// computeBeta0 computes beta_0(G) by
+// exhaustive TPP search over all subgroup
+// triples, matching the prototype
+// semantics exactly.
 func computeBeta0(g *tpp.Group) int {
 	n := len(g.Subgroups)
 	nG := g.N

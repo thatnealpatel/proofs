@@ -1,8 +1,12 @@
-// Command tier4rank computes the tier-4 ranking over sieve survivors.
+// Command tier4rank computes the tier-4
+// ranking over sieve survivors.
 //
-// It reads checkpoint JSONL (orders 2..511) and census shards, computes
-// qr(G) = log(n_G)/log(|G|), validates against known rho_0 anchors, and
-// produces a ranked survivor table (ceiling desc, qr asc).
+// It reads checkpoint JSONL (orders
+// 2..511) and census shards, computes
+// qr(G) = log(n_G)/log(|G|), validates
+// against known rho_0 anchors, and
+// produces a ranked survivor table
+// (ceiling desc, qr asc).
 package main
 
 import (
@@ -17,7 +21,8 @@ import (
 	"strings"
 )
 
-// checkpointRecord is a single record from an order_N.jsonl checkpoint.
+// checkpointRecord is a single record
+// from an order_N.jsonl checkpoint.
 type checkpointRecord struct {
 	ID           [2]int             `json:"id"`
 	Order        int                `json:"order"`
@@ -35,7 +40,8 @@ type checkpointRecord struct {
 	Ceiling      float64            `json:"ceiling"`
 }
 
-// censusRecord is a record from the survivors-census shards.
+// censusRecord is a record from the
+// survivors-census shards.
 type censusRecord struct {
 	ID                    [2]int   `json:"id"`
 	Order                 int      `json:"order"`
@@ -135,7 +141,8 @@ func main() {
 	for _, a := range anchors {
 		s, found := survMap[a.ID]
 		if !found {
-			// Check if it was rejected (rho_0 = 1 groups get REJECT'd)
+			// Check if it was rejected (rho_0 = 1
+			// groups get REJECT'd)
 			if a.Rho0 == 1.0 {
 				fmt.Printf("  [%d,%d] rho_0=%.4f (%s): REJECT (correct, not in survivors)\n",
 					a.ID[0], a.ID[1], a.Rho0, a.Source)
@@ -162,9 +169,11 @@ func main() {
 	}
 	fmt.Println()
 
-	// Class-2 ceiling agreement check: Murthy26 Thm 3.1 says rho_0 < sqrt(|G:Z|)
-	// BCGPU Cor 3.8 says rho_0 <= sqrt(|G:Z|) for subgroup triples.
-	// Both appear as "class2_strict" and "subgroup_packing" in ceilings.
+	// Class-2 ceiling agreement check: Murthy26
+	// Thm 3.1 says rho_0 < sqrt(|G:Z|) BCGPU Cor
+	// 3.8 says rho_0 <= sqrt(|G:Z|) for subgroup
+	// triples. Both appear as "class2_strict" and
+	// "subgroup_packing" in ceilings.
 	fmt.Println("=== CLASS-2 CEILING AGREEMENT ===")
 	fmt.Println()
 	class2Agree := 0
@@ -181,9 +190,11 @@ func main() {
 		c2strict, hasC2 := s.Ceilings["class2_strict"]
 		subPack, hasSP := s.Ceilings["subgroup_packing"]
 		if hasC2 && hasSP {
-			// class2_strict = sqrt(|G:Z|) from Murthy26 Thm 3.1
-			// subgroup_packing = sqrt(|G:Z|) from BCGPU Cor 3.8
-			// They should agree (both are sqrt(|G:Z|) for class-2 groups)
+			// class2_strict = sqrt(|G:Z|) from
+			// Murthy26 Thm 3.1 subgroup_packing =
+			// sqrt(|G:Z|) from BCGPU Cor 3.8 They
+			// should agree (both are sqrt(|G:Z|)
+			// for class-2 groups)
 			if math.Abs(c2strict-subPack) < 1e-9 {
 				class2Agree++
 			} else {
@@ -273,10 +284,9 @@ func knownAnchors() []anchor {
 		{ID: [2]int{64, 226}, Rho0: 2.0, Source: "HM12 Table 2 (beta_g/|G|=2)"},
 		// HM Table 2: [128,2194] C2xD8^2, rho_0=2
 		{ID: [2]int{128, 2194}, Rho0: 2.0, Source: "HM12 Table 2 (beta_g/|G|=2)"},
-		// HM Table 1 selected anchors (order < 25):
-		// All rho_0 values here are beta_g/|G| (SUBGROUP TPP ratio),
-		// which is what Murthy25/26 and BCGPU bound.
-		// [6,1] S3: beta_g=8, rho_0 = 8/6 = 4/3
+		// HM Table 1 selected anchors (order < 25): All rho_0 values here are
+		// beta_g/|G| (SUBGROUP TPP ratio), which is what Murthy25/26 and BCGPU
+		// bound. [6,1] S3: beta_g=8, rho_0 = 8/6 = 4/3
 		{ID: [2]int{6, 1}, Rho0: 4.0 / 3.0, Source: "HM12 Table 1 (beta_g)"},
 		// [8,3] D8: beta_g=8, rho_0 = 8/8 = 1
 		{ID: [2]int{8, 3}, Rho0: 1.0, Source: "HM12 Table 1 (beta_g)"},
