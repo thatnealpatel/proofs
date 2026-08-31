@@ -13,11 +13,12 @@ candidate generator, typed local moves, and replayable finite certificates.
 The executable exploration repository at `/home/exedev/x/tensor` is a
 read-only evidence source for this plan. Its computations generate candidate
 theorems and finite certificates; they are not proofs. A completed prior-art
-and feasibility review now supports a minimal-factor-carrier pivot for the
-relation-level theorem. The first implementation work remains the normalized
-carrier and automatic five-circuit layer; the eventual certificate should
-reduce each relation to its exact factor spans rather than replay the full
-343-term dimension-three carrier.
+and feasibility review supports a minimal-factor-carrier pivot for the
+relation-level theorem. The normalized carrier and automatic five-circuit
+layers have now landed; the next research decision is how to sequence the
+pruned pair-to-triple generator against the smallest typed-move `221` replay.
+The eventual certificate should reduce each relation to its exact factor spans
+rather than replay the full 343-term dimension-three carrier.
 
 `Documents/CircuitMoveSourceContract.md` remains the authority for what the
 Kauers--Moosbauer and Arai--Ichikawa--Hukushima sources actually define or
@@ -50,6 +51,17 @@ connectivity result.
   finite-set binary-cycle decomposition, the constructed circuit-toggle path,
   target-fiber preservation, and the path-specific altitude bound
   $|D\cup E|$. It does not compile a circuit toggle into KM or Arai moves.
+- `Proofs/BilinearComplexity/NormalizedBinaryCarrier.lean` defines the
+  heterogeneous normalized binary factor-triple carrier and its
+  `BinaryCircuit.Scheme` states. Coordinate tensor evaluation is proved
+  nonzero and injective, and the carrier counts for profiles $221$, $411$,
+  $321$, and $222$, as well as homogeneous dimensions two and three, are
+  checked. It does not define local moves or profile classification.
+- `Proofs/BilinearComplexity/FiveCircuit.lean` proves that a five-element
+  binary cycle with nonzero values injective on its support is automatically
+  an inclusion-minimal circuit. It also proves the disjoint $2|3$
+  equal-evaluation corollary and its normalized-carrier specialization. It
+  does not supply tensor-profile or move-legality theorems.
 - `Proofs/BilinearComplexity/ParityBox.lean` proves the selected-entry
   parity-to-bounded-integer-box equivalence with explicit slack and indicator
   data. It does not establish a Graver projection theorem.
@@ -80,7 +92,7 @@ are recorded in `Documents/CircuitMoveSourceContract.md`. In particular:
 
 ## Governing carrier split
 
-The local normalized carrier in factor dimensions $(a,b,c)$ should be
+The local normalized carrier in factor dimensions $(a,b,c)$ is modeled as
 
 $$
 L_{a,b,c}=(\mathbb F_2^a\setminus\{0\})\times
@@ -121,23 +133,26 @@ An explicit multiplicity-one embedding from a finite set to a multiset is
 harmless. What is forbidden is an implicit carrier identification or automatic
 transfer of a move theorem across that embedding.
 
-The first carrier implementation should use coordinate evaluation. Do not
-force a coordinate-array/`TensorProduct` equivalence into the carrier layer
-unless the structural proof actually needs both models.
+The landed carrier implementation uses coordinate evaluation. Do not force a
+coordinate-array/`TensorProduct` equivalence into the carrier layer unless the
+structural proof actually needs both models.
 
 ## Immediate local-search tranche
 
-The structural span theorem is complete, and a diagnostic minimal-carrier
-path search has passed, but neither fact is yet a repository theorem about
-concrete carriers or typed moves. Keep the next production tranche limited to
-**Carrier**, **FiveCircuit**, and **PrunedPairTriple**. Do not create the
-previously proposed large file tree or begin the full-scheme bridge before the
-local generator has a precise completeness theorem and the typed local move
-checker has stabilized.
+The structural span theorem, normalized carrier, and automatic five-circuit
+lemma are repository-proved. A diagnostic minimal-carrier path search has also
+passed, but it remains computational evidence: no concrete typed move or path
+certificate has landed. Keep the next production work narrow. The two pending
+near-term boundaries are **PrunedPairTriple** and the minimal typed-move `221`
+replay; their sequencing is an explicit research-direction decision. Do not
+create the previously proposed large file tree or begin the full-scheme bridge
+before the local generator has a precise completeness theorem and the typed
+local move checker has stabilized.
 
-### 1. Carrier
+### 1. Carrier — completed
 
-Prove, in dependency order:
+Repository-proved in `NormalizedBinaryCarrier.lean` and landed in commit
+`00b54da`. The module provides:
 
 1. normalization and decidable equality for nonzero factor triples;
 2. coordinate evaluation and its compatibility with addition;
@@ -148,21 +163,19 @@ Prove, in dependency order:
 No full $4\times4$ pure-tensor carrier should be materialized: it would have
 $(2^{16}-1)^3$ normalized triples.
 
-### 2. Automatic five-circuit lemma
+### 2. Automatic five-circuit lemma — completed
 
-For disjoint sides $D,E$ with $|D|=2$, $|E|=3$, five pairwise distinct nonzero
-binary vectors, and equal evaluations, prove that $D\cup E$ is automatically a
-circuit.
+Repository-proved in `FiveCircuit.lean` and landed in commit `947f8a4`.
+For a binary cycle of cardinality five, nonzeroness and injectivity on the
+support imply inclusion-minimality. The module derives the intended theorem
+for disjoint sides $D,E$ with $|D|=2$, $|E|=3$ and equal evaluations, and also
+provides the normalized tensor-carrier specialization.
 
-The intended short proof is independent of tensor structure. The five terms
-sum to zero. If a proper nonempty subrelation summed to zero, its complement
-would also sum to zero, so one of the two zero subsets would have cardinality
-at most two. A singleton cannot sum to zero because its term is nonzero. Two
-distinct vectors cannot sum to zero over $\mathbb F_2$. Thus no additional
-inclusion-minimality hypothesis should be needed.
-
-Pairwise distinctness is expected to suffice, but this remains a target until
-its Lean statement lands.
+The proof is independent of tensor structure. The five terms sum to zero. If
+a proper nonempty subrelation summed to zero, its complement would also sum to
+zero, so one of the two zero subsets would have cardinality at most two. A
+singleton cannot sum to zero because its term is nonzero. Two distinct vectors
+cannot sum to zero over $\mathbb F_2$.
 
 ### 3. Complete pruned pair-to-triple generator
 
@@ -458,10 +471,11 @@ barrier.
 
 ## Dependency-ordered next work
 
-1. Land and review the heterogeneous normalized coordinate carrier, including
+1. **Completed (`00b54da`):** heterogeneous normalized coordinate carrier,
    nonzero/injective evaluation, homogeneous counts 27 and 343, and the
    `BinaryCircuit` instantiation.
-2. Land the automatic five-circuit theorem.
+2. **Completed (`947f8a4`):** automatic five-circuit theorem, disjoint $2|3$
+   equal-evaluation corollary, and normalized-carrier specialization.
 3. Define the three span-constrained pair-to-triple loci and their union as an
    executable local candidate generator.
 4. Prove generator completeness from `pair_triple_span_drop`, with explicit
@@ -486,6 +500,9 @@ barrier.
 10. Develop relation-algebra or quotient infrastructure only when a proved
     named-move connectivity result needs it.
 
-A fresh session should begin at item 1 or 2. It should not begin by designing
-later graph, quotient, or full-scheme APIs, and it should not treat the proved
-local span restriction as an implemented global search reduction.
+The next research-direction discussion must choose the immediate production
+checkpoint: item 3's complete pruned generator, or the smallest portion of
+item 6 needed to type and replay the canonical `221` path. Whichever is chosen
+must remain a narrow standalone delta. It must not begin by designing later
+graph, quotient, certificate-file, or full-scheme APIs, and it must not treat
+the proved local span restriction as an implemented global search reduction.
