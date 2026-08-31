@@ -1,7 +1,9 @@
-// Command gelfandrank applies the Pf5 rigidity strengthening and BCZ17
-// s-rank lower bound to the Gelfand screen output, deduplicates by
-// available-field fingerprint, and emits the ranked survivor JSONL and
-// ranking doc.
+// Command gelfandrank applies the Pf5
+// rigidity strengthening and BCZ17 s-rank
+// lower bound to the Gelfand screen
+// output, deduplicates by available-field
+// fingerprint, and emits the ranked
+// survivor JSONL and ranking doc.
 package main
 
 import (
@@ -34,7 +36,8 @@ type record struct {
 	Verdict        string `json:"verdict"`
 }
 
-// outputRecord extends a KEEP record with strengthened fields.
+// outputRecord extends a KEEP record with
+// strengthened fields.
 type outputRecord struct {
 	GID            [2]int `json:"G_id"`
 	HID            [2]int `json:"H_id"`
@@ -57,7 +60,9 @@ type outputRecord struct {
 	FingerprintID  string `json:"fingerprint_id"`
 }
 
-// scored holds a KEEP record with its strengthened cap2, cap3, and fingerprint.
+// scored holds a KEEP record with
+// its strengthened cap2, cap3, and
+// fingerprint.
 type scored struct {
 	rec  record
 	cap2 int
@@ -115,7 +120,8 @@ func main() {
 	}
 	fmt.Fprintf(os.Stderr, "Sanity check 1 PASS: all %d r=4 KEEPs rejected by rigidity\n", r4KeepCount)
 
-	// Sanity check 2: [24,10] H_class=2 demotes from cap_eff=3 to cap2=2.
+	// Sanity check 2: [24,10] H_class=2
+	// demotes from cap_eff=3 to cap2=2.
 	anchor3Found := false
 	for i := range all {
 		s := &all[i]
@@ -153,7 +159,8 @@ func main() {
 				s.cap2, s.cap3, s.rec.GID[0], s.rec.GID[1], s.rec.HClass)
 			os.Exit(1)
 		}
-		// No r >= 7 record changes verdict at n=2 (cap2>=2 implies cap3>=2 if r>=7)
+		// No r >= 7 record changes verdict at n=2
+		// (cap2>=2 implies cap3>=2 if r>=7)
 		if s.cap2 >= 2 && s.rec.R >= 7 && s.cap3 < 2 {
 			fmt.Fprintf(os.Stderr, "SANITY FAIL: r=%d >= 7 with cap2=%d but cap3=%d < 2 for [%d,%d] H_class=%d\n",
 				s.rec.R, s.cap2, s.cap3, s.rec.GID[0], s.rec.GID[1], s.rec.HClass)
@@ -184,7 +191,9 @@ func main() {
 	fmt.Fprintf(os.Stderr, "After s-rank strengthening (cap3 >= 2): %d survivors\n", len(survivors))
 	fmt.Fprintf(os.Stderr, "Records killed by cap3 (cap2>=2 but cap3<2): %d\n", len(cap3Deaths))
 
-	// Deduplicate by fingerprint. Canonical representative: smallest (G_order, G_index, H_class).
+	// Deduplicate by fingerprint. Canonical
+	// representative: smallest (G_order,
+	// G_index, H_class).
 	type fpEntry struct {
 		canonical scored
 		count     int
@@ -203,7 +212,9 @@ func main() {
 		}
 	}
 
-	// Collect deduped records sorted by (cap3 desc, N desc, r desc, fingerprint).
+	// Collect deduped records sorted
+	// by (cap3 desc, N desc, r desc,
+	// fingerprint).
 	var deduped []scored
 	for _, g := range fpMap {
 		deduped = append(deduped, g.canonical)
@@ -227,7 +238,8 @@ func main() {
 	for i := range cap2Survivors {
 		cap2DistPre[cap2Survivors[i].cap2]++
 	}
-	// Cap2 distribution (after dedup, among cap2-survivors for rev1 doc).
+	// Cap2 distribution (after dedup, among
+	// cap2-survivors for rev1 doc).
 	cap2DedupMap := make(map[string]*fpEntry)
 	for i := range cap2Survivors {
 		s := &cap2Survivors[i]
@@ -266,7 +278,8 @@ func main() {
 		}
 	}
 
-	// Compute r - cap3^2 gap stats per cap3 level (for rev2 doc section).
+	// Compute r - cap3^2 gap stats per cap3
+	// level (for rev2 doc section).
 	minGapCap3PerLevel := make(map[int]int)
 	for i := range deduped {
 		c3 := deduped[i].cap3
@@ -276,7 +289,8 @@ func main() {
 		}
 	}
 
-	// Collect cap2-deduped for rev1 top-20 (preserve original doc).
+	// Collect cap2-deduped for rev1 top-20
+	// (preserve original doc).
 	var cap2Deduped []scored
 	for _, g := range cap2DedupMap {
 		cap2Deduped = append(cap2Deduped, g.canonical)
@@ -364,7 +378,8 @@ func main() {
 	fmt.Fprintf(os.Stderr, "Wrote ranking doc to %s\n", docPath)
 }
 
-// computeCap2 computes the strengthened capacity per the Pf5 rigidity lemma.
+// computeCap2 computes the strengthened
+// capacity per the Pf5 rigidity lemma.
 //
 //	cap2 = max { n >= 2 :
 //	             n^2 <= r - 1,                     (rigidity)
@@ -396,7 +411,8 @@ func computeCap2(rec record) int {
 	return 0
 }
 
-// srankLB returns the s-rank lower bound for tensor <n,n,n>.
+// srankLB returns the s-rank lower bound
+// for tensor <n,n,n>.
 //
 //	n = 2: R_s(<2,2,2>) = 7 (exact, BCZ17 arXiv:1705.09652)
 //	n >= 3: n^2 + 1 (rigidity bound only; no tighter published value in local corpus)
@@ -411,9 +427,12 @@ func srankLB(n int) int {
 //
 //	cap3 = max { n >= 2 : cap2's conditions AND r >= srank_lb(n) }
 //
-// Since srank_lb(n) for n >= 3 equals n^2 + 1 which is equivalent to the
-// rigidity condition (n^2 <= r-1) already in cap2, cap3 = cap2 for cap2 >= 3.
-// At n = 2, cap3 requires r >= 7 (vs r >= 5 from rigidity alone).
+// Since srank_lb(n) for n >= 3 equals n^2
+// + 1 which is equivalent to the rigidity
+// condition (n^2 <= r-1) already in cap2,
+// cap3 = cap2 for cap2 >= 3. At n = 2, cap3
+// requires r >= 7 (vs r >= 5 from rigidity
+// alone).
 func computeCap3(rec record, cap2 int) int {
 	// Start from cap2 and check srank bound downward.
 	for n := cap2; n >= 2; n-- {
@@ -424,7 +443,9 @@ func computeCap3(rec record, cap2 int) int {
 	return 0
 }
 
-// computeFingerprint computes an available-field fingerprint for deduplication.
+// computeFingerprint computes an
+// available-field fingerprint for
+// deduplication.
 func computeFingerprint(rec record) string {
 	vals := make([]int, len(rec.Valencies))
 	copy(vals, rec.Valencies)
@@ -632,7 +653,8 @@ func writeDoc(path string, totalKeeps, r4Keeps, cap2SurvivorCount, cap2DedupCoun
 	fmt.Fprintf(w, "  non-thin, nonabelian G, non-normal H) fails NC2' at n=2 (Pf5 Section 2\n")
 	fmt.Fprintf(w, "  and Pl4 provenance).\n")
 
-	// === Rev 2 section (cap3 / BCZ17 s-rank strengthening) ===
+	// === Rev 2 section (cap3 / BCZ17 s-rank
+	// strengthening) ===
 
 	fmt.Fprintf(w, "\n---\n\n")
 	fmt.Fprintf(w, "## Rev 2: S-rank strengthening (BCZ17)\n\n")

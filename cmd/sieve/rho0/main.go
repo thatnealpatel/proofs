@@ -1,5 +1,7 @@
-// Command rho0 computes exact rho_0(G) = beta_0(G)/|G| for finite groups
-// using bitset-based TPP (triple product property) search.
+// Command rho0 computes exact rho_0(G)
+// = beta_0(G)/|G| for finite groups
+// using bitset-based TPP (triple product
+// property) search.
 //
 // Two modes:
 //
@@ -12,11 +14,15 @@
 //     Per-target budget (--target-budget, default 2h) and global budget
 //     (--global-budget). Timed-out targets emit lower bounds.
 //
-// Input: JSON files under --data-dir (default forge/out/tpp-data/),
-// produced by the Sage exporter.
+// Input: JSON files under --data-dir
+// (default forge/out/tpp-data/), produced
+// by the Sage exporter.
 //
-// Output: JSONL records to --output (default forge/out/rho0/rho0-results.jsonl).
-// Resume skips IDs already present in the output file.
+// Output: JSONL records
+// to --output (default
+// forge/out/rho0/rho0-results.jsonl).
+// Resume skips IDs already present in the
+// output file.
 //
 // Projected candidate spaces (from prototype log):
 //
@@ -25,7 +31,8 @@
 //	Order 160 (C2 wr C5):      ~163K candidates, ~1s (Go)
 //	Order 384 (C2 wr C6):    ~123.7M candidates, ~minutes (Go, parallel)
 //
-// Mathematical reference: Murthy, arXiv:2602.15796, eqs 2.5-2.6.
+// Mathematical reference: Murthy,
+// arXiv:2602.15796, eqs 2.5-2.6.
 package main
 
 import (
@@ -58,7 +65,8 @@ func main() {
 	)
 	flag.Parse()
 
-	// Resolve default paths relative to the script's expected location.
+	// Resolve default paths relative to the
+	// script's expected location.
 	repoRoot := findRepoRoot()
 
 	if *dataDir == "" {
@@ -320,9 +328,12 @@ func runPilot(dataDir string, m tpp.ManifestEntry, workers int) {
 }
 
 func isToyTarget(m tpp.ManifestEntry) bool {
-	// Toy mode: regression anchors and controls of order <= 32.
-	// We parse the description to check order. A more robust approach would
-	// be to load the JSON, but we want to avoid that for dry-run.
+	// Toy mode: regression anchors and
+	// controls of order <= 32. We parse the
+	// description to check order. A more
+	// robust approach would be to load the
+	// JSON, but we want to avoid that for
+	// dry-run.
 	switch m.Category {
 	case "regression_anchor":
 		// Include anchors of order <= 32.
@@ -405,7 +416,7 @@ func rationalEqual(a, b string) bool {
 	if !ok1 || !ok2 {
 		return a == b
 	}
-	// a.P/a.Q == b.P/b.Q  <=>  a.P*b.Q == b.P*a.Q
+	// a.P/a.Q == b.P/b.Q <=> a.P*b.Q == b.P*a.Q
 	lhs := new(big.Int).Mul(big.NewInt(ra.P), big.NewInt(rb.Q))
 	rhs := new(big.Int).Mul(big.NewInt(rb.P), big.NewInt(ra.Q))
 	return lhs.Cmp(rhs) == 0

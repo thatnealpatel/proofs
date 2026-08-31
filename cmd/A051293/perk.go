@@ -2,18 +2,23 @@ package main
 
 import "fmt"
 
-// runPerk verifies the per-k identity that decomposes (A) into n
-// independent single-k statements:
+// runPerk verifies the per-k identity
+// that decomposes (A) into n independent
+// single-k statements:
 //
 //	#{nonempty S ⊆ {1,...,k} : k | sum(S)}
 //	  = #{S ⊆ {1,...,k} : k ∈ S, |S| | sum(S)}
 //
-// If this holds for each k, then summing over k=1..n and using the
-// fact that "k ∈ S with S ⊆ {1,...,k}" partitions subsets by max(S)
-// gives identity (A): Σ (b(k)-1) = #{integer-mean subsets of {1,...,n}}.
+// If this holds for each k, then summing
+// over k=1..n and using the fact that
+// "k ∈ S with S ⊆ {1,...,k}" partitions
+// subsets by max(S) gives identity (A):
+// Σ (b(k)-1) = #{integer-mean subsets of
+// {1,...,n}}.
 //
-// Gus Wiseman (OEIS A063776, 2019) observes this equality but no
-// proof is cited.
+// Gus Wiseman (OEIS A063776, 2019)
+// observes this equality but no proof is
+// cited.
 func runPerk(_ []string) {
 	fmt.Printf("%4s  %10s  %10s  %5s\n", "k", "mod-k", "max=k+mean", "match")
 	for k := 1; k <= 22; k++ {
