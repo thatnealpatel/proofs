@@ -12,7 +12,12 @@ candidate generator, typed local moves, and replayable finite certificates.
 
 The executable exploration repository at `/home/exedev/x/tensor` is a
 read-only evidence source for this plan. Its computations generate candidate
-theorems and finite certificates; they are not proofs.
+theorems and finite certificates; they are not proofs. A completed prior-art
+and feasibility review now supports a minimal-factor-carrier pivot for the
+relation-level theorem. The first implementation work remains the normalized
+carrier and automatic five-circuit layer; the eventual certificate should
+reduce each relation to its exact factor spans rather than replay the full
+343-term dimension-three carrier.
 
 `Documents/CircuitMoveSourceContract.md` remains the authority for what the
 Kauers--Moosbauer and Arai--Ichikawa--Hukushima sources actually define or
@@ -75,16 +80,19 @@ are recorded in `Documents/CircuitMoveSourceContract.md`. In particular:
 
 ## Governing carrier split
 
-The local normalized carrier in factor dimension $d$ should be
+The local normalized carrier in factor dimensions $(a,b,c)$ should be
 
 $$
-L_d=(\mathbb F_2^d\setminus\{0\})^3,
+L_{a,b,c}=(\mathbb F_2^a\setminus\{0\})\times
+          (\mathbb F_2^b\setminus\{0\})\times
+          (\mathbb F_2^c\setminus\{0\}),
 $$
 
-with coordinate evaluation into the three-dimensional tensor array. Over
-$\mathbb F_2$ there is no nontrivial scalar refactorization, so the intended
-carrier theorem is that normalized triples evaluate injectively to distinct
-nonzero pure tensors. The first instances must prove
+with coordinate evaluation into the corresponding tensor array. Write $L_d$
+for $L_{d,d,d}$. Over $\mathbb F_2$ there is no nontrivial scalar
+refactorization, so the intended carrier theorem is that normalized triples
+evaluate injectively to distinct nonzero pure tensors. The first homogeneous
+instances must prove
 
 $$
 |L_2|=27,
@@ -92,10 +100,19 @@ $$
 |L_3|=343.
 $$
 
+The minimal carriers for five-term circuits also require the heterogeneous
+instances
+
+$$
+|L_{2,2,1}|=9,\quad |L_{4,1,1}|=15,\quad
+|L_{3,2,1}|=21,\quad |L_{2,2,2}|=27.
+$$
+
 The following representations remain physically and semantically separate.
 
-1. `BilinearComplexity.CircuitMove.State d`: finite subsets of the normalized
-   local carrier, used for KM-style local states and `BinaryCircuit`.
+1. Local KM-style states: `Finset` subsets of the normalized carrier,
+   instantiated through `BilinearComplexity.BinaryCircuit.Scheme`. No concrete
+   `BilinearComplexity.CircuitMove.State` declaration currently exists.
 2. Arai states: occurrence-aware multisets with their own move relations.
 3. Existing `BilinearComplexity.Scheme`: ordered full
    matrix-multiplication schemes.
@@ -110,11 +127,13 @@ unless the structural proof actually needs both models.
 
 ## Immediate local-search tranche
 
-The structural theorem is complete, but its search interpretation is not yet a
-repository theorem. Keep the next tranche limited to **Carrier**,
-**FiveCircuit**, and **PrunedPairTriple**. Do not create the previously proposed
-large file tree or begin the full-scheme bridge before the local generator has a
-precise completeness theorem and measured finite behavior.
+The structural span theorem is complete, and a diagnostic minimal-carrier
+path search has passed, but neither fact is yet a repository theorem about
+concrete carriers or typed moves. Keep the next production tranche limited to
+**Carrier**, **FiveCircuit**, and **PrunedPairTriple**. Do not create the
+previously proposed large file tree or begin the full-scheme bridge before the
+local generator has a precise completeness theorem and the typed local move
+checker has stabilized.
 
 ### 1. Carrier
 
@@ -162,6 +181,85 @@ in dimensions two and three. Record raw candidate and surviving-relation
 counts. Record orbit reductions only after specifying and verifying the acting
 group and coverage map; the existing dimension-three report does not contain
 an orbit-coverage certificate.
+
+### 4. Exact minimal-factor profiles
+
+For a collision-free binary $2\leftrightarrow3$ relation, the automatic
+five-circuit lemma gives tensor-span dimension four. The Lovitz--Petrov
+Splitting Theorem is a **source theorem**, not yet formalized here; its
+five-circuit specialization gives
+
+$$
+\sum_i(r_i-1)\le 3,
+$$
+
+where $r_i$ is the factor-span dimension. Together with
+$4\le r_1r_2r_3$, elementary enumeration leaves, up to mode permutation,
+
+$$
+(2,2,1),\quad(3,2,1),\quad(2,2,2),\quad(4,1,1).
+$$
+
+All four occur over $\mathbb F_2$. The $9$-term $(2,2,1)$ carrier is
+mandatory. Let $e_1,e_2$ be the standard basis of $\mathbb F_2^2$, fix the
+unique nonzero $w\in\mathbb F_2^1$, and set
+
+$$
+E_{ij}=e_i\otimes e_j\otimes w,
+\qquad
+J=(e_1+e_2)\otimes(e_1+e_2)\otimes w.
+$$
+
+The derived relation
+
+$$
+E_{11}+E_{22}=E_{12}+E_{21}+J
+$$
+
+is a collision-free five-circuit and no pair within either side shares two
+factors. Thus pruning based only on within-side pair reductions does not remove
+it. In ambient factor dimension three, $(4,1,1)$ is impossible, so the exact
+minimal carriers have sizes $9$, $21$, and $27$.
+
+The formal target is a disjoint exact-span partition: every ambient relation
+is represented uniquely by its ordered profile, a tuple of canonical factor
+subspaces, and an internal relation whose factor projections span those
+subspaces exactly. Certificates for the four displayed representatives cover
+all ordered profiles only after an explicit tensor-mode permutation transport
+theorem; factorwise maps alone do not permute modes. Enumerating arbitrary
+subsets of a larger carrier is not a substitute, because it duplicates
+lower-profile relations.
+
+### 5. Passed diagnostic gate
+
+The exact diagnostic generator and output are preserved as campaign artifacts
+at `/home/exedev/x/matrix-prior-art/profilepaths.go` and `profilepaths.out`.
+They are reproduced by
+`go run /home/exedev/x/matrix-prior-art/profilepaths.go`; their SHA-256 hashes
+are respectively
+`1f126bb8dea51d36ad9bc8f0f1074b3e337d9863aad9fac0439e78cd967eb2f3`
+and
+`81a45a9ffe1951f19bcc5faa7d321c09b977af95858615b54ca38aa6e8f49e3e`.
+The generic finite computation enumerates every arity-one-through-three
+squarefree state in the four minimal carriers and uses only
+implementation-generated one-factor Split, its pair Reduction inverse, and
+ordinary Flip, with nonzero and collision checks. Every one of the $5{,}490$
+exact-span ordered relations has a path confined to its minimal carrier at
+local altitude three:
+
+| profile | exact circuits | ordered relations | shortest path lengths |
+|---|---:|---:|---|
+| $(2,2,1)$ | 9 | 90 | all 90 have length 2 |
+| $(4,1,1)$ | 168 | 1,680 | all 1,680 have length 3 |
+| $(3,2,1)$ | 210 | 2,100 | 1,512 have length 2; 588 have length 3 |
+| $(2,2,2)$ | 162 | 1,620 | 1,296 have length 2; 324 have length 3 |
+
+This is reproducible deterministic computational evidence, not a checked
+certificate: the aggregate program does not retain explicit path witnesses or
+supply an independent replay format. It justifies building the small typed
+semantics and replay checker; it does not justify assuming the resulting
+theorem or altitude bound before replay is formalized. Generated Split must
+remain labeled as an implementation relation, not a source-defined KM Split.
 
 ## Typed move layer
 
@@ -221,10 +319,26 @@ All enumerated relations pass the computational minimality test and are
 connected at local altitude three in the raw arity-at-most-three graph, with
 reported distances one through three. No mask-7 example occurs.
 
-This report does **not** emit orbit-coverage certificates or a path for each
-relation. Therefore orbit formalization is not the current proof route. A
-formal dimension-three theorem may use raw or chunked certificates until a
-verified quotient exists.
+Independent exact computation reproduces the underlying circuit count through
+the minimal-profile partition:
+
+$$
+126{,}567=
+3\cdot7^3\cdot9+6\cdot7^2\cdot210+7^3\cdot162,
+$$
+
+The displayed sum is $126{,}567$; multiplying by the ten choices of the
+two-term side reproduces the $1{,}265{,}670$ oriented relation count. Here $7$
+is each relevant Gaussian subspace count in $\mathbb F_2^3$. This factorization
+is the intended certificate theorem, but it remains computational evidence
+until the exact-span lift bijection and reduced counts are checked in Lean.
+
+The raw report does **not** emit orbit-coverage certificates or a path for each
+relation. A formal relation-level dimension-three theorem should use the
+minimal-profile partition and reduced replay rather than raw 343-term replay.
+Raw or joint ambient certificates remain necessary for predicates depending on
+relative embeddings of several relations, shared tensors, or unchanged global
+context.
 
 ### Trust boundary
 
@@ -344,21 +458,28 @@ barrier.
 
 ## Dependency-ordered next work
 
-1. Finish and review the normalized coordinate carrier, including counts and
-   the `BinaryCircuit` instantiation.
+1. Land and review the heterogeneous normalized coordinate carrier, including
+   nonzero/injective evaluation, homogeneous counts 27 and 343, and the
+   `BinaryCircuit` instantiation.
 2. Land the automatic five-circuit theorem.
 3. Define the three span-constrained pair-to-triple loci and their union as an
    executable local candidate generator.
 4. Prove generator completeness from `pair_triple_span_drop`, with explicit
    nonzero, injectivity, disjointness, and equal-evaluation hypotheses.
-5. Compare unrestricted and pruned enumeration in dimensions two and three;
-   report orbit reductions only with a verified action and coverage map.
-6. Define typed KM finite-set moves and prove their local legality and
-   preservation laws; keep Arai in a separate tranche.
-7. Specify the typed certificate format and certify the dimension-two bounded
-   theorem.
-8. Certify dimension three with raw or chunked replay, unless the structural
-   generator makes that census unnecessary.
+5. Prove the specialized five-circuit profile table and define exact-span
+   internal relations. Attribute the structural inequality to
+   Lovitz--Petrov; do not import Ballico wholesale when the elementary integer
+   deduction suffices.
+6. Define typed finite-set pair Reduction, implementation-generated Split, and
+   source Flip, with directionality and all legality/preservation laws.
+7. Specify a small typed certificate format and replay the four reduced
+   representative carriers at altitude three. Require every intermediate to
+   remain in the minimal factor spans; do not claim all ordered profiles before
+   proving tensor-mode permutation transport.
+8. Prove factorwise injective-map equivariance, tensor-mode permutation
+   equivariance for carriers, moves, and paths, and the canonical RREF subspace
+   lift bijection. Derive the dimension-three count from the exact-profile
+   partition as a corollary.
 9. Prove rule-specific context transport, then the ordered full-scheme bridge
    with coherent `Fin` enumeration/replacement data and dependent path
    substitution.
