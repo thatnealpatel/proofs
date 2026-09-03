@@ -18,6 +18,7 @@ import BilinearComplexity.LinearElimination
 import BilinearComplexity.LinearFlattening
 import BilinearComplexity.LinearFlatteningCompression
 import BilinearComplexity.MatMulMono
+import BilinearComplexity.NormalizedBinaryReplay221
 import BilinearComplexity.Omega
 import BilinearComplexity.PairedCircuit
 import BilinearComplexity.Peeling
