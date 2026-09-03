@@ -26,6 +26,7 @@ import BilinearComplexity.PeelingCert333
 import BilinearComplexity.PeelingMoves
 import BilinearComplexity.PeelingSplit
 import BilinearComplexity.PeelingSupport
+import BilinearComplexity.ProfileInequality
 import BilinearComplexity.ProjectiveFirstFactorFiber
 import BilinearComplexity.RankCalculus
 import BilinearComplexity.Scheme
