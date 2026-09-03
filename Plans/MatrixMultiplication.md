@@ -5,20 +5,29 @@
 This is the canonical plan for the exact matrix-multiplication and binary-circuit
 research program. It replaces the former circuit-move, symbolic-completeness,
 and rank-47 plans. The immediate objective is not a large architecture or a
-headline connectivity theorem. The dimension-free pair-to-triple span theorem
-has now landed; the next objective is the shortest dependency chain from that
-theorem and the existing formal circuit layer to a complete pruned local
-candidate generator, typed local moves, and replayable finite certificates.
+headline connectivity theorem. The dimension-free pair-to-triple span theorem,
+normalized carrier, and automatic five-circuit layer have landed. The immediate
+objective is now the shortest dependency chain to a dimension-independent,
+exact-factor-span local compilation theorem: promote the completed experimental
+binary profile inequality, derive the four-profile table, stabilize the typed
+finite-set move semantics, and replay the canonical `221` path end to end
+before introducing broader generator, graph, or certificate infrastructure.
 
 The executable exploration repository at `/home/exedev/x/tensor` is a
 read-only evidence source for this plan. Its computations generate candidate
 theorems and finite certificates; they are not proofs. A completed prior-art
 and feasibility review supports a minimal-factor-carrier pivot for the
 relation-level theorem. The normalized carrier and automatic five-circuit
-layers have now landed; the next research decision is how to sequence the
-pruned pair-to-triple generator against the smallest typed-move `221` replay.
-The eventual certificate should reduce each relation to its exact factor spans
-rather than replay the full 343-term dimension-three carrier.
+layers have now landed. A complete coordinate proof of the profile inequality
+exists as an experimental Lean checkpoint: its endpoint derives five-term
+minimality from `FiveCircuit` and handles the selected mode of rank at most two
+from `pair_triple_span_drop`. The next production boundary is extraction and
+the elementary four-profile corollary, followed by the smallest typed-move
+`221` replay. The complete pruned pair-to-triple generator remains useful
+search infrastructure, but it is no longer allowed to delay that end-to-end
+semantics test. Eventual finite coverage should reduce each relation to its
+exact factor spans rather than replay the full 343-term dimension-three
+carrier.
 
 `Documents/CircuitMoveSourceContract.md` remains the authority for what the
 Kauers--Moosbauer and Arai--Ichikawa--Hukushima sources actually define or
@@ -28,10 +37,12 @@ prove.
 
 Every claim in this plan has one of the following statuses.
 
-- **Repository-proved:** checked by Lean in a committed file in this repository.
-- **Experimental Lean checkpoint:** elaborated successfully in the current
-  worktree but intentionally excluded from the present plan/document commit;
-  it is not part of the repository-proved boundary.
+- **Repository-proved:** checked by Lean in a committed production module in
+  this repository.
+- **Experimental Lean checkpoint:** elaborated successfully under
+  `Proofs/Scratch`; it may be committed as a research artifact but remains
+  outside the repository-proved production boundary and supported import
+  surface.
 - **Deterministic computational evidence:** reproducible finite computation,
   with the tested carrier and bounds stated explicitly.
 - **Source assertion:** attributed to a primary source and subject to the
@@ -75,6 +86,18 @@ connectivity result.
 - The existing `BilinearComplexity.Scheme` development is an ordered concrete
   matrix-multiplication representation. It is not definitionally the finite-set
   KM carrier or the occurrence-aware Arai carrier.
+
+### Experimental Lean checkpoint
+
+`Proofs/Scratch/ProfileInequalityBridge.lean` is a type-checked coordinate
+experiment over `ZMod 2`, not yet part of the repository-proved boundary. Its
+endpoint `pair_triple_profile_finrank_le_six` starts from five indexed nonzero
+pure tensors, injectivity, and a binary two-equals-three relation, then proves
+that the sum of the three factor-span dimensions is at most six. It derives
+subset minimality from the landed automatic five-circuit theorem and selects a
+rank-at-most-two mode with `pair_triple_span_drop`; the rank-one and rank-two
+fiber branches are complete. Keep it in scratch until independent review fixes
+the minimal production statement and API.
 
 ### Audited source boundary
 
@@ -142,12 +165,13 @@ structural proof actually needs both models.
 The structural span theorem, normalized carrier, and automatic five-circuit
 lemma are repository-proved. A diagnostic minimal-carrier path search has also
 passed, but it remains computational evidence: no concrete typed move or path
-certificate has landed. Keep the next production work narrow. The two pending
-near-term boundaries are **PrunedPairTriple** and the minimal typed-move `221`
-replay; their sequencing is an explicit research-direction decision. Do not
-create the previously proposed large file tree or begin the full-scheme bridge
-before the local generator has a precise completeness theorem and the typed
-local move checker has stabilized.
+certificate has landed. Keep the next production work narrow. First extract
+the completed profile endpoint and its elementary four-profile corollary; then
+implement the minimal typed-move `221` replay. **PrunedPairTriple** remains
+useful future search infrastructure, but it is not a prerequisite for that
+first replay. Do not create the previously proposed large file tree or begin
+the full-scheme bridge before the typed local move checker has stabilized and
+a later proof actually requires generic generator completeness.
 
 ### 1. Carrier — completed
 
@@ -213,9 +237,18 @@ $$
 (2,2,1),\quad(3,2,1),\quad(2,2,2),\quad(4,1,1).
 $$
 
-All four occur over $\mathbb F_2$. The $9$-term $(2,2,1)$ carrier is
-mandatory. Let $e_1,e_2$ be the standard basis of $\mathbb F_2^2$, fix the
-unique nonzero $w\in\mathbb F_2^1$, and set
+Deterministic exact enumeration finds examples of all four profiles over
+$\mathbb F_2$, with exact-profile counts recorded in the finite census below.
+The direct coordinate Lean proof of the inequality is complete in scratch;
+production extraction remains pending. Its purpose is self-contained formal
+infrastructure, not a novelty claim. Lovitz--Petrov separately supplies the
+arbitrary-field splitting inequality. Ballico classifies related small
+dependent Segre subsets under additional geometric hypotheses that are not
+assumed by the Lean endpoint. The endpoint invokes neither source theorem, and
+neither source supplies the finite binary census or typed move compilation.
+
+The $9$-term $(2,2,1)$ carrier is mandatory. Let $e_1,e_2$ be the standard
+basis of $\mathbb F_2^2$, fix the unique nonzero $w\in\mathbb F_2^1$, and set
 
 $$
 E_{ij}=e_i\otimes e_j\otimes w,
@@ -273,6 +306,37 @@ supply an independent replay format. It justifies building the small typed
 semantics and replay checker; it does not justify assuming the resulting
 theorem or altitude bound before replay is formalized. Generated Split must
 remain labeled as an implementation relation, not a source-defined KM Split.
+
+A second deterministic audit at
+`/home/exedev/x/matrix-prior-art/profile_orbits.sage` explicitly constructs the
+factorwise linear actions and the dimension-preserving mode permutations,
+checks orbit partitions, and verifies orbit--stabilizer for circuits and
+oriented relations. Its output is preserved as `profile_orbits.out`; the
+SHA-256 hashes are respectively
+`11ae27e07363bfb98d25d9abfb4a691325d9d33c00aa10ad735c02d2db619f55`
+and
+`00931e3d5c62f80a9122ce9c038aafae253d8a558fb68543863c786ed1e7422d`.
+With mode permutations, the $5{,}490$ ordered relations form only thirteen
+orbits: three in `221`, one in `411`, six in `321`, and three in `222`.
+Factorwise `222` has three circuit orbits of size 54, not the impossible former
+claim of two size-81 orbits; all three merge under mode permutations. These
+results suggest thirteen canonical replay witnesses after transport is proved,
+but remain uncertified and cannot serve as orbit coverage in Lean.
+
+There is also a proposed coding-theoretic count route. Taking the pure
+tensors as columns of a binary projective-system matrix, weight-five words of
+the dual code are exactly five-subsets summing to zero. Every such word is
+support-minimal because a dependent proper subset would force either two
+distinct columns to agree or the remaining nonzero column to vanish. An
+informal MacWilliams calculation predicts unrestricted five-circuit counts
+$9,168,273,243$ in the four canonical carriers of cardinalities $9,15,21,27$.
+The proposed exact-span subtraction is
+$273-7\mathbin{\cdot}9=210$ for `321` and
+$243-9\mathbin{\cdot}9=162$ for `222`; exact spans make the embedded `221`
+contributions disjoint. This calculation is an unverified proposed proof route,
+not a repository theorem or preserved computational audit. The independently
+preserved exact enumeration supplies the current evidence for exact-profile
+counts $9,168,210,162$. Neither route by itself proves move reachability.
 
 ## Typed move layer
 
@@ -476,33 +540,41 @@ barrier.
    `BinaryCircuit` instantiation.
 2. **Completed (`947f8a4`):** automatic five-circuit theorem, disjoint $2|3$
    equal-evaluation corollary, and normalized-carrier specialization.
-3. Define the three span-constrained pair-to-triple loci and their union as an
-   executable local candidate generator.
-4. Prove generator completeness from `pair_triple_span_drop`, with explicit
-   nonzero, injectivity, disjointness, and equal-evaluation hypotheses.
-5. Prove the specialized five-circuit profile table and define exact-span
-   internal relations. Attribute the structural inequality to
-   Lovitz--Petrov; do not import Ballico wholesale when the elementary integer
-   deduction suffices.
-6. Define typed finite-set pair Reduction, implementation-generated Split, and
-   source Flip, with directionality and all legality/preservation laws.
-7. Specify a small typed certificate format and replay the four reduced
-   representative carriers at altitude three. Require every intermediate to
-   remain in the minimal factor spans; do not claim all ordered profiles before
-   proving tensor-mode permutation transport.
-8. Prove factorwise injective-map equivariance, tensor-mode permutation
-   equivariance for carriers, moves, and paths, and the canonical RREF subspace
-   lift bijection. Derive the dimension-three count from the exact-profile
-   partition as a corollary.
+3. **Experimental endpoint completed:** review and extract
+   `pair_triple_profile_finrank_le_six` from scratch into the minimal production
+   module, then derive positive factor ranks, the Lovitz--Petrov inequality
+   form, and the elementary four-profile table. Preserve the existing source
+   attribution and do not promote scratch-only examples or audit commands.
+4. Define only the typed finite-set pair Reduction,
+   implementation-generated Split, and source Flip needed for the canonical
+   exact-profile `221` replay. Retain labels and intrinsic directions, and
+   prove legality, evaluation preservation, cardinality, collision freedom,
+   and confinement for the two-step path.
+5. Prove factorwise injective-map and typed tensor-mode-permutation transport
+   for the `221` replay. Do not begin a generic graph, external certificate
+   format, arbitrary-support compiler, Arai bridge, or full-scheme API before
+   this end-to-end chain succeeds.
+6. Extract canonical representatives for the thirteen corrected oriented
+   relation orbits, produce explicit local witnesses, and define the smallest
+   replay/coverage mechanism that Lean can check independently. Replay all
+   four exact carriers at local altitude three.
+7. Define the three span-constrained pair-to-triple loci and prove generator
+   completeness from `pair_triple_span_drop` when search infrastructure needs
+   it; keep its nonzero, injectivity, disjointness, and equal-evaluation
+   hypotheses explicit.
+8. Prove the canonical RREF subspace lift bijection and derive the
+   dimension-three count from the exact-profile partition. The orbit and
+   MacWilliams computations may guide this proof but cannot replace checked
+   coverage.
 9. Prove rule-specific context transport, then the ordered full-scheme bridge
    with coherent `Fin` enumeration/replacement data and dependent path
    substitution.
-10. Develop relation-algebra or quotient infrastructure only when a proved
-    named-move connectivity result needs it.
+10. Develop Arai, relation-algebra, quotient, or broader search infrastructure
+    only when a proved named-move result requires it.
 
-The next research-direction discussion must choose the immediate production
-checkpoint: item 3's complete pruned generator, or the smallest portion of
-item 6 needed to type and replay the canonical `221` path. Whichever is chosen
-must remain a narrow standalone delta. It must not begin by designing later
-graph, quotient, certificate-file, or full-scheme APIs, and it must not treat
-the proved local span restriction as an implemented global search reduction.
+The immediate production checkpoint is fixed: review and promote the completed
+profile inequality, derive the four-profile corollary, then type and replay the
+canonical `221` path. The currently staged profile files remain experimental
+scratch work until the endpoint is independently reviewed. No later graph,
+quotient, certificate-file, arbitrary-support, or full-scheme architecture may
+precede the end-to-end `221` semantics test.
