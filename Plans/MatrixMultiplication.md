@@ -8,11 +8,12 @@ and rank-47 plans. The immediate objective is not a large architecture or a
 headline connectivity theorem. The dimension-free pair-to-triple span theorem,
 normalized carrier, and automatic five-circuit layer have landed. A production
 implementation of the binary profile inequality, positive-rank form, and
-four-profile classification is now ready for review. The immediate objective is
-the shortest remaining dependency chain to a dimension-independent,
-exact-factor-span local compilation theorem: stabilize the typed finite-set
-move semantics and replay the canonical `221` path end to end before
-introducing broader generator, graph, or certificate infrastructure.
+four-profile classification is now ready for review. The smallest typed
+finite-set `221` replay is also implemented as a production checkpoint; the
+next objective is the shortest remaining dependency chain to a
+dimension-independent, exact-factor-span local compilation theorem. Stabilize
+this concrete checkpoint before introducing broader generator, graph, or
+certificate infrastructure.
 
 The executable exploration repository at `/home/exedev/x/tensor` is a
 read-only evidence source for this plan. Its computations generate candidate
@@ -23,8 +24,12 @@ layers have now landed. `ProfileInequality.lean` gives the direct binary
 coordinate profile theorem, its positive-rank form, the unordered profiles
 `221`, `321`, `222`, and `411`, and the ambient-dimension-three exclusion of
 `411`. Its proof derives five-term minimality from `FiveCircuit` and handles the
-selected mode of rank at most two from `pair_triple_span_drop`. The next
-production boundary is the smallest typed-move `221` replay. The complete
+selected mode of rank at most two from `pair_triple_span_drop`.
+`NormalizedBinaryReplay221.lean` now implements the smallest typed-move `221`
+checkpoint with exact finite-set replacement, both directed two-edge paths,
+and the six-term confinement boundary. This is only one concrete replay: it
+asserts no generic completeness, canonicality, orbit coverage, transport, or
+global connectivity result. The complete
 pruned pair-to-triple generator remains useful search infrastructure, but it is
 no longer allowed to delay that end-to-end semantics test. Eventual finite
 coverage should reduce each relation to its exact factor spans rather than
@@ -167,14 +172,14 @@ structural proof actually needs both models.
 ## Immediate local-search tranche
 
 The structural span theorem, normalized carrier, and automatic five-circuit
-lemma are repository-proved. A diagnostic minimal-carrier path search has also
-passed, but it remains computational evidence: no concrete typed move or path
-certificate has landed. Keep the next production work narrow. Implement the
-minimal typed-move `221` replay next. **PrunedPairTriple** remains useful future
-search infrastructure, but it is not a prerequisite for that first replay. Do
-not create the previously proposed large file tree or begin the full-scheme
-bridge before the typed local move checker has stabilized and a later proof
-actually requires generic generator completeness.
+lemma are repository-proved. The external aggregate computation remains only
+computational evidence and did not retain concrete path certificates. The
+designated standard-basis `221` path is now typed and kernel-checked, including
+its exact `221` endpoint profile; this establishes neither orbit coverage nor
+global connectivity. The immediate next dependency is factorwise injective-map
+transport together with typed tensor-mode-permutation transport. Do not create
+the previously proposed large file tree or begin the full-scheme bridge before
+that narrow transport layer is proved to require it.
 
 ### 1. Carrier — completed
 
@@ -548,11 +553,13 @@ barrier.
    bound, positive factor ranks, the subtracted inequality, the elementary four
    unordered profiles, and the ambient-dimension-three exclusion of `411`.
    Its production API omits scratch examples and audit commands.
-4. Define only the typed finite-set pair Reduction,
-   implementation-generated Split, and source Flip needed for the canonical
-   exact-profile `221` replay. Retain labels and intrinsic directions, and
-   prove legality, evaluation preservation, cardinality, collision freedom,
-   and confinement for the two-step path.
+4. **Completed:** `NormalizedBinaryReplay221.lean` defines only the typed
+   finite-set directed narrow pair Reduction, implementation-generated Split,
+   and source third-factor Flip needed for the designated explicit exact-profile
+   `221` replay. It checks intrinsic directions, exact replacement and
+   collisions, evaluation and cardinality preservation, both two-edge paths at
+   altitude three, the strict six-term boundary, the five-circuit endpoint with
+   factor-span profile `2,2,1`, side-pair separation, and the nine-term carrier.
 5. Prove factorwise injective-map and typed tensor-mode-permutation transport
    for the `221` replay. Do not begin a generic graph, external certificate
    format, arbitrary-support compiler, Arai bridge, or full-scheme API before
@@ -575,7 +582,7 @@ barrier.
 10. Develop Arai, relation-algebra, quotient, or broader search infrastructure
     only when a proved named-move result requires it.
 
-The immediate production checkpoint is fixed: review and land the production
-profile module, then type and replay the canonical `221` path. No later graph,
-quotient, certificate-file, arbitrary-support, or full-scheme architecture may
-precede the end-to-end `221` semantics test.
+The immediate production checkpoint is fixed: review and land the profile
+module together with the concrete `221` replay, then proceed to its narrowly
+typed transport. No later graph, quotient, certificate-file, arbitrary-support,
+or full-scheme architecture is established by this checkpoint.
