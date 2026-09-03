@@ -6,28 +6,29 @@ This is the canonical plan for the exact matrix-multiplication and binary-circui
 research program. It replaces the former circuit-move, symbolic-completeness,
 and rank-47 plans. The immediate objective is not a large architecture or a
 headline connectivity theorem. The dimension-free pair-to-triple span theorem,
-normalized carrier, and automatic five-circuit layer have landed. The immediate
-objective is now the shortest dependency chain to a dimension-independent,
-exact-factor-span local compilation theorem: promote the completed experimental
-binary profile inequality, derive the four-profile table, stabilize the typed
-finite-set move semantics, and replay the canonical `221` path end to end
-before introducing broader generator, graph, or certificate infrastructure.
+normalized carrier, and automatic five-circuit layer have landed. A production
+implementation of the binary profile inequality, positive-rank form, and
+four-profile classification is now ready for review. The immediate objective is
+the shortest remaining dependency chain to a dimension-independent,
+exact-factor-span local compilation theorem: stabilize the typed finite-set
+move semantics and replay the canonical `221` path end to end before
+introducing broader generator, graph, or certificate infrastructure.
 
 The executable exploration repository at `/home/exedev/x/tensor` is a
 read-only evidence source for this plan. Its computations generate candidate
 theorems and finite certificates; they are not proofs. A completed prior-art
 and feasibility review supports a minimal-factor-carrier pivot for the
 relation-level theorem. The normalized carrier and automatic five-circuit
-layers have now landed. A complete coordinate proof of the profile inequality
-exists as an experimental Lean checkpoint: its endpoint derives five-term
-minimality from `FiveCircuit` and handles the selected mode of rank at most two
-from `pair_triple_span_drop`. The next production boundary is extraction and
-the elementary four-profile corollary, followed by the smallest typed-move
-`221` replay. The complete pruned pair-to-triple generator remains useful
-search infrastructure, but it is no longer allowed to delay that end-to-end
-semantics test. Eventual finite coverage should reduce each relation to its
-exact factor spans rather than replay the full 343-term dimension-three
-carrier.
+layers have now landed. `ProfileInequality.lean` gives the direct binary
+coordinate profile theorem, its positive-rank form, the unordered profiles
+`221`, `321`, `222`, and `411`, and the ambient-dimension-three exclusion of
+`411`. Its proof derives five-term minimality from `FiveCircuit` and handles the
+selected mode of rank at most two from `pair_triple_span_drop`. The next
+production boundary is the smallest typed-move `221` replay. The complete
+pruned pair-to-triple generator remains useful search infrastructure, but it is
+no longer allowed to delay that end-to-end semantics test. Eventual finite
+coverage should reduce each relation to its exact factor spans rather than
+replay the full 343-term dimension-three carrier.
 
 `Documents/CircuitMoveSourceContract.md` remains the authority for what the
 Kauers--Moosbauer and Arai--Ichikawa--Hukushima sources actually define or
@@ -87,17 +88,20 @@ connectivity result.
   matrix-multiplication representation. It is not definitionally the finite-set
   KM carrier or the occurrence-aware Arai carrier.
 
-### Experimental Lean checkpoint
+### Binary profile inequality
 
-`Proofs/Scratch/ProfileInequalityBridge.lean` is a type-checked coordinate
-experiment over `ZMod 2`, not yet part of the repository-proved boundary. Its
-endpoint `pair_triple_profile_finrank_le_six` starts from five indexed nonzero
-pure tensors, injectivity, and a binary two-equals-three relation, then proves
-that the sum of the three factor-span dimensions is at most six. It derives
-subset minimality from the landed automatic five-circuit theorem and selects a
-rank-at-most-two mode with `pair_triple_span_drop`; the rank-one and rank-two
-fiber branches are complete. Keep it in scratch until independent review fixes
-the minimal production statement and API.
+`Proofs/BilinearComplexity/ProfileInequality.lean` contains the production
+coordinate proof over `ZMod 2`. Its endpoint
+`pair_triple_profile_finrank_le_six` starts from five indexed nonzero pure
+tensors, injectivity, and a binary two-equals-three relation, then proves that
+the sum of the three factor-span dimensions is at most six. It derives subset
+minimality from the landed automatic five-circuit theorem and selects a mode of
+rank at most two with `pair_triple_span_drop`; the rank-one and rank-two fiber
+branches are complete. The module also proves positive factor ranks, the
+subtracted inequality, the four unordered profiles, and the exclusion of `411`
+when all three ambient dimensions are at most three. Its supported API omits
+the scratch examples and audit commands; the proof-mechanism lemmas are
+private.
 
 ### Audited source boundary
 
@@ -165,13 +169,12 @@ structural proof actually needs both models.
 The structural span theorem, normalized carrier, and automatic five-circuit
 lemma are repository-proved. A diagnostic minimal-carrier path search has also
 passed, but it remains computational evidence: no concrete typed move or path
-certificate has landed. Keep the next production work narrow. First extract
-the completed profile endpoint and its elementary four-profile corollary; then
-implement the minimal typed-move `221` replay. **PrunedPairTriple** remains
-useful future search infrastructure, but it is not a prerequisite for that
-first replay. Do not create the previously proposed large file tree or begin
-the full-scheme bridge before the typed local move checker has stabilized and
-a later proof actually requires generic generator completeness.
+certificate has landed. Keep the next production work narrow. Implement the
+minimal typed-move `221` replay next. **PrunedPairTriple** remains useful future
+search infrastructure, but it is not a prerequisite for that first replay. Do
+not create the previously proposed large file tree or begin the full-scheme
+bridge before the typed local move checker has stabilized and a later proof
+actually requires generic generator completeness.
 
 ### 1. Carrier — completed
 
@@ -239,13 +242,14 @@ $$
 
 Deterministic exact enumeration finds examples of all four profiles over
 $\mathbb F_2$, with exact-profile counts recorded in the finite census below.
-The direct coordinate Lean proof of the inequality is complete in scratch;
-production extraction remains pending. Its purpose is self-contained formal
-infrastructure, not a novelty claim. Lovitz--Petrov separately supplies the
-arbitrary-field splitting inequality. Ballico classifies related small
-dependent Segre subsets under additional geometric hypotheses that are not
-assumed by the Lean endpoint. The endpoint invokes neither source theorem, and
-neither source supplies the finite binary census or typed move compilation.
+The direct coordinate Lean proof of the inequality originated in the committed
+scratch checkpoint and has now been extracted into the production profile
+module. Its purpose is self-contained formal infrastructure, not a novelty
+claim. Lovitz--Petrov separately supplies the arbitrary-field splitting
+inequality. Ballico classifies related small dependent Segre subsets under
+additional geometric hypotheses that are not assumed by the Lean endpoint. The
+endpoint invokes neither source theorem, and neither source supplies the finite
+binary census or typed move compilation.
 
 The $9$-term $(2,2,1)$ carrier is mandatory. Let $e_1,e_2$ be the standard
 basis of $\mathbb F_2^2$, fix the unique nonzero $w\in\mathbb F_2^1$, and set
@@ -540,11 +544,10 @@ barrier.
    `BinaryCircuit` instantiation.
 2. **Completed (`947f8a4`):** automatic five-circuit theorem, disjoint $2|3$
    equal-evaluation corollary, and normalized-carrier specialization.
-3. **Experimental endpoint completed:** review and extract
-   `pair_triple_profile_finrank_le_six` from scratch into the minimal production
-   module, then derive positive factor ranks, the Lovitz--Petrov inequality
-   form, and the elementary four-profile table. Preserve the existing source
-   attribution and do not promote scratch-only examples or audit commands.
+3. **Completed:** `ProfileInequality.lean` proves the direct binary coordinate
+   bound, positive factor ranks, the subtracted inequality, the elementary four
+   unordered profiles, and the ambient-dimension-three exclusion of `411`.
+   Its production API omits scratch examples and audit commands.
 4. Define only the typed finite-set pair Reduction,
    implementation-generated Split, and source Flip needed for the canonical
    exact-profile `221` replay. Retain labels and intrinsic directions, and
@@ -572,9 +575,7 @@ barrier.
 10. Develop Arai, relation-algebra, quotient, or broader search infrastructure
     only when a proved named-move result requires it.
 
-The immediate production checkpoint is fixed: review and promote the completed
-profile inequality, derive the four-profile corollary, then type and replay the
-canonical `221` path. The currently staged profile files remain experimental
-scratch work until the endpoint is independently reviewed. No later graph,
+The immediate production checkpoint is fixed: review and land the production
+profile module, then type and replay the canonical `221` path. No later graph,
 quotient, certificate-file, arbitrary-support, or full-scheme architecture may
 precede the end-to-end `221` semantics test.
