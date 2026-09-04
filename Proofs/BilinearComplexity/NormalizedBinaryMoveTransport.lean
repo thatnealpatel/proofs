@@ -71,6 +71,13 @@ def mapState {p q : Profile} (f : FactorwiseAdditiveInjection p q)
 example {p q : Profile} (f : FactorwiseAdditiveInjection p q) :
     mapState f (∅ : State p) = ∅ := rfl
 
+/-- Mapping finite-set states by an ordered factorwise injection commutes with
+finite-set union. -/
+@[simp] theorem mapState_union {p q : Profile}
+    (f : FactorwiseAdditiveInjection p q) (D E : State p) :
+    mapState f (D ∪ E) = mapState f D ∪ mapState f E := by
+  exact Finset.image_union D E
+
 /-- The induced ordered carrier map is injective. -/
 theorem mapTerm_injective {p q : Profile} (f : FactorwiseAdditiveInjection p q) :
     Function.Injective (mapTerm f) := by
