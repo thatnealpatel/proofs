@@ -6,39 +6,39 @@ posture is **none.** It does not claim any
 security properties: operators are trusted.
 
 **You are actively engaged in a goal-oriented,
-auto-research program: You operate autonomously
-and efficiently to MEET ONE OF THE FOLLOWING
-CRITIERA:**
+auto-research program to establish:**
 
-1. Build a *profile-polymorphic typed kernel*
-   for generated Split, source Flip, directed
-   Reduction, and MovePath, including
-   factorwise-injective and mode-permutation
-   transport with exact preservation of legality,
-   evaluation, collisions, direction, cardinality,
-   confinement, length, and altitude.
+> An orbit-resolved, constructively bounded local
+> connectivity theorem for binary five-term rank-one
+> decompositions, accompanied by a machine-checked
+> proof-producing compiler.
 
-2. Build a complete finite normalized compiler
-   for every exact-profile binary 2|3 five-circuit
-   and every required orientation. It must return
-   explicit kernel-checked paths; enumeration
-   without replayable Lean coverage is evidence,
+The program is complete only when production Lean proves:
+
+1. **The binary five-circuit theorem.** For any three
+   finite-dimensional $\mathbb F_2$ factor spaces and disjoint
+   sets $A,B$ of nonzero rank-one terms with $|A|=2$, $|B|=3$,
+   equal evaluation, and $A\cup B$ a circuit, the pair belongs
+   to exactly one of 13 orbits under factorwise linear
+   equivalences and mode permutations. There are legal paths
+   $A\rightsquigarrow B$ and $B\rightsquigarrow A$ using Split,
+   Flip, and directed Reduction, each of length at most $3$ and
+   altitude at most $4$, confined to the exact factor spans.
+   Prove that the length bound is sharp.
+
+2. **The certified compiler.** A production function such as
+   `compileBinaryFiveCircuit` accepts every circuit in the
+   theorem and returns its orbit certificate and both explicit
+   `MovePath`s with kernel-checked correctness and bounds.
+   Its finite coverage must be replayable in Lean; an external
+   census, a normalized-only theorem, or a bare existential is
    not completion.
 
-3. Lift normalized paths through exact-factor-span
-   normalization into arbitrary ambient schemes and
-   prove context-safe insertion. Do not identify
-   Finset, ordered Scheme, or Arai multiset semantics
-   without proved bridges.
-
-*Exit only when a production Lean theorem or
-proof-producing compiler accepts any qualifying
-binary 2|3 five-circuit in an arbitrary ambient
-scheme and returns a legal full-scheme path with
-dimension-independent local-support, length, and
-altitude bounds, with evaluation, confinement,
-collision safety, orientation coverage, and semantic
-transport all formally proved.
+Orbit enumeration, normalization, transport, and other
+infrastructure are proof methods, not separate end goals. Do not
+broaden the goal to surrounding-scheme or multiset semantics.
+Relevant production declarations must have no `sorryAx` or
+project-specific unproved axioms.
 
 ### Rules
 
@@ -79,7 +79,7 @@ You SHOULD update the ledger before each repair;
 prefer to resume reviewers and writers so that
 each successive round converges quickly.
 
-During a campaign, the orchestartion loop takes a phase
+During a campaign, the orchestration loop takes a phase
 that is one of `WRITE`, `REVIEW`, `STAGE_REQUIRED`, `REPAIR`,
 or `COMMIT`:
 
