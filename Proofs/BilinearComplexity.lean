@@ -19,6 +19,7 @@ import BilinearComplexity.LinearFlattening
 import BilinearComplexity.LinearFlatteningCompression
 import BilinearComplexity.MatMulMono
 import BilinearComplexity.NormalizedBinaryEndpointTransport
+import BilinearComplexity.NormalizedBinaryModePermutation
 import BilinearComplexity.NormalizedBinaryMoveTransport
 import BilinearComplexity.NormalizedBinaryReplay221
 import BilinearComplexity.Omega
