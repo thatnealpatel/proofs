@@ -1,0 +1,22 @@
+Use `sagedoc` to inspect documentation for
+public names exported by `sage.all`.
+
+Set `SAGEDOC_PYTHON` to the Python executable
+inside the intended Sage environment. The command
+never guesses an interpreter from `PATH`.
+
+A whitespace-free query is an exact,
+case-sensitive name lookup, for example `sagedoc GF`
+or `sagedoc AffineGroup`.
+
+A query containing whitespace is a ranked documentation
+search, for example `sagedoc finite field construction`.
+
+Results are JSON `indexing.Envelope` values. Exact hits
+contain complete docstrings; searches contain snippets.
+Add `-v` only when ranking scores are useful.
+
+The index covers documented public `sage.all` exports,
+not methods or every source declaration. Use the configured
+Sage interpreter directly—typically `$SAGEDOC_PYTHON -c '...'`
+to inspect methods, source, or APIs outside `sage.all`.
