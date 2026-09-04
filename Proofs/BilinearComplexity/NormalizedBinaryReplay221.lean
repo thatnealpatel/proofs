@@ -3,14 +3,16 @@ import BilinearComplexity.FiveCircuit
 set_option autoImplicit false
 
 /-!
-# Explicit normalized binary profile-221 replay
+# Profile-polymorphic normalized binary moves and profile-221 replay
 
-This module gives only the finite-set move semantics needed to replay one
-designated path in the normalized `(2,2,1)` carrier. The three labels remain
-separate: an implementation-generated first-factor Split, a source ordinary
-third-factor Flip, and a directed narrow two-to-one Reduction.
+This module defines the profile-polymorphic finite-set predicates for the three
+move labels used here, together with their evaluation, cardinality, and path
+infrastructure. It then uses those predicates to replay one designated path in
+the normalized `(2,2,1)` carrier. The labels remain separate: an
+implementation-generated first-factor Split, a source ordinary third-factor
+Flip, and a directed narrow two-to-one Reduction.
 
-AI disclosure: produced with AI assistance (see `Proofs/README`).
+AI disclosure: produced with AI assistance (see `README`).
 -/
 
 namespace BilinearComplexity.NormalizedBinaryReplay221
@@ -59,8 +61,8 @@ def J : Term := (ep, ep, w)
 term by two distinct fresh terms, sharing the other factors, whose first
 factors sum to the source first factor. The target is required to be the exact
 finite-set replacement. -/
-def GeneratedFirstSplit (source outputLeft outputRight : Term)
-    (D E : State221) : Prop :=
+def GeneratedFirstSplit {p : Profile}
+    (source outputLeft outputRight : Carrier p) (D E : State p) : Prop :=
     source ∈ D ∧
     outputLeft ≠ outputRight ∧
     outputLeft ∉ D.erase source ∧
@@ -76,9 +78,9 @@ def GeneratedFirstSplit (source outputLeft outputRight : Term)
 present pair by the displayed unit shear. The pair literally shares its third
 factor, both outputs are collision-free, and the target is the exact finite-set
 replacement. -/
-def SourceThirdFlip
-    (sourceLeft sourceRight targetLeft targetRight : Term)
-    (D E : State221) : Prop :=
+def SourceThirdFlip {p : Profile}
+    (sourceLeft sourceRight targetLeft targetRight : Carrier p)
+    (D E : State p) : Prop :=
     sourceLeft ∈ D ∧
     sourceRight ∈ D ∧
     sourceLeft ≠ sourceRight ∧
@@ -99,8 +101,8 @@ def SourceThirdFlip
 sharing their second and third factors by one fresh term whose first factor is
 their sum. This is only the displayed two-to-one template, not a claim that all
 KM Reduction instances have this form. -/
-def DirectedNarrowPairReduction (sourceLeft sourceRight target : Term)
-    (D E : State221) : Prop :=
+def DirectedNarrowPairReduction {p : Profile}
+    (sourceLeft sourceRight target : Carrier p) (D E : State p) : Prop :=
     sourceLeft ∈ D ∧
     sourceRight ∈ D ∧
     sourceLeft ≠ sourceRight ∧
@@ -112,8 +114,8 @@ def DirectedNarrowPairReduction (sourceLeft sourceRight target : Term)
     target.2.2.1 = sourceLeft.2.2.1 ∧
     E = insert target ((D.erase sourceLeft).erase sourceRight)
 
-private theorem generatedFirstSplit_local_eq
-    (source outputLeft outputRight : Term)
+private theorem generatedFirstSplit_local_eq {p : Profile}
+    (source outputLeft outputRight : Carrier p)
     (hfirst : source.1.1 = outputLeft.1.1 + outputRight.1.1)
     (hleftSecond : outputLeft.2.1.1 = source.2.1.1)
     (hrightSecond : outputRight.2.1.1 = source.2.1.1)
@@ -130,8 +132,8 @@ private theorem generatedFirstSplit_local_eq
   simp only [Pi.add_apply]
   ring
 
-private theorem sourceThirdFlip_local_eq
-    (sourceLeft sourceRight targetLeft targetRight : Term)
+private theorem sourceThirdFlip_local_eq {p : Profile}
+    (sourceLeft sourceRight targetLeft targetRight : Carrier p)
     (hsourceThird : sourceRight.2.2.1 = sourceLeft.2.2.1)
     (htargetLeftFirst : targetLeft.1.1 = sourceLeft.1.1 + sourceRight.1.1)
     (htargetLeftSecond : targetLeft.2.1.1 = sourceLeft.2.1.1)
@@ -155,8 +157,8 @@ private theorem sourceThirdFlip_local_eq
   simp only [Pi.add_apply, Pi.sub_apply]
   ring
 
-private theorem directedNarrowPairReduction_local_eq
-    (sourceLeft sourceRight target : Term)
+private theorem directedNarrowPairReduction_local_eq {p : Profile}
+    (sourceLeft sourceRight target : Carrier p)
     (hsecond : sourceRight.2.1.1 = sourceLeft.2.1.1)
     (hthird : sourceRight.2.2.1 = sourceLeft.2.2.1)
     (htargetFirst : target.1.1 = sourceLeft.1.1 + sourceRight.1.1)
@@ -174,8 +176,8 @@ private theorem directedNarrowPairReduction_local_eq
   simp only [Pi.add_apply]
   ring
 
-private lemma replace_one_by_two_evaluation
-    (D E : State221) (x y z : Term)
+private lemma replace_one_by_two_evaluation {p : Profile}
+    (D E : State p) (x y z : Carrier p)
     (hx : x ∈ D) (hy : y ∉ D.erase x) (hz : z ∉ D.erase x)
     (hyz : y ≠ z)
     (hlocal : tensorEvaluation x = tensorEvaluation y + tensorEvaluation z)
@@ -191,36 +193,36 @@ private lemma replace_one_by_two_evaluation
   rw [hlocal]
   ac_rfl
 
-private lemma replace_two_by_two_evaluation
-    (D E : State221) (x y p q : Term)
+private lemma replace_two_by_two_evaluation {p : Profile}
+    (D E : State p) (x y x' y' : Carrier p)
     (hx : x ∈ D) (hy : y ∈ D) (hxy : x ≠ y)
-    (hp : p ∉ (D.erase x).erase y) (hq : q ∉ (D.erase x).erase y)
-    (hpq : p ≠ q)
+    (hx' : x' ∉ (D.erase x).erase y) (hy' : y' ∉ (D.erase x).erase y)
+    (hx'y' : x' ≠ y')
     (hlocal : tensorEvaluation x + tensorEvaluation y =
-      tensorEvaluation p + tensorEvaluation q)
-    (hE : E = insert p (insert q ((D.erase x).erase y))) :
+      tensorEvaluation x' + tensorEvaluation y')
+    (hE : E = insert x' (insert y' ((D.erase x).erase y))) :
     stateEvaluation E = stateEvaluation D := by
   rw [hE]
   simp only [stateEvaluation, BinaryCircuit.evaluation]
-  have hpInsert : p ∉ insert q ((D.erase x).erase y) := by
-    simpa only [Finset.mem_insert, not_or] using ⟨hpq, hp⟩
-  rw [Finset.sum_insert hpInsert]
-  rw [Finset.sum_insert hq]
+  have hx'Insert : x' ∉ insert y' ((D.erase x).erase y) := by
+    simpa only [Finset.mem_insert, not_or] using ⟨hx'y', hx'⟩
+  rw [Finset.sum_insert hx'Insert]
+  rw [Finset.sum_insert hy']
   have hyErase : y ∈ D.erase x := Finset.mem_erase.mpr ⟨hxy.symm, hy⟩
   rw [← Finset.sum_erase_add _ _ hx]
   rw [← Finset.sum_erase_add _ _ hyErase]
   calc
-    tensorEvaluation p + (tensorEvaluation q +
+    tensorEvaluation x' + (tensorEvaluation y' +
         ∑ t ∈ (D.erase x).erase y, tensorEvaluation t) =
-        (tensorEvaluation p + tensorEvaluation q) +
+        (tensorEvaluation x' + tensorEvaluation y') +
           ∑ t ∈ (D.erase x).erase y, tensorEvaluation t := by ac_rfl
     _ = (tensorEvaluation x + tensorEvaluation y) +
           ∑ t ∈ (D.erase x).erase y, tensorEvaluation t := by rw [hlocal]
     _ = ∑ t ∈ (D.erase x).erase y, tensorEvaluation t +
           tensorEvaluation y + tensorEvaluation x := by ac_rfl
 
-private lemma replace_two_by_one_evaluation
-    (D E : State221) (x y z : Term)
+private lemma replace_two_by_one_evaluation {p : Profile}
+    (D E : State p) (x y z : Carrier p)
     (hx : x ∈ D) (hy : y ∈ D) (hxy : x ≠ y)
     (hz : z ∉ (D.erase x).erase y)
     (hlocal : tensorEvaluation x + tensorEvaluation y = tensorEvaluation z)
@@ -240,8 +242,8 @@ private lemma replace_two_by_one_evaluation
           tensorEvaluation y + tensorEvaluation x := by ac_rfl
 
 /-- Every legal implementation-generated first-factor Split preserves state evaluation. -/
-theorem GeneratedFirstSplit.preserves_evaluation
-    {source outputLeft outputRight : Term} {D E : State221}
+theorem GeneratedFirstSplit.preserves_evaluation {p : Profile}
+    {source outputLeft outputRight : Carrier p} {D E : State p}
     (h : GeneratedFirstSplit source outputLeft outputRight D E) :
     stateEvaluation E = stateEvaluation D := by
   rcases h with ⟨hmem, hne, hfreshLeft, hfreshRight, hfirst, hleftSecond,
@@ -252,8 +254,8 @@ theorem GeneratedFirstSplit.preserves_evaluation
       hleftSecond hrightSecond hleftThird hrightThird) htarget
 
 /-- Every legal source third-factor Flip preserves state evaluation. -/
-theorem SourceThirdFlip.preserves_evaluation
-    {sourceLeft sourceRight targetLeft targetRight : Term} {D E : State221}
+theorem SourceThirdFlip.preserves_evaluation {p : Profile}
+    {sourceLeft sourceRight targetLeft targetRight : Carrier p} {D E : State p}
     (h : SourceThirdFlip sourceLeft sourceRight targetLeft targetRight D E) :
     stateEvaluation E = stateEvaluation D := by
   rcases h with ⟨hleftMem, hrightMem, hsources, hfreshLeft, hfreshRight,
@@ -267,8 +269,8 @@ theorem SourceThirdFlip.preserves_evaluation
       htargetRightFirst htargetRightSecond htargetRightThird) htarget
 
 /-- Every legal directed narrow pair Reduction preserves state evaluation. -/
-theorem DirectedNarrowPairReduction.preserves_evaluation
-    {sourceLeft sourceRight target : Term} {D E : State221}
+theorem DirectedNarrowPairReduction.preserves_evaluation {p : Profile}
+    {sourceLeft sourceRight target : Carrier p} {D E : State p}
     (h : DirectedNarrowPairReduction sourceLeft sourceRight target D E) :
     stateEvaluation E = stateEvaluation D := by
   rcases h with ⟨hleftMem, hrightMem, hsources, hfresh, hsecond, hthird,
@@ -280,8 +282,8 @@ theorem DirectedNarrowPairReduction.preserves_evaluation
 
 /-- A legal implementation-generated first-factor Split increases finite-set
 cardinality by exactly one. -/
-theorem GeneratedFirstSplit.card_eq
-    {source outputLeft outputRight : Term} {D E : State221}
+theorem GeneratedFirstSplit.card_eq {p : Profile}
+    {source outputLeft outputRight : Carrier p} {D E : State p}
     (h : GeneratedFirstSplit source outputLeft outputRight D E) :
     E.card = D.card + 1 := by
   rcases h with ⟨hmem, hne, hfreshLeft, hfreshRight, _hfirst, _hleftSecond,
@@ -294,8 +296,8 @@ theorem GeneratedFirstSplit.card_eq
   omega
 
 /-- A legal source third-factor Flip preserves finite-set cardinality exactly. -/
-theorem SourceThirdFlip.card_eq
-    {sourceLeft sourceRight targetLeft targetRight : Term} {D E : State221}
+theorem SourceThirdFlip.card_eq {p : Profile}
+    {sourceLeft sourceRight targetLeft targetRight : Carrier p} {D E : State p}
     (h : SourceThirdFlip sourceLeft sourceRight targetLeft targetRight D E) :
     E.card = D.card := by
   rcases h with ⟨hleftMem, hrightMem, hsources, hfreshLeft, hfreshRight,
@@ -317,8 +319,8 @@ theorem SourceThirdFlip.card_eq
 
 /-- A legal directed narrow pair Reduction decreases finite-set cardinality by
 exactly one, stated additively to avoid natural-number subtraction. -/
-theorem DirectedNarrowPairReduction.card_add_one_eq
-    {sourceLeft sourceRight target : Term} {D E : State221}
+theorem DirectedNarrowPairReduction.card_add_one_eq {p : Profile}
+    {sourceLeft sourceRight target : Carrier p} {D E : State p}
     (h : DirectedNarrowPairReduction sourceLeft sourceRight target D E) :
     E.card + 1 = D.card := by
   rcases h with ⟨hleftMem, hrightMem, hsources, hfresh, _hsecond, _hthird,
@@ -332,7 +334,7 @@ theorem DirectedNarrowPairReduction.card_add_one_eq
 
 /-- Every normalized finite-set state consists of nonzero evaluated tensors,
 and coordinate evaluation is injective on its terms. -/
-theorem state_tensor_legality (D : State221) :
+theorem state_tensor_legality {p : Profile} (D : State p) :
     (∀ t, t ∈ D → tensorEvaluation t ≠ 0) ∧
       (∀ s, s ∈ D → ∀ t, t ∈ D →
         tensorEvaluation s = tensorEvaluation t → s = t) := by
@@ -342,22 +344,22 @@ theorem state_tensor_legality (D : State221) :
   · intro s _hs t _ht hst
     exact tensorEvaluation_injective hst
 
-/-- The three intrinsically directed move labels used by the profile-221 replay. -/
-inductive Move : State221 → State221 → Prop
+/-- The three intrinsically directed move labels at an ordered normalized profile. -/
+inductive Move {p : Profile} : State p → State p → Prop
   /-- A forward implementation-generated first-factor Split edge. -/
-  | generatedFirstSplit {source outputLeft outputRight : Term} {D E : State221} :
+  | generatedFirstSplit {source outputLeft outputRight : Carrier p} {D E : State p} :
       GeneratedFirstSplit source outputLeft outputRight D E → Move D E
   /-- A source ordinary third-factor Flip edge. -/
-  | sourceThirdFlip {sourceLeft sourceRight targetLeft targetRight : Term}
-      {D E : State221} :
+  | sourceThirdFlip {sourceLeft sourceRight targetLeft targetRight : Carrier p}
+      {D E : State p} :
       SourceThirdFlip sourceLeft sourceRight targetLeft targetRight D E → Move D E
   /-- A directed narrow two-to-one Reduction edge. -/
-  | directedNarrowPairReduction {sourceLeft sourceRight target : Term}
-      {D E : State221} :
+  | directedNarrowPairReduction {sourceLeft sourceRight target : Carrier p}
+      {D E : State p} :
       DirectedNarrowPairReduction sourceLeft sourceRight target D E → Move D E
 
 /-- Every typed replay edge preserves normalized state evaluation. -/
-theorem Move.preserves_evaluation {D E : State221} (h : Move D E) :
+theorem Move.preserves_evaluation {p : Profile} {D E : State p} (h : Move D E) :
     stateEvaluation E = stateEvaluation D := by
   cases h with
   | generatedFirstSplit hsplit => exact hsplit.preserves_evaluation
@@ -365,9 +367,9 @@ theorem Move.preserves_evaluation {D E : State221} (h : Move D E) :
   | directedNarrowPairReduction hreduction => exact hreduction.preserves_evaluation
 
 /-- Every concrete path of the three typed moves preserves endpoint evaluation. -/
-theorem movePath_preserves_evaluation {D E : State221}
-    (p : MovePath Move D E) : stateEvaluation E = stateEvaluation D := by
-  induction p with
+theorem movePath_preserves_evaluation {p : Profile} {D E : State p}
+    (path : MovePath (@Move p) D E) : stateEvaluation E = stateEvaluation D := by
+  induction path with
   | singleton => rfl
   | snoc _ h ih => exact h.preserves_evaluation.trans ih
 
