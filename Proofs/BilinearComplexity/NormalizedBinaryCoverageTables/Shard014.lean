@@ -1,0 +1,182 @@
+import BilinearComplexity.NormalizedBinaryCoverageData
+
+set_option autoImplicit false
+set_option maxRecDepth 10000
+set_option maxHeartbeats 1000000
+
+namespace BilinearComplexity.NormalizedBinaryCoverageTables.Shard014
+
+open BilinearComplexity.NormalizedBinaryCarrier
+open BilinearComplexity.NormalizedBinaryCoverageData
+open BilinearComplexity.NormalizedBinaryFiniteAction
+
+/-- Generated raw coverage actions 1664 through 1679 for profile 411.
+Source: coverage_actions.json, SHA-256 bdb8a983a8cad61c375811e21a5cdb831dac77ceb70e4b9eb832d26df727f0bf. -/
+def rawActions : List (RawCoverageAction profile411 (Fin 1)) := [
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 0, 0, 1; 0, 1, 1, 1; 1, 0, 1, 1; 1, 1, 1, 0]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨10, 1, 1⟩, ⟨12, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨14, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 0, 0, 1; 1, 1, 0, 1; 0, 1, 1, 1; 1, 1, 1, 0]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨10, 1, 1⟩, ⟨14, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨12, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 0, 0; 1, 1, 0, 1; 0, 1, 1, 1; 1, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨10, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨12, 1, 1⟩, ⟨14, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 0, 0, 1; 0, 1, 1, 1; 1, 1, 0, 1; 1, 1, 1, 0]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨12, 1, 1⟩, ⟨14, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨10, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 0, 0; 0, 1, 1, 1; 1, 1, 0, 1; 1, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨12, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨10, 1, 1⟩, ⟨14, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 0, 0; 1, 1, 0, 1; 1, 1, 1, 0; 1, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨14, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨10, 1, 1⟩, ⟨12, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![1, 1, 0, 1; 1, 1, 1, 0; 0, 1, 1, 1; 1, 0, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨7, 1, 1⟩, ⟨11, 1, 1⟩]
+      right := [⟨13, 1, 1⟩, ⟨14, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![1, 1, 0, 1; 0, 1, 1, 1; 1, 1, 1, 0; 1, 0, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨7, 1, 1⟩, ⟨13, 1, 1⟩]
+      right := [⟨11, 1, 1⟩, ⟨14, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 1, 1; 1, 1, 0, 1; 1, 1, 1, 0; 1, 0, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨7, 1, 1⟩, ⟨14, 1, 1⟩]
+      right := [⟨11, 1, 1⟩, ⟨13, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![1, 1, 0, 1; 1, 1, 1, 0; 1, 1, 1, 1; 0, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨7, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨11, 1, 1⟩, ⟨13, 1, 1⟩, ⟨14, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![1, 1, 0, 1; 0, 1, 1, 1; 1, 0, 1, 1; 1, 1, 1, 0]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨11, 1, 1⟩, ⟨13, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨14, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 1, 1; 1, 1, 0, 1; 1, 0, 1, 1; 1, 1, 1, 0]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨11, 1, 1⟩, ⟨14, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨13, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![1, 1, 0, 1; 1, 1, 1, 0; 0, 1, 1, 1; 1, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨11, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨13, 1, 1⟩, ⟨14, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 1, 1; 1, 0, 1, 1; 1, 1, 0, 1; 1, 1, 1, 0]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨13, 1, 1⟩, ⟨14, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨11, 1, 1⟩, ⟨15, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![1, 1, 0, 1; 0, 1, 1, 1; 1, 1, 1, 0; 1, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨13, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨11, 1, 1⟩, ⟨14, 1, 1⟩] } },
+  { sourceRowIndex := ⟨0, by decide⟩
+    profileAction := {
+      first := !![0, 1, 1, 1; 1, 1, 0, 1; 1, 1, 1, 0; 1, 1, 1, 1]
+      second := !![1]
+      third := !![1]
+      orientation := .abc }
+    target := {
+      left := [⟨14, 1, 1⟩, ⟨15, 1, 1⟩]
+      right := [⟨7, 1, 1⟩, ⟨11, 1, 1⟩, ⟨13, 1, 1⟩] } }
+]
+
+/-- Every generated action in this shard passes target decoding, raw matrix
+validity, and the reflected endpoint equations, producing actual entries. -/
+theorem allChecksSucceed :
+    (RawCoverageAction.Entry.reflectedCheckAll selectedRowSources411 rawActions).isSome = true := by
+  decide
+
+/-- Actual checked entries corresponding to every raw action in this shard. -/
+def entries : List (RawCoverageAction.Entry selectedRowSources411) :=
+  (RawCoverageAction.Entry.reflectedCheckAll selectedRowSources411 rawActions).get allChecksSucceed
+
+/-- Projecting checked entries recovers every serialized action exactly. -/
+theorem entries_rawActions : entries.map RawCoverageAction.Entry.raw = rawActions :=
+  RawCoverageAction.Entry.reflectedCheckAll_get_raws selectedRowSources411 rawActions allChecksSucceed
+
+/-- The shard's literal target set, independent of checker/get reduction. -/
+def literalTargetSet : Finset (RelationEndpoints profile411) :=
+  RawCoverageAction.decodedTargetSet rawActions
+
+#print axioms allChecksSucceed
+
+end BilinearComplexity.NormalizedBinaryCoverageTables.Shard014
