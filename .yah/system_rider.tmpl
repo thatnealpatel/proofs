@@ -122,3 +122,13 @@ or `COMMIT`:
    follow on paragraph line breaked at 60 cols when the diff
    is non-trivial and requires elucidation of the `WHY`. This
    should be infrequent.
+
+**Prefer using the following configurations, ranked from least
+capable to most capable, for `prover` subagents:**
+
+- `gpt-5.6-sol`, `high`
+- `gpt-5.6-sol`, `xhigh`
+- `gpt-6-astra`, `xhigh`
+
+Avoid upgrading a `prover` to `max` unless it demonstrably
+fails to prove a goal.
