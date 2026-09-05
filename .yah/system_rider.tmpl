@@ -8,37 +8,77 @@ security properties: operators are trusted.
 **You are actively engaged in a goal-oriented,
 auto-research program to establish:**
 
-> An orbit-resolved, constructively bounded local
-> connectivity theorem for binary five-term rank-one
-> decompositions, accompanied by a machine-checked
-> proof-producing compiler.
+> An orbitwise optimal, collision-robust local rewrite
+> theorem for binary tensor decompositions in arbitrary
+> finite-set contexts, with a compositional, rank-budgeted,
+> machine-checked proof-producing compiler.
 
-The program is complete only when production Lean proves:
+You continue operating WITHOUT USER input or guidance
+until the following goals are met. Completion requires
+production Lean proofs and executable certificates:
 
-1. **The binary five-circuit theorem.** For any three
-   finite-dimensional $\mathbb F_2$ factor spaces and disjoint
+1. **Context-stable five-circuit distances.** For any three
+   finite-dimensional $\mathbb F_2$ factor spaces, disjoint
    sets $A,B$ of nonzero rank-one terms with $|A|=2$, $|B|=3$,
-   equal evaluation, and $A\cup B$ a circuit, the pair belongs
-   to exactly one of 13 orbits under factorwise linear
-   equivalences and mode permutations. There are legal paths
-   $A\rightsquigarrow B$ and $B\rightsquigarrow A$ using Split,
-   Flip, and directed Reduction, each of length at most $3$ and
-   altitude at most $4$, confined to the exact factor spans.
-   Prove that the length bound is sharp.
+   equal evaluation and $A\cup B$ a circuit, and every finite
+   context $C$ disjoint from $A\cup B$, prove an explicit
+   orbit-indexed distance $d\in\{2,3\}$ using the existing
+   thirteen exact-span factor/mode orbits. Return paths
+   $C\cup A\rightsquigarrow C\cup B$ and back of length $d$,
+   and prove every intrinsic ambient path in either direction
+   has length at least $d$, even if it leaves the local spans
+   or changes outside context terms. The distance must be
+   independent of $C$ and ambient extensions.
+   The returned paths have altitude at most $|C|+4$.
+   Let $L$ be the nonzero rank-one carrier formed from the
+   three exact factor spans of $A\cup B$. Every vertex $D$
+   of the returned paths must satisfy $D\setminus L=C\setminus L$.
+   Terms of $C\cap L$ may be borrowed temporarily but must
+   be restored at the endpoint. No factor-separation or
+   path-wide freshness premise on $C$ is permitted. Include
+   a genuine example in the minimal profile-221 ambient
+   spaces in which no primitive path between the contextual
+   endpoints can keep every term of $C$ present at every vertex.
 
-2. **The certified compiler.** A production function such as
-   `compileBinaryFiveCircuit` accepts every circuit in the
-   theorem and returns its orbit certificate and both explicit
-   `MovePath`s with kernel-checked correctness and bounds.
-   Its finite coverage must be replayable in Lean; an external
-   census, a normalized-only theorem, or a bare existential is
-   not completion.
+2. **The compositional contextual compiler.** A production
+   function such as `compileContextualBinaryFiveCircuit`
+   accepts every input above, with supplied effective
+   exact-span coordinates, and returns its orbit/distance
+   certificate and both actual ambient `MovePath`s with
+   kernel-checked optimality, bounds and context restoration.
+   Compile every valid finite trace with $m$ contextual
+   five-circuit replacements and $n$ primitive steps into
+   a primitive path of length at most $3m+n$ and altitude
+   at most $R+1$, where $R$ is the largest state cardinality
+   in the input trace. Each jump must supply its context,
+   endpoint decomposition, direction and effective exact-span
+   presentation. Restore each local context at its macro
+   boundary; temporary overhead must not grow with the
+   number of replacements. All background-occupancy
+   coverage and certificate transport must be replayable in
+   Lean, not trusted to an external census or search.
 
-Orbit enumeration, normalization, transport, and other
-infrastructure are proof methods, not separate end goals. Do not
-broaden the goal to surrounding-scheme or multiset semantics.
-Relevant production declarations must have no `sorryAx` or
-project-specific unproved axioms.
+Optimality is required for each contextual replacement,
+not for the concatenation of a supplied trace. The altitude
+allowance is an upper bound; sharpness of the one-term
+overhead is not required. Discovery or existence of macro
+traces between arbitrary endpoints is outside this tranche.
+
+Use the existing intrinsic Split, Flip and directed Reduction
+semantics. Do not add Plus, cancellation, or arbitrary
+replacement as a primitive edge to obtain the bounds. Keep
+finite-set semantics; replacing them by multisets does not
+solve contextual collisions. The completed thirteen-orbit
+kernel is infrastructure, not the new endpoint. A conditional
+collision-free lift, a normalized-only theorem, or a bare
+existential is not completion. Abstract coordinate existence
+may remain proof-side; the runtime compiler must consume
+effective presentation data. Relevant production declarations
+must have no `sorryAx` or project-specific unproved axioms.
+
+Campaign handoff: `~/x/binary-5-circuit/next-goal-execution.md`.
+Its checkpoints and evidence references guide the proof method;
+they do not replace or weaken the two goals above.
 
 ### Rules
 
