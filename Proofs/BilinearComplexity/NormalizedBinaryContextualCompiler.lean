@@ -25,9 +25,9 @@ open NormalizedBinaryContextualCertificates
 open NormalizedBinaryFiveCircuitRows
 open NormalizedBinaryOrbitClassification
 
-/-- The canonical proposed orbit-distance table for normalized labels.
-In this module it specifies constructed witness lengths; downstream
-shortestness results establish when these values are graph distances. -/
+/-- The canonical orbit-distance table for normalized labels.
+This module establishes constructed witness lengths; the downstream module
+`BinaryContextualFiveCircuitOptimality` proves their global shortestness. -/
 def orbitDistance : OrbitLabel → Nat
   | ⟨.family221, _⟩ => 2
   | ⟨.family411, _⟩ => 3

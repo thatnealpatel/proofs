@@ -13,12 +13,12 @@ parameter turns each contextual jump into an exact intrinsic path.
 The local compilation result owns its computed distance; a caller cannot
 request or prescribe a distance. Its orbit-label field is compiler-supplied,
 unverified metadata at this generic interface: no field relates that label to
-the jump's endpoints or presentation. A concrete adapter must separately
-certify orbit identity. Consequently `ContextualTrace.macroDistanceSum` depends
-on the supplied compiler. The infrastructure here is intentionally intermediate:
-it proves generic path length, altitude, and endpoint-evaluation contracts, but
-does not construct
-the still-required concrete total contextual five-circuit compiler.
+the jump's endpoints or presentation. The concrete adapter in
+`BinaryContextualConcreteTrace` separately certifies orbit identity and supplies
+a total local compiler. Consequently `ContextualTrace.macroDistanceSum` here
+depends on the supplied compiler. This module proves the generic path length,
+altitude, and endpoint-evaluation contracts; the concrete module exports the
+callback-free specialization.
 
 AI disclosure: produced with AI assistance (see `README`).
 -/
