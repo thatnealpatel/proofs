@@ -53,6 +53,11 @@ srcDir = "Proofs"
 name = "Scratch"
 srcDir = "Proofs"
 
+[[lean_exe]]
+name = "binary-search"
+root = "BilinearComplexity.BinarySearchMain"
+srcDir = "Proofs"
+
 [[require]]
 name  = "mathlib"
 scope = "leanprover-community"
