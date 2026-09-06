@@ -42,7 +42,8 @@ The candidate action artifact is `coverage_actions.json`, SHA-256
 Its standalone external generator is `coverage_generate.go`, SHA-256
 `f045bc75d5943ce33b47a1fd95ed2dce9a148b733144dcfc3bea7f009f418208`.
 Both are retained in the campaign artifact directory
-`~/x/binary-5-circuit/`; neither is a runtime or proof dependency of Lean.
+`~/x/auto-research/binary-five-circuit/artifacts/kernel/`; neither is a runtime
+or proof dependency of Lean.
 
 For each profile, project every action to its
 `target_support_term_indices` field, remove duplicates, and sort the resulting
@@ -58,8 +59,10 @@ literals and matched them exactly, in order:
 | 222 | 162 |
 
 The bounded comparison and tensor-mask reconstruction are retained as
-`~/x/binary-5-circuit/verify_compact_provenance.sage`, run with
-`timeout 60 sage ~/x/binary-5-circuit/verify_compact_provenance.sage`.
+`~/x/auto-research/binary-five-circuit/tools/verify_compact_provenance.sage`,
+run with `timeout 60 sage` followed by that path. This relocated copy changes
+only artifact-path resolution; the original script is preserved under
+`artifacts/kernel/` and indexed in the campaign's `migration-map.json`.
 This computation documents the candidate data; it is not a formal Lean proof.
 The external action artifact's ordered pair/triple endpoints are not exchanged
 by this projection or by the Lean action checker.
