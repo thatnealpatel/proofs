@@ -16,9 +16,10 @@ contains no path callback or run-time basis choice, and returns concrete paths
 with exact constructed length, controlled altitude, and exact outside-box
 restoration.
 
-`orbitDistance` denotes the length constructed here. This module deliberately
-does not identify that length with shortest-path distance and does not provide
-a trace projection; those lower-bound interfaces remain downstream.
+`orbitDistance` denotes the length constructed here. The downstream module
+`BinaryContextualFiveCircuitOptimality` identifies it with global ambient
+shortest-path distance for these same compiler results, and
+`BinaryContextualConcreteTrace` supplies the concrete trace compiler.
 -/
 
 namespace BilinearComplexity.BinaryContextualFiveCircuitCompiler

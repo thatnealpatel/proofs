@@ -14,7 +14,10 @@ nonzero invariant. In particular, `vectorAdd` truncates unequal lists and a
 line candidate may contain a zero or otherwise malformed factor code. No
 result in this module identifies the tables with production normalized rows,
 reflects native moves into the checker, or proves an ambient path exclusion;
-those semantic bridges are separate pending work.
+those semantic bridges are supplied separately by
+`BinaryContextualExclusionSemantics`, `BinaryContextualFlipReflection`, and
+`BinaryContextualNativeExclusion`, with ambient optimality in
+`BinaryContextualFiveCircuitOptimality`.
 -/
 
 set_option autoImplicit false
