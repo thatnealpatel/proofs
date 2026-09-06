@@ -18,8 +18,9 @@ They do not assert that every contextual witness is controlled by those bits.
 ## Reconstruction
 
 The candidate artifacts used for these modules are maintained outside the
-repository in `/home/exedev/x/binary-5-circuit-contextual/`. With that directory
-bound to `CTX`, the successful candidate-generation command is:
+repository in
+`/home/exedev/x/auto-research/binary-five-circuit/artifacts/contextual/`.
+With that directory bound to `CTX`, the successful candidate-generation command is:
 
 ```sh
 "$CTX/generate.py" > "$CTX/all.json" 2> "$CTX/generate-all.log"
@@ -39,9 +40,13 @@ instance names remain distinct:
   Proofs/BilinearComplexity/NormalizedBinaryContextual222.lean --profiles 222
 ```
 
-`$CTX/SHA256SUMS` is the authoritative manifest for the current generator,
-emitter, JSON candidates, production sources, and stable build logs. The
-external provenance record distinguishes the isolated successful invocation
+`$CTX/SHA256SUMS` preserves the original manifest for the generator, emitter,
+JSON candidates, production sources, and stable build logs. After campaign
+consolidation, use `$CTX/SHA256SUMS.relocated` to verify those same hashes at
+their new locations. Its entry for this document checks the byte-preserved
+pre-relocation version; the present revision changes reconstruction paths only.
+The campaign's `migration-map.json` records all original and relocated paths.
+The external provenance record distinguishes the isolated successful invocation
 from a later archived failed invocation which incorrectly supplied unsupported
 `--all --output` arguments.
 
