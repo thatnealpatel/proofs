@@ -1,0 +1,17 @@
+import BilinearComplexity.FieldFiveToFour
+import BilinearComplexity.FieldNativeExecutablePath
+
+set_option pp.all true in
+#print BilinearComplexity.FieldTernaryFiveCircuitPair.scan
+set_option pp.all true in
+#print BilinearComplexity.FieldTernaryFiveCircuitPair.certifiedScan
+set_option pp.all true in
+#print BilinearComplexity.FieldTernaryFiveCircuitPair.Candidate.Valid
+#print axioms BilinearComplexity.FieldTernaryFiveCircuitPair.scan
+
+#check @BilinearComplexity.FieldTernaryFiveCircuitPair.scan_sound
+#check @BilinearComplexity.FieldTernaryFiveCircuitPair.scan_isSome
+#check @BilinearComplexity.FieldTernaryFiveCircuitPair.certifiedScan
+#check @BilinearComplexity.FieldTernaryFiveCircuitPair.certifiedScanGauge
+#check @BilinearComplexity.FieldFiveToFour.certifiedFiveToFour
+#check @BilinearComplexity.FieldTernaryFiveCircuitPair.List.find?_some

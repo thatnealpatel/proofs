@@ -1,0 +1,21 @@
+
+namespace CertifiedFiveToFour
+
+/-- The conditional splice adds exactly its one actual outer native primitive. -/
+theorem length_compose {I : DisplayedF3PairTriple a b c}
+    (B : CertifiedFiveToFour I) (C : State F3 a b c)
+    (hC : Disjoint C (stateUnion I.sourceState I.targetState))
+    (fourPath : StrictNativePath (requestStart B C) (requestFinish B C)) :
+    Path.length (compose B C hC fourPath) = Path.length fourPath + 1 := by
+  cases hp : B.normalized.placement <;> by_cases hqC : B.q ∈ C <;>
+    simp [compose, hp, hqC, Path.length_snoc, Path.length]
+
+/-- Reversing the completed splice preserves its exact primitive length. -/
+theorem length_reverse_compose {I : DisplayedF3PairTriple a b c}
+    (B : CertifiedFiveToFour I) (C : State F3 a b c)
+    (hC : Disjoint C (stateUnion I.sourceState I.targetState))
+    (fourPath : StrictNativePath (requestStart B C) (requestFinish B C)) :
+    Path.length (Path.reverse (compose B C hC fourPath)) = Path.length fourPath + 1 := by
+  rw [Path.length_reverse, length_compose]
+
+end CertifiedFiveToFour
