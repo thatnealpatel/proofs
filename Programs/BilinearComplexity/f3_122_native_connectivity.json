@@ -1,0 +1,3177 @@
+{
+  "atoms": {
+    "all_nonzero_rank_one": true,
+    "count": 32,
+    "records": [
+      {
+        "coordinates": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "index": 0
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          0,
+          2
+        ],
+        "index": 1
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "index": 2
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "index": 3
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          1,
+          2
+        ],
+        "index": 4
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "index": 5
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          2,
+          1
+        ],
+        "index": 6
+      },
+      {
+        "coordinates": [
+          0,
+          0,
+          2,
+          2
+        ],
+        "index": 7
+      },
+      {
+        "coordinates": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "index": 8
+      },
+      {
+        "coordinates": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "index": 9
+      },
+      {
+        "coordinates": [
+          0,
+          1,
+          0,
+          2
+        ],
+        "index": 10
+      },
+      {
+        "coordinates": [
+          0,
+          2,
+          0,
+          0
+        ],
+        "index": 11
+      },
+      {
+        "coordinates": [
+          0,
+          2,
+          0,
+          1
+        ],
+        "index": 12
+      },
+      {
+        "coordinates": [
+          0,
+          2,
+          0,
+          2
+        ],
+        "index": 13
+      },
+      {
+        "coordinates": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "index": 14
+      },
+      {
+        "coordinates": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "index": 15
+      },
+      {
+        "coordinates": [
+          1,
+          0,
+          2,
+          0
+        ],
+        "index": 16
+      },
+      {
+        "coordinates": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "index": 17
+      },
+      {
+        "coordinates": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "index": 18
+      },
+      {
+        "coordinates": [
+          1,
+          1,
+          2,
+          2
+        ],
+        "index": 19
+      },
+      {
+        "coordinates": [
+          1,
+          2,
+          0,
+          0
+        ],
+        "index": 20
+      },
+      {
+        "coordinates": [
+          1,
+          2,
+          1,
+          2
+        ],
+        "index": 21
+      },
+      {
+        "coordinates": [
+          1,
+          2,
+          2,
+          1
+        ],
+        "index": 22
+      },
+      {
+        "coordinates": [
+          2,
+          0,
+          0,
+          0
+        ],
+        "index": 23
+      },
+      {
+        "coordinates": [
+          2,
+          0,
+          1,
+          0
+        ],
+        "index": 24
+      },
+      {
+        "coordinates": [
+          2,
+          0,
+          2,
+          0
+        ],
+        "index": 25
+      },
+      {
+        "coordinates": [
+          2,
+          1,
+          0,
+          0
+        ],
+        "index": 26
+      },
+      {
+        "coordinates": [
+          2,
+          1,
+          1,
+          2
+        ],
+        "index": 27
+      },
+      {
+        "coordinates": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "index": 28
+      },
+      {
+        "coordinates": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "index": 29
+      },
+      {
+        "coordinates": [
+          2,
+          2,
+          1,
+          1
+        ],
+        "index": 30
+      },
+      {
+        "coordinates": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "index": 31
+      }
+    ]
+  },
+  "census_hashes": {
+    "atoms_index_then_4_coordinates": "6e6d83f861089dab428ee1ed9d123cff079a0ef27bf9cd02c564aa31ec06f531",
+    "contextual_flip_directed_edges": "7eeaae3561b7aa3b3c73e14900d7af013772e53b927c0ec3be542a8469bd7360",
+    "contextual_reduction_directed_edges": "9d3b8d432c38ce1d94bccb95c81985b11b78737b04d270baa81779d1cfb9456c",
+    "contextual_split_directed_edges": "cc9760707f6c3d62afcc6db03ebe0595c9f8c6f59e28926d3fb38d2c91f3ad46",
+    "format": "sha256 over lexicographically sorted records; decimal fields joined by comma and terminated by LF",
+    "local_flip_relations_source_target_masks": "72a6a6579800737d1145e7aa43f4283104dd284b1aa05657cb4ef6cba154ecec",
+    "local_split_relations_source_target_masks": "0834196e12832db14755c7fa8eae9b9e67a7ac7d71e7c38c97ef5eab26c78e7d",
+    "separated_endpoint_pairs": "ba3c07bc79c8c01e38b2eb8ae89fcbb672ff349ad87f870a6daff9de2c4703c7",
+    "state_mask_then_4_evaluation_coordinates": "e170654b5de9c128fa5cee5381ac07f652b361f7b677a9711d0e78985020d8b2",
+    "state_mask_then_component_id": "9fe234fb990d24bc3755d8c47d7199e2d5b723b755b8cff0d912132211c39680",
+    "undirected_graph_edges_including_loops": "0089edf9ef84869ea1cc10544b84b34d0cacdccc8170170285fded7f71c03aa1",
+    "vertices_state_masks": "64fb78470018f79fad6e9a0fb8a6f9f0601b42d40e44c472c6dfc0ee5de49801"
+  },
+  "checks": {
+    "all_atoms_nonzero_and_rank_one": true,
+    "atom_universe_from_all_coefficients_and_gauges": true,
+    "component_partition_complete": true,
+    "contextual_evaluation_preservation": true,
+    "endpoint_pair_partition_complete": true,
+    "independent_local_oracle_exact_match": true,
+    "local_evaluation_preservation": true,
+    "state_legality": true
+  },
+  "components": {
+    "count": 82,
+    "fiber_count": 81,
+    "fiber_records": [
+      {
+        "component_sizes": [
+          536,
+          1
+        ],
+        "endpoint_count_cardinality_at_most_3": 81,
+        "evaluation": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 0,
+        "strict_edge_count": 5184,
+        "vertex_count": 537,
+        "vertices_by_cardinality": {
+          "0": 1,
+          "1": 0,
+          "2": 16,
+          "3": 64,
+          "4": 456
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 1,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 2,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "evaluation_code": 3,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "evaluation_code": 4,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          1,
+          0,
+          0
+        ],
+        "evaluation_code": 5,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          2,
+          0,
+          0
+        ],
+        "evaluation_code": 6,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          2,
+          0,
+          0
+        ],
+        "evaluation_code": 7,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "evaluation_code": 8,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "evaluation_code": 9,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "evaluation_code": 10,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          0,
+          1,
+          0
+        ],
+        "evaluation_code": 11,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "evaluation_code": 12,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "evaluation_code": 13,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          1,
+          1,
+          0
+        ],
+        "evaluation_code": 14,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          2,
+          1,
+          0
+        ],
+        "evaluation_code": 15,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          2,
+          1,
+          0
+        ],
+        "evaluation_code": 16,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          2,
+          1,
+          0
+        ],
+        "evaluation_code": 17,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "evaluation_code": 18,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          0,
+          2,
+          0
+        ],
+        "evaluation_code": 19,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          0,
+          2,
+          0
+        ],
+        "evaluation_code": 20,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          1,
+          2,
+          0
+        ],
+        "evaluation_code": 21,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          1,
+          2,
+          0
+        ],
+        "evaluation_code": 22,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          1,
+          2,
+          0
+        ],
+        "evaluation_code": 23,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          2,
+          2,
+          0
+        ],
+        "evaluation_code": 24,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          2,
+          2,
+          0
+        ],
+        "evaluation_code": 25,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          2,
+          2,
+          0
+        ],
+        "evaluation_code": 26,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "evaluation_code": 27,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          0,
+          0,
+          1
+        ],
+        "evaluation_code": 28,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          0,
+          0,
+          1
+        ],
+        "evaluation_code": 29,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "evaluation_code": 30,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "evaluation_code": 31,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          1,
+          0,
+          1
+        ],
+        "evaluation_code": 32,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          2,
+          0,
+          1
+        ],
+        "evaluation_code": 33,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          2,
+          0,
+          1
+        ],
+        "evaluation_code": 34,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          2,
+          0,
+          1
+        ],
+        "evaluation_code": 35,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "evaluation_code": 36,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          0,
+          1,
+          1
+        ],
+        "evaluation_code": 37,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          0,
+          1,
+          1
+        ],
+        "evaluation_code": 38,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "evaluation_code": 39,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "evaluation_code": 40,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          1,
+          1,
+          1
+        ],
+        "evaluation_code": 41,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          2,
+          1,
+          1
+        ],
+        "evaluation_code": 42,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          2,
+          1,
+          1
+        ],
+        "evaluation_code": 43,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          2,
+          1,
+          1
+        ],
+        "evaluation_code": 44,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          2,
+          1
+        ],
+        "evaluation_code": 45,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          0,
+          2,
+          1
+        ],
+        "evaluation_code": 46,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          0,
+          2,
+          1
+        ],
+        "evaluation_code": 47,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          1,
+          2,
+          1
+        ],
+        "evaluation_code": 48,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          1,
+          2,
+          1
+        ],
+        "evaluation_code": 49,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "evaluation_code": 50,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          2,
+          2,
+          1
+        ],
+        "evaluation_code": 51,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          2,
+          2,
+          1
+        ],
+        "evaluation_code": 52,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          2,
+          2,
+          1
+        ],
+        "evaluation_code": 53,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          0,
+          2
+        ],
+        "evaluation_code": 54,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          0,
+          0,
+          2
+        ],
+        "evaluation_code": 55,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          0,
+          0,
+          2
+        ],
+        "evaluation_code": 56,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          1,
+          0,
+          2
+        ],
+        "evaluation_code": 57,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          1,
+          0,
+          2
+        ],
+        "evaluation_code": 58,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          1,
+          0,
+          2
+        ],
+        "evaluation_code": 59,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          2,
+          0,
+          2
+        ],
+        "evaluation_code": 60,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          2,
+          0,
+          2
+        ],
+        "evaluation_code": 61,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          2,
+          0,
+          2
+        ],
+        "evaluation_code": 62,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          1,
+          2
+        ],
+        "evaluation_code": 63,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          0,
+          1,
+          2
+        ],
+        "evaluation_code": 64,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          0,
+          1,
+          2
+        ],
+        "evaluation_code": 65,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          1,
+          1,
+          2
+        ],
+        "evaluation_code": 66,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          1,
+          1,
+          2
+        ],
+        "evaluation_code": 67,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          1,
+          1,
+          2
+        ],
+        "evaluation_code": 68,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          2,
+          1,
+          2
+        ],
+        "evaluation_code": 69,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          2,
+          1,
+          2
+        ],
+        "evaluation_code": 70,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          2,
+          1,
+          2
+        ],
+        "evaluation_code": 71,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          0,
+          0,
+          2,
+          2
+        ],
+        "evaluation_code": 72,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          0,
+          2,
+          2
+        ],
+        "evaluation_code": 73,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          0,
+          2,
+          2
+        ],
+        "evaluation_code": 74,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          1,
+          2,
+          2
+        ],
+        "evaluation_code": 75,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          1,
+          1,
+          2,
+          2
+        ],
+        "evaluation_code": 76,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          2,
+          1,
+          2,
+          2
+        ],
+        "evaluation_code": 77,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          0,
+          2,
+          2,
+          2
+        ],
+        "evaluation_code": 78,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          507
+        ],
+        "endpoint_count_cardinality_at_most_3": 66,
+        "evaluation": [
+          1,
+          2,
+          2,
+          2
+        ],
+        "evaluation_code": 79,
+        "strict_edge_count": 4812,
+        "vertex_count": 507,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 0,
+          "2": 6,
+          "3": 60,
+          "4": 441
+        }
+      },
+      {
+        "component_sizes": [
+          518
+        ],
+        "endpoint_count_cardinality_at_most_3": 70,
+        "evaluation": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "evaluation_code": 80,
+        "strict_edge_count": 5004,
+        "vertex_count": 518,
+        "vertices_by_cardinality": {
+          "0": 0,
+          "1": 1,
+          "2": 6,
+          "3": 63,
+          "4": 448
+        }
+      }
+    ],
+    "size_distribution": [
+      {
+        "count": 1,
+        "size": 1
+      },
+      {
+        "count": 48,
+        "size": 507
+      },
+      {
+        "count": 32,
+        "size": 518
+      },
+      {
+        "count": 1,
+        "size": 536
+      }
+    ],
+    "size_edge_signature_distribution": [
+      {
+        "count": 1,
+        "strict_edges": 0,
+        "vertices": 1
+      },
+      {
+        "count": 48,
+        "strict_edges": 4812,
+        "vertices": 507
+      },
+      {
+        "count": 32,
+        "strict_edges": 5004,
+        "vertices": 518
+      },
+      {
+        "count": 1,
+        "strict_edges": 5184,
+        "vertices": 536
+      }
+    ],
+    "strict_degree_distribution": [
+      {
+        "degree": 0,
+        "vertex_count": 1
+      },
+      {
+        "degree": 4,
+        "vertex_count": 48
+      },
+      {
+        "degree": 6,
+        "vertex_count": 32
+      },
+      {
+        "degree": 7,
+        "vertex_count": 192
+      },
+      {
+        "degree": 8,
+        "vertex_count": 192
+      },
+      {
+        "degree": 9,
+        "vertex_count": 128
+      },
+      {
+        "degree": 12,
+        "vertex_count": 592
+      },
+      {
+        "degree": 13,
+        "vertex_count": 192
+      },
+      {
+        "degree": 14,
+        "vertex_count": 2304
+      },
+      {
+        "degree": 15,
+        "vertex_count": 4416
+      },
+      {
+        "degree": 16,
+        "vertex_count": 2088
+      },
+      {
+        "degree": 17,
+        "vertex_count": 2304
+      },
+      {
+        "degree": 18,
+        "vertex_count": 4800
+      },
+      {
+        "degree": 19,
+        "vertex_count": 3072
+      },
+      {
+        "degree": 20,
+        "vertex_count": 7488
+      },
+      {
+        "degree": 21,
+        "vertex_count": 5824
+      },
+      {
+        "degree": 22,
+        "vertex_count": 2880
+      },
+      {
+        "degree": 24,
+        "vertex_count": 1536
+      },
+      {
+        "degree": 25,
+        "vertex_count": 1152
+      },
+      {
+        "degree": 26,
+        "vertex_count": 288
+      },
+      {
+        "degree": 27,
+        "vertex_count": 1152
+      },
+      {
+        "degree": 30,
+        "vertex_count": 768
+      }
+    ]
+  },
+  "edges": {
+    "all_generated_contextual_edges_preserve_exact_evaluation": true,
+    "all_generated_contextual_endpoints_are_legal_vertices": true,
+    "directed_contextual_relations_by_move_kind": {
+      "all_move_kinds_union_including_loops": 799912,
+      "flip_including_loops": 632488,
+      "reduction": 83712,
+      "split": 83712
+    },
+    "directed_flip_reverse_closure": true,
+    "directed_split_reduction_reverse_closure": true,
+    "orientation_specific_contextual_relation_counts_before_cross_orientation_dedup": {
+      "flip": {
+        "firstSecond": 85480,
+        "firstThird": 85480,
+        "secondFirst": 85480,
+        "secondThird": 632488,
+        "thirdFirst": 85480,
+        "thirdSecond": 632488
+      },
+      "split": {
+        "first": 0,
+        "second": 41856,
+        "third": 41856
+      }
+    },
+    "simple_undirected_endpoint_pairs_by_family": {
+      "all_including_loops": 403624,
+      "distinct_loop_local_source_incidences": 7456,
+      "flip_including_loops": 319912,
+      "loop_states_by_cardinality": {
+        "0": 0,
+        "1": 0,
+        "2": 16,
+        "3": 480,
+        "4": 6840
+      },
+      "loops": 7336,
+      "split_reduction": 83712,
+      "strict_flip_by_endpoint_cardinality": {
+        "2": 768,
+        "3": 21504,
+        "4": 290304
+      },
+      "strict_nonloop_edges_used_for_connectivity": 396288,
+      "strict_split_reduction_by_endpoint_cardinalities": {
+        "1-2": 192,
+        "2-3": 5568,
+        "3-4": 77952
+      }
+    }
+  },
+  "endpoint_pair_census": {
+    "all_separated_pairs": [
+      [
+        "00000000",
+        "00000003"
+      ],
+      [
+        "00000000",
+        "0000001c"
+      ],
+      [
+        "00000000",
+        "00000024"
+      ],
+      [
+        "00000000",
+        "0000002a"
+      ],
+      [
+        "00000000",
+        "00000031"
+      ],
+      [
+        "00000000",
+        "00000046"
+      ],
+      [
+        "00000000",
+        "00000049"
+      ],
+      [
+        "00000000",
+        "00000050"
+      ],
+      [
+        "00000000",
+        "00000085"
+      ],
+      [
+        "00000000",
+        "00000088"
+      ],
+      [
+        "00000000",
+        "00000092"
+      ],
+      [
+        "00000000",
+        "000000e0"
+      ],
+      [
+        "00000000",
+        "00000700"
+      ],
+      [
+        "00000000",
+        "00000900"
+      ],
+      [
+        "00000000",
+        "00000a02"
+      ],
+      [
+        "00000000",
+        "00000c01"
+      ],
+      [
+        "00000000",
+        "00001102"
+      ],
+      [
+        "00000000",
+        "00001201"
+      ],
+      [
+        "00000000",
+        "00001400"
+      ],
+      [
+        "00000000",
+        "00002101"
+      ],
+      [
+        "00000000",
+        "00002200"
+      ],
+      [
+        "00000000",
+        "00002402"
+      ],
+      [
+        "00000000",
+        "00003800"
+      ],
+      [
+        "00000000",
+        "0001c000"
+      ],
+      [
+        "00000000",
+        "000e0000"
+      ],
+      [
+        "00000000",
+        "00124000"
+      ],
+      [
+        "00000000",
+        "00248000"
+      ],
+      [
+        "00000000",
+        "00490000"
+      ],
+      [
+        "00000000",
+        "00700000"
+      ],
+      [
+        "00000000",
+        "00804000"
+      ],
+      [
+        "00000000",
+        "00808020"
+      ],
+      [
+        "00000000",
+        "00810004"
+      ],
+      [
+        "00000000",
+        "00820800"
+      ],
+      [
+        "00000000",
+        "00900100"
+      ],
+      [
+        "00000000",
+        "01004020"
+      ],
+      [
+        "00000000",
+        "01008004"
+      ],
+      [
+        "00000000",
+        "01010000"
+      ],
+      [
+        "00000000",
+        "01081000"
+      ],
+      [
+        "00000000",
+        "01400400"
+      ],
+      [
+        "00000000",
+        "02004004"
+      ],
+      [
+        "00000000",
+        "02008000"
+      ],
+      [
+        "00000000",
+        "02010020"
+      ],
+      [
+        "00000000",
+        "02042000"
+      ],
+      [
+        "00000000",
+        "02200200"
+      ],
+      [
+        "00000000",
+        "03800000"
+      ],
+      [
+        "00000000",
+        "04004800"
+      ],
+      [
+        "00000000",
+        "04020100"
+      ],
+      [
+        "00000000",
+        "04100000"
+      ],
+      [
+        "00000000",
+        "04200040"
+      ],
+      [
+        "00000000",
+        "04400010"
+      ],
+      [
+        "00000000",
+        "08011000"
+      ],
+      [
+        "00000000",
+        "08080400"
+      ],
+      [
+        "00000000",
+        "08100040"
+      ],
+      [
+        "00000000",
+        "08200010"
+      ],
+      [
+        "00000000",
+        "08400000"
+      ],
+      [
+        "00000000",
+        "1000a000"
+      ],
+      [
+        "00000000",
+        "10040200"
+      ],
+      [
+        "00000000",
+        "10100010"
+      ],
+      [
+        "00000000",
+        "10200000"
+      ],
+      [
+        "00000000",
+        "10400040"
+      ],
+      [
+        "00000000",
+        "1c000000"
+      ],
+      [
+        "00000000",
+        "20004100"
+      ],
+      [
+        "00000000",
+        "20020000"
+      ],
+      [
+        "00000000",
+        "20040080"
+      ],
+      [
+        "00000000",
+        "20080008"
+      ],
+      [
+        "00000000",
+        "20100800"
+      ],
+      [
+        "00000000",
+        "24800000"
+      ],
+      [
+        "00000000",
+        "40010400"
+      ],
+      [
+        "00000000",
+        "40020080"
+      ],
+      [
+        "00000000",
+        "40040008"
+      ],
+      [
+        "00000000",
+        "40080000"
+      ],
+      [
+        "00000000",
+        "40401000"
+      ],
+      [
+        "00000000",
+        "49000000"
+      ],
+      [
+        "00000000",
+        "80008200"
+      ],
+      [
+        "00000000",
+        "80020008"
+      ],
+      [
+        "00000000",
+        "80040000"
+      ],
+      [
+        "00000000",
+        "80080080"
+      ],
+      [
+        "00000000",
+        "80202000"
+      ],
+      [
+        "00000000",
+        "92000000"
+      ],
+      [
+        "00000000",
+        "e0000000"
+      ]
+    ],
+    "connected_distance_distribution": {
+      "1": 28032,
+      "2": 107712,
+      "3": 45600,
+      "4": 2056
+    },
+    "connected_pairs": 183400,
+    "endpoint_vertices": 5489,
+    "identity_pairs_not_in_distinct_pair_count": 5489,
+    "maximum_connected_distance": 4,
+    "maximum_distance_pair": [
+      "00000003",
+      "0001c000"
+    ],
+    "maximum_distance_path": [
+      {
+        "atom_indices": [
+          0,
+          1
+        ],
+        "atoms": [
+          [
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            2
+          ]
+        ],
+        "cardinality": 2,
+        "evaluation": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 0,
+        "id": 33,
+        "mask": "00000003",
+        "next_edge_witness": {
+          "context_atoms": [
+            1
+          ],
+          "context_mask": "00000002",
+          "kind": "split",
+          "local_source_atoms": [
+            0
+          ],
+          "local_source_mask": "00000001",
+          "local_target_atoms": [
+            3,
+            5
+          ],
+          "local_target_mask": "00000028",
+          "parameters": {
+            "common_factors": {
+              "first": [
+                1
+              ],
+              "second": [
+                0,
+                1
+              ]
+            },
+            "orientation": "third",
+            "x": [
+              2,
+              0
+            ],
+            "x_plus_y": [
+              0,
+              1
+            ],
+            "y": [
+              1,
+              1
+            ]
+          }
+        }
+      },
+      {
+        "atom_indices": [
+          1,
+          3,
+          5
+        ],
+        "atoms": [
+          [
+            0,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            2,
+            0
+          ]
+        ],
+        "cardinality": 3,
+        "evaluation": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 0,
+        "id": 1024,
+        "mask": "0000002a",
+        "next_edge_witness": {
+          "context_atoms": [
+            5
+          ],
+          "context_mask": "00000020",
+          "kind": "reduction",
+          "local_source_atoms": [
+            1,
+            3
+          ],
+          "local_source_mask": "0000000a",
+          "local_target_atoms": [
+            2
+          ],
+          "local_target_mask": "00000004",
+          "parameters": {
+            "common_factors": {
+              "first": [
+                1
+              ],
+              "second": [
+                0,
+                1
+              ]
+            },
+            "orientation": "third",
+            "x": [
+              1,
+              1
+            ],
+            "x_plus_y": [
+              1,
+              0
+            ],
+            "y": [
+              0,
+              2
+            ]
+          }
+        }
+      },
+      {
+        "atom_indices": [
+          2,
+          5
+        ],
+        "atoms": [
+          [
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0
+          ]
+        ],
+        "cardinality": 2,
+        "evaluation": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 0,
+        "id": 96,
+        "mask": "00000024",
+        "next_edge_witness": {
+          "context_atoms": [
+            5
+          ],
+          "context_mask": "00000020",
+          "kind": "split",
+          "local_source_atoms": [
+            2
+          ],
+          "local_source_mask": "00000004",
+          "local_target_atoms": [
+            15,
+            23
+          ],
+          "local_target_mask": "00808000",
+          "parameters": {
+            "common_factors": {
+              "first": [
+                1
+              ],
+              "third": [
+                2,
+                0
+              ]
+            },
+            "orientation": "second",
+            "x": [
+              2,
+              2
+            ],
+            "x_plus_y": [
+              0,
+              2
+            ],
+            "y": [
+              1,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "atom_indices": [
+          5,
+          15,
+          23
+        ],
+        "atoms": [
+          [
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0
+          ]
+        ],
+        "cardinality": 3,
+        "evaluation": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 0,
+        "id": 2760,
+        "mask": "00808020",
+        "next_edge_witness": {
+          "context_atoms": [
+            15
+          ],
+          "context_mask": "00008000",
+          "kind": "flip",
+          "local_source_atoms": [
+            5,
+            23
+          ],
+          "local_source_mask": "00800020",
+          "local_target_atoms": [
+            14,
+            16
+          ],
+          "local_target_mask": "00014000",
+          "parameters": {
+            "common": [
+              1,
+              0
+            ],
+            "common_mode": "third",
+            "orientation": "firstSecond",
+            "x1": [
+              1
+            ],
+            "x1_plus_x2": [
+              2
+            ],
+            "x2": [
+              1
+            ],
+            "x_mode": "first",
+            "y1": [
+              2,
+              0
+            ],
+            "y2": [
+              0,
+              2
+            ],
+            "y2_minus_y1": [
+              1,
+              2
+            ],
+            "y_mode": "second"
+          }
+        }
+      },
+      {
+        "atom_indices": [
+          14,
+          15,
+          16
+        ],
+        "atoms": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            2,
+            0
+          ]
+        ],
+        "cardinality": 3,
+        "evaluation": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluation_code": 0,
+        "id": 4673,
+        "mask": "0001c000"
+      }
+    ],
+    "separated_pairs": 80,
+    "unordered_distinct_equal_evaluation_pairs": 183480
+  },
+  "generator_coverage": {
+    "absorbed_presentations_per_atom": 4,
+    "coefficient_absorbed_presentations": 128,
+    "coefficientful_raw_representatives": 256,
+    "coefficientful_representatives_per_atom": 8,
+    "completeness_basis": [
+      "Every semantic atom is reached by coefficient absorption; every raw F3 nonzero factor and every absorbed gauge presentation was enumerated.",
+      "The three Split constructors and six ordered Flip constructors were enumerated directly with their exact nonzero sum/difference and finite-set distinctness guards.",
+      "A second source-presentation enumeration reproduced every orientation-specific local relation exactly.",
+      "Every NativeStep is its local source/target plus the unique unchanged context D\\source; all fresh contexts respecting both endpoint altitude bounds were enumerated."
+    ],
+    "flip_orientations": [
+      {
+        "common_mode": "third",
+        "contextual_witness_incidences": 372224,
+        "finite_set_distinct_witnesses": 896,
+        "nonzero_sum_and_difference_witnesses": 896,
+        "orientation": "firstSecond",
+        "parameter_tuples": 2048,
+        "unique_directed_local_relations": 208,
+        "x_mode": "first",
+        "y_mode": "second"
+      },
+      {
+        "common_mode": "third",
+        "contextual_witness_incidences": 372224,
+        "finite_set_distinct_witnesses": 896,
+        "nonzero_sum_and_difference_witnesses": 896,
+        "orientation": "secondFirst",
+        "parameter_tuples": 2048,
+        "unique_directed_local_relations": 208,
+        "x_mode": "second",
+        "y_mode": "first"
+      },
+      {
+        "common_mode": "second",
+        "contextual_witness_incidences": 372224,
+        "finite_set_distinct_witnesses": 896,
+        "nonzero_sum_and_difference_witnesses": 896,
+        "orientation": "firstThird",
+        "parameter_tuples": 2048,
+        "unique_directed_local_relations": 208,
+        "x_mode": "first",
+        "y_mode": "third"
+      },
+      {
+        "common_mode": "second",
+        "contextual_witness_incidences": 372224,
+        "finite_set_distinct_witnesses": 896,
+        "nonzero_sum_and_difference_witnesses": 896,
+        "orientation": "thirdFirst",
+        "parameter_tuples": 2048,
+        "unique_directed_local_relations": 208,
+        "x_mode": "third",
+        "y_mode": "first"
+      },
+      {
+        "common_mode": "first",
+        "contextual_witness_incidences": 2560256,
+        "finite_set_distinct_witnesses": 6272,
+        "nonzero_sum_and_difference_witnesses": 6272,
+        "orientation": "secondThird",
+        "parameter_tuples": 8192,
+        "unique_directed_local_relations": 1552,
+        "x_mode": "second",
+        "y_mode": "third"
+      },
+      {
+        "common_mode": "first",
+        "contextual_witness_incidences": 2560256,
+        "finite_set_distinct_witnesses": 6272,
+        "nonzero_sum_and_difference_witnesses": 6272,
+        "orientation": "thirdSecond",
+        "parameter_tuples": 8192,
+        "unique_directed_local_relations": 1552,
+        "x_mode": "third",
+        "y_mode": "second"
+      }
+    ],
+    "independent_source_presentation_oracle_matches_all_orientation_relations": true,
+    "nonzero_factor_counts_by_mode": [
+      2,
+      8,
+      8
+    ],
+    "split_orientations": [
+      {
+        "contextual_witness_incidences": 0,
+        "finite_set_distinct_witnesses": 0,
+        "nonzero_sum_witnesses": 128,
+        "orientation": "first",
+        "parameter_tuples": 256,
+        "unique_directed_local_relations": 0
+      },
+      {
+        "contextual_witness_incidences": 334848,
+        "finite_set_distinct_witnesses": 768,
+        "nonzero_sum_witnesses": 896,
+        "orientation": "second",
+        "parameter_tuples": 1024,
+        "unique_directed_local_relations": 96
+      },
+      {
+        "contextual_witness_incidences": 334848,
+        "finite_set_distinct_witnesses": 768,
+        "nonzero_sum_witnesses": 896,
+        "orientation": "third",
+        "parameter_tuples": 1024,
+        "unique_directed_local_relations": 96
+      }
+    ]
+  },
+  "provenance": {
+    "deterministic_encoding": {
+      "atom": "lexicographic (T000,T001,T010,T011) in {0,1,2}^4",
+      "component_order": "first unseen vertex in vertex order",
+      "evaluation": "coordinate tuple and little-endian base-3 code sum coordinate[i]*3^i",
+      "state": "32-bit mask; bit i is atom i",
+      "vertex_order": "cardinality 0..4, then lexicographic atom-index combination"
+    },
+    "script": "Programs/BilinearComplexity/f3_122_native_connectivity.py",
+    "script_sha256": "6711cdb05f43d7838c3991febbc9c255ca9c89823a0b7dcc280cc9fba72a0627"
+  },
+  "schema": "f3-122-field-native-connectivity-census-v1",
+  "scope": {
+    "altitude": 4,
+    "endpoint_cardinality_limit": 3,
+    "field": "F3",
+    "limits": {
+      "address_space_bytes": 4294967296,
+      "seconds": 180
+    },
+    "profile": [
+      1,
+      2,
+      2
+    ],
+    "source_contract": "Proofs/BilinearComplexity/FieldNativeMoves.lean at accepted revision 318734eb6daa04fa0d960de42c36aa041efb5908",
+    "statement": "finite semantic-atom Finset graph only; not a Lean theorem and not an unbounded F3-LG result"
+  },
+  "smallest_separated_pair": {
+    "certificate": [
+      "Both evaluations are (0,0,0,0): atom 1 is -atom 0 in F3.",
+      "Every NativeReplacement source is a singleton or a distinct pair.",
+      "NativeStep.source_subset therefore rules out every step from the empty state.",
+      "The exhaustive graph gives the empty state strict degree zero; the other 536 zero-fiber vertices form one component.",
+      "All 80 separated endpoint pairs are the empty state paired with a nonempty zero-evaluation state of cardinality at most three."
+    ],
+    "left": {
+      "atom_indices": [],
+      "atoms": [],
+      "cardinality": 0,
+      "evaluation": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluation_code": 0,
+      "id": 0,
+      "mask": "00000000"
+    },
+    "ordering": "minimize total cardinality, then maximum cardinality, then minimum cardinality, then masks",
+    "right": {
+      "atom_indices": [
+        0,
+        1
+      ],
+      "atoms": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          2
+        ]
+      ],
+      "cardinality": 2,
+      "evaluation": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluation_code": 0,
+      "id": 33,
+      "mask": "00000003"
+    }
+  },
+  "status": "DISCONNECTED",
+  "vertices": {
+    "by_cardinality": {
+      "0": 1,
+      "1": 32,
+      "2": 496,
+      "3": 4960,
+      "4": 35960
+    },
+    "count": 41449
+  }
+}
