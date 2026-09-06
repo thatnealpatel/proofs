@@ -151,7 +151,7 @@ func run() error {
 	report.Configuration.Altitude = 48
 	report.Configuration.Deadline = "60s"
 	report.Configuration.MemoryCapBytes = 4 << 30
-	report.Configuration.OrientationOrder = "cyclic rotations of accepted (b,c,a)=(native0,native2,native1): (0,2,1),(1,0,2),(2,1,0)"
+	report.Configuration.OrientationOrder = "all six lexicographically ordered native role assignments (b,c,a): (0,1,2),(0,2,1),(1,0,2),(1,2,0),(2,0,1),(2,1,0)"
 	report.Configuration.SubsetOrder = "orientation, arity 1..5, common-factor class first-slot order, pivot slot, lexicographic source-slot combination"
 	peakAlloc, peakSys := uint64(0), uint64(0)
 	observe := func() error {
