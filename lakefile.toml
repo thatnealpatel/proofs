@@ -63,6 +63,11 @@ name = "binary-macro-search"
 root = "BilinearComplexity.BinaryMacroSearchMain"
 srcDir = "Proofs"
 
+[[lean_exe]]
+name = "binary-km-regression"
+root = "BilinearComplexity.BinaryKMMain"
+srcDir = "Proofs"
+
 [[require]]
 name  = "mathlib"
 scope = "leanprover-community"
