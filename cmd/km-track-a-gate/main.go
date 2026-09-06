@@ -63,29 +63,29 @@ type classRecord struct {
 }
 
 type candidateRecord struct {
-	Orientation        tensor.KMOrientation `json:"orientation"`
-	PivotSlot          int                  `json:"pivot_slot"`
-	SourceSlots        []int                `json:"source_slots"`
-	Arity              int                  `json:"arity"`
-	ChangedIndices     []int                `json:"changed_indices"`
-	ChangedCount       int                  `json:"changed_count"`
-	PredictedLengthMin int                  `json:"predicted_compiled_length_min"`
-	PredictedLengthMax int                  `json:"predicted_compiled_length_max"`
-	Pivot              triple               `json:"pivot"`
-	Sources            []triple             `json:"sources"`
-	Targets            []triple             `json:"targets"`
+	Orientation        kmOrientation `json:"orientation"`
+	PivotSlot          int           `json:"pivot_slot"`
+	SourceSlots        []int         `json:"source_slots"`
+	Arity              int           `json:"arity"`
+	ChangedIndices     []int         `json:"changed_indices"`
+	ChangedCount       int           `json:"changed_count"`
+	PredictedLengthMin int           `json:"predicted_compiled_length_min"`
+	PredictedLengthMax int           `json:"predicted_compiled_length_max"`
+	Pivot              triple        `json:"pivot"`
+	Sources            []triple      `json:"sources"`
+	Targets            []triple      `json:"targets"`
 }
 
 type stateReport struct {
-	ID         string                      `json:"id"`
-	Role       string                      `json:"role"`
-	TermCount  int                         `json:"term_count"`
-	Canonical  string                      `json:"canonical_sha256"`
-	Checks     checks                      `json:"checks"`
-	Indexes    []tensor.KMOrientationIndex `json:"orientation_indexes"`
-	Scans      []tensor.KMArityScan        `json:"arity_scans"`
-	Candidates []candidateRecord           `json:"accepted_candidates"`
-	Classes    []classRecord               `json:"shared_factor_analysis"`
+	ID         string               `json:"id"`
+	Role       string               `json:"role"`
+	TermCount  int                  `json:"term_count"`
+	Canonical  string               `json:"canonical_sha256"`
+	Checks     checks               `json:"checks"`
+	Indexes    []kmOrientationIndex `json:"orientation_indexes"`
+	Scans      []kmArityScan        `json:"arity_scans"`
+	Candidates []candidateRecord    `json:"accepted_candidates"`
+	Classes    []classRecord        `json:"shared_factor_analysis"`
 }
 
 type regressionRecord struct {
@@ -406,7 +406,7 @@ func scanState(state stateSpec) (stateReport, error) {
 		return stateReport{}, fmt.Errorf("%s distinct: %w", state.ID, err)
 	}
 	result.Checks.Distinct = true
-	scan, err := tensor.ScanBinaryKMIndexedData(state.Scheme, 5)
+	scan, err := scanBinaryKMIndexedData(state.Scheme, 5)
 	if err != nil {
 		return stateReport{}, fmt.Errorf("scan %s: %w", state.ID, err)
 	}
@@ -452,7 +452,7 @@ func scanState(state stateSpec) (stateReport, error) {
 	return result, nil
 }
 
-func makeCandidateRecord(scheme tensor.Scheme, candidate tensor.KMCandidate) (candidateRecord, error) {
+func makeCandidateRecord(scheme tensor.Scheme, candidate kmCandidate) (candidateRecord, error) {
 	pivot, err := termWords(scheme.Term(candidate.PivotSlot))
 	if err != nil {
 		return candidateRecord{}, err
@@ -470,7 +470,7 @@ func makeCandidateRecord(scheme tensor.Scheme, candidate tensor.KMCandidate) (ca
 		}
 		record.Sources = append(record.Sources, words)
 	}
-	for _, term := range candidate.TargetTerms() {
+	for _, term := range candidate.TargetTerms {
 		words, err := termWords(term)
 		if err != nil {
 			return candidateRecord{}, err
@@ -491,14 +491,14 @@ func replayC567Regression(states []stateSpec) (regressionRecord, error) {
 	if c567.ID == "" {
 		return regressionRecord{}, fmt.Errorf("c567 state absent")
 	}
-	scan, err := tensor.ScanBinaryKMIndexedData(c567.Scheme, 5)
+	scan, err := scanBinaryKMIndexedData(c567.Scheme, 5)
 	if err != nil {
 		return regressionRecord{}, err
 	}
-	var selected *tensor.KMCandidate
+	var selected *kmCandidate
 	for i := range scan.Candidates {
 		candidate := &scan.Candidates[i]
-		if candidate.Orientation == (tensor.KMOrientation{BMode: 0, CMode: 2, AMode: 1}) && len(candidate.SourceSlots) == 1 {
+		if candidate.Orientation == (kmOrientation{BMode: 0, CMode: 2, AMode: 1}) && len(candidate.SourceSlots) == 1 {
 			if selected == nil || candidate.PivotSlot < selected.PivotSlot {
 				selected = candidate
 			}
