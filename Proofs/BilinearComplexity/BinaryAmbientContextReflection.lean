@@ -876,4 +876,84 @@ theorem allModeMove_normalizeLocalContext
   exact allModeMove_pullback (presentationChart P) h
     (by simpa only [presentationChart_box] using hsupport)
 
+private theorem left_subset_localBox
+    {A B : BinaryAmbientCarrier.State U V W}
+    (P : ExactSpanPresentation A B) : A ⊆ localBox P := by
+  intro t ht
+  rw [localBox_eq_mapState]
+  rw [← mapState_normalizedLeft P] at ht
+  obtain ⟨s, hs, rfl⟩ := Finset.mem_image.mp ht
+  exact Finset.mem_image.mpr ⟨s, mem_normalizedBox s, rfl⟩
+
+private theorem right_subset_localBox
+    {A B : BinaryAmbientCarrier.State U V W}
+    (P : ExactSpanPresentation A B) : B ⊆ localBox P := by
+  intro t ht
+  rw [localBox_eq_mapState]
+  rw [← mapState_normalizedRight P] at ht
+  obtain ⟨s, hs, rfl⟩ := Finset.mem_image.mp ht
+  exact Finset.mem_image.mpr ⟨s, mem_normalizedBox s, rfl⟩
+
+/-- Normalizing a context unioned with the left endpoint is exactly the union
+of the normalized context and the normalized left endpoint. -/
+@[simp] theorem normalizeLocalContext_union_left
+    {A B : BinaryAmbientCarrier.State U V W}
+    (P : ExactSpanPresentation A B) (C : BinaryAmbientCarrier.State U V W) :
+    normalizeLocalContext P (C ∪ A) =
+      normalizeLocalContext P C ∪ normalizedLeft P := by
+  apply (presentationChart P).mapState_injective
+  change mapState (exactSpanCoordinateEmbedding P)
+      (normalizeLocalContext P (C ∪ A)) =
+    mapState (exactSpanCoordinateEmbedding P)
+      (normalizeLocalContext P C ∪ normalizedLeft P)
+  rw [mapState_union, mapState_normalizedLeft]
+  change mapState (presentationChart P).embedding
+      ((presentationChart P).normalize (C ∪ A)) = _
+  rw [(presentationChart P).mapState_normalize,
+    mapState_normalizeLocalContext]
+  ext t
+  simp only [Finset.mem_inter, Finset.mem_union]
+  constructor
+  · rintro ⟨htC | htA, htBox⟩
+    · exact Or.inl ⟨htC, htBox⟩
+    · exact Or.inr htA
+  · rintro (⟨htC, htBox⟩ | htA)
+    · exact ⟨Or.inl htC, htBox⟩
+    · exact ⟨Or.inr htA, left_subset_localBox P htA⟩
+
+/-- Normalizing a context unioned with the right endpoint is exactly the union
+of the normalized context and the normalized right endpoint. -/
+@[simp] theorem normalizeLocalContext_union_right
+    {A B : BinaryAmbientCarrier.State U V W}
+    (P : ExactSpanPresentation A B) (C : BinaryAmbientCarrier.State U V W) :
+    normalizeLocalContext P (C ∪ B) =
+      normalizeLocalContext P C ∪ normalizedRight P := by
+  apply (presentationChart P).mapState_injective
+  change mapState (exactSpanCoordinateEmbedding P)
+      (normalizeLocalContext P (C ∪ B)) =
+    mapState (exactSpanCoordinateEmbedding P)
+      (normalizeLocalContext P C ∪ normalizedRight P)
+  rw [mapState_union, mapState_normalizedRight]
+  change mapState (presentationChart P).embedding
+      ((presentationChart P).normalize (C ∪ B)) = _
+  rw [(presentationChart P).mapState_normalize,
+    mapState_normalizeLocalContext]
+  ext t
+  simp only [Finset.mem_inter, Finset.mem_union]
+  constructor
+  · rintro ⟨htC | htB, htBox⟩
+    · exact Or.inl ⟨htC, htBox⟩
+    · exact Or.inr htB
+  · rintro (⟨htC, htBox⟩ | htB)
+    · exact ⟨Or.inl htC, htBox⟩
+    · exact ⟨Or.inr htB, right_subset_localBox P htB⟩
+
+#check @allModeMove_normalizeLocalContext
+#check @normalizeLocalContext_union_left
+#check @normalizeLocalContext_union_right
+
+#print axioms allModeMove_normalizeLocalContext
+#print axioms normalizeLocalContext_union_left
+#print axioms normalizeLocalContext_union_right
+
 end BilinearComplexity.BinaryAmbientContextReflection
