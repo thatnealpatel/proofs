@@ -1,0 +1,9 @@
+import BilinearComplexity.FieldFiveToFourContext
+#check Finset.card_insert_of_not_mem
+#check Finset.card_insert_erase
+#check Finset.card_insert_le
+#check Finset.card_insert
+#check Finset.card_pair
+#check Finset.card_singleton
+#check Finset.card_eq_two
+#check ZMod.neg_one_ne_one

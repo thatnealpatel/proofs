@@ -1,0 +1,4 @@
+import BilinearComplexity.FieldCircuitContraction
+#check @BilinearComplexity.FieldFiveToFour.pairFrontSplit_left_zero
+#check @BilinearComplexity.FieldFiveToFour.pairFrontSplit_left_one
+#print BilinearComplexity.FieldFiveToFour.ContractionData
