@@ -1,67 +1,62 @@
-package tensor
+package main
 
 import (
 	"fmt"
 	"slices"
 
 	"patel.codes/proofs/internal/ring"
+	"patel.codes/proofs/internal/tensor"
 )
 
-type KMOrientation struct {
+type kmOrientation struct {
 	BMode int `json:"b_mode"`
 	CMode int `json:"c_mode"`
 	AMode int `json:"a_mode"`
 }
 
-type KMGuardCount struct {
+type kmGuardCount struct {
 	Guard string `json:"guard"`
 	Count uint64 `json:"count"`
 }
 
-type KMArityScan struct {
-	Orientation       KMOrientation  `json:"orientation"`
+type kmArityScan struct {
+	Orientation       kmOrientation  `json:"orientation"`
 	Arity             int            `json:"arity"`
 	Enumerated        uint64         `json:"enumerated"`
 	Accepted          uint64         `json:"accepted"`
 	Rejected          uint64         `json:"rejected"`
-	GuardCounts       []KMGuardCount `json:"guard_counts"`
+	GuardCounts       []kmGuardCount `json:"guard_counts"`
 	AcceptedByChanged []uint64       `json:"accepted_by_changed_count"`
 }
 
-type KMOrientationIndex struct {
-	Orientation      KMOrientation `json:"orientation"`
+type kmOrientationIndex struct {
+	Orientation      kmOrientation `json:"orientation"`
 	FactorClasses    int           `json:"factor_classes"`
 	RepeatedClasses  int           `json:"repeated_classes"`
 	MaximumClassSize int           `json:"maximum_class_size"`
 	IndexedTermCount int           `json:"indexed_term_count"`
 }
 
-type KMCandidate struct {
-	Orientation    KMOrientation `json:"orientation"`
-	PivotSlot      int           `json:"pivot_slot"`
-	SourceSlots    []int         `json:"source_slots"`
-	ChangedIndices []int         `json:"changed_indices"`
-	targetTerms    []RankOneTerm
+type kmCandidate struct {
+	Orientation    kmOrientation
+	PivotSlot      int
+	SourceSlots    []int
+	ChangedIndices []int
+	TargetTerms    []tensor.RankOneTerm
 }
 
-type KMScanResult struct {
-	MaximumArity int                  `json:"maximum_arity"`
-	Indexes      []KMOrientationIndex `json:"indexes"`
-	Scans        []KMArityScan        `json:"scans"`
-	Candidates   []KMCandidate        `json:"candidates"`
+type kmScanResult struct {
+	Indexes    []kmOrientationIndex
+	Scans      []kmArityScan
+	Candidates []kmCandidate
 }
 
-func (c KMCandidate) TargetTerms() []RankOneTerm {
-	terms := make([]RankOneTerm, len(c.targetTerms))
-	for i := range c.targetTerms {
-		terms[i] = c.targetTerms[i].clone()
-	}
-	return terms
-}
-
-var kmOrientations = []KMOrientation{
+var kmOrientations = []kmOrientation{
+	{BMode: 0, CMode: 1, AMode: 2},
 	{BMode: 0, CMode: 2, AMode: 1},
 	{BMode: 1, CMode: 0, AMode: 2},
+	{BMode: 1, CMode: 2, AMode: 0},
+	{BMode: 2, CMode: 0, AMode: 1},
 	{BMode: 2, CMode: 1, AMode: 0},
 }
 
@@ -73,27 +68,24 @@ var kmGuardNames = []string{
 	"context_not_disjoint",
 }
 
-func ScanBinaryKMIndexedData(scheme Scheme, maximumArity int) (KMScanResult, error) {
-	if err := scheme.validateStructure(); err != nil {
-		return KMScanResult{}, fmt.Errorf("binary KM scan source: %w", err)
-	}
-	if scheme.ring != ring.Z2 {
-		return KMScanResult{}, fmt.Errorf("binary KM scan requires ring Z2, got %d", scheme.ring)
+func scanBinaryKMIndexedData(scheme tensor.Scheme, maximumArity int) (kmScanResult, error) {
+	if scheme.Ring() != ring.Z2 {
+		return kmScanResult{}, fmt.Errorf("binary KM scan requires ring Z2, got %d", scheme.Ring())
 	}
 	if maximumArity < 1 {
-		return KMScanResult{}, fmt.Errorf("binary KM maximum arity is %d, want at least 1", maximumArity)
+		return kmScanResult{}, fmt.Errorf("binary KM maximum arity is %d, want at least 1", maximumArity)
 	}
-	if err := ValidateNonzeroTerms(scheme); err != nil {
-		return KMScanResult{}, fmt.Errorf("binary KM scan nonzero source: %w", err)
+	if err := tensor.ValidateNonzeroTerms(scheme); err != nil {
+		return kmScanResult{}, fmt.Errorf("binary KM scan nonzero source: %w", err)
 	}
-	if err := ValidateDistinctTensors(scheme); err != nil {
-		return KMScanResult{}, fmt.Errorf("binary KM scan distinct source: %w", err)
+	if err := tensor.ValidateDistinctTensors(scheme); err != nil {
+		return kmScanResult{}, fmt.Errorf("binary KM scan distinct source: %w", err)
 	}
 
-	result := KMScanResult{MaximumArity: maximumArity}
+	result := kmScanResult{}
 	for _, orientation := range kmOrientations {
 		classes := kmFactorClasses(scheme, orientation.AMode)
-		index := KMOrientationIndex{
+		index := kmOrientationIndex{
 			Orientation:      orientation,
 			FactorClasses:    len(classes),
 			IndexedTermCount: scheme.TermCount(),
@@ -106,10 +98,10 @@ func ScanBinaryKMIndexedData(scheme Scheme, maximumArity int) (KMScanResult, err
 		}
 		result.Indexes = append(result.Indexes, index)
 		for arity := 1; arity <= maximumArity; arity++ {
-			scan := KMArityScan{
+			scan := kmArityScan{
 				Orientation:       orientation,
 				Arity:             arity,
-				GuardCounts:       make([]KMGuardCount, len(kmGuardNames)),
+				GuardCounts:       make([]kmGuardCount, len(kmGuardNames)),
 				AcceptedByChanged: make([]uint64, arity+1),
 			}
 			for i, name := range kmGuardNames {
@@ -151,7 +143,7 @@ func ScanBinaryKMIndexedData(scheme Scheme, maximumArity int) (KMScanResult, err
 				}
 			}
 			if scanErr != nil {
-				return KMScanResult{}, scanErr
+				return kmScanResult{}, scanErr
 			}
 			result.Scans = append(result.Scans, scan)
 		}
@@ -159,11 +151,11 @@ func ScanBinaryKMIndexedData(scheme Scheme, maximumArity int) (KMScanResult, err
 	return result, nil
 }
 
-func kmFactorClasses(scheme Scheme, mode int) [][]int {
+func kmFactorClasses(scheme tensor.Scheme, mode int) [][]int {
 	indexes := make(map[string]int)
 	classes := make([][]int, 0)
-	for slot, term := range scheme.terms {
-		key := factorKey(term.factors[mode])
+	for slot := range scheme.TermCount() {
+		key := matrixKey(scheme.Term(slot).Factor(mode))
 		index, ok := indexes[key]
 		if !ok {
 			index = len(classes)
@@ -194,23 +186,24 @@ func forEachCombination(values []int, size int, visit func([]int)) {
 	walk(0, 0)
 }
 
-func checkKMCandidate(scheme Scheme, orientation KMOrientation, pivotSlot int, sourceSlots []int) (KMCandidate, string, error) {
-	pivot := scheme.terms[pivotSlot]
-	bSum := make([]int, len(pivot.factors[orientation.BMode].entries))
+func checkKMCandidate(scheme tensor.Scheme, orientation kmOrientation, pivotSlot int, sourceSlots []int) (kmCandidate, string, error) {
+	pivot := scheme.Term(pivotSlot)
+	pivotB := pivot.Factor(orientation.BMode)
+	bSum := make([]int, len(pivotB.Entries()))
 	pairs := make(map[string]struct{}, len(sourceSlots))
 	for _, slot := range sourceSlots {
-		term := scheme.terms[slot]
-		for i, entry := range term.factors[orientation.BMode].entries {
+		term := scheme.Term(slot)
+		for i, entry := range term.Factor(orientation.BMode).Entries() {
 			bSum[i] ^= entry
 		}
-		key := factorKey(term.factors[orientation.BMode]) + "\x00" + factorKey(term.factors[orientation.CMode])
+		key := matrixKey(term.Factor(orientation.BMode)) + "\x00" + matrixKey(term.Factor(orientation.CMode))
 		if _, found := pairs[key]; found {
-			return KMCandidate{}, "source_not_injective", nil
+			return kmCandidate{}, "source_not_injective", nil
 		}
 		pairs[key] = struct{}{}
 	}
-	if !slices.Equal(bSum, pivot.factors[orientation.BMode].entries) {
-		return KMCandidate{}, "b0_not_sum", nil
+	if !slices.Equal(bSum, pivotB.Entries()) {
+		return kmCandidate{}, "b0_not_sum", nil
 	}
 
 	support := make(map[int]struct{}, len(sourceSlots)+1)
@@ -218,33 +211,34 @@ func checkKMCandidate(scheme Scheme, orientation KMOrientation, pivotSlot int, s
 	for _, slot := range sourceSlots {
 		support[slot] = struct{}{}
 	}
-	targets := make([]RankOneTerm, len(sourceSlots))
+	targets := make([]tensor.RankOneTerm, len(sourceSlots))
 	targetKeys := make(map[string]struct{}, len(sourceSlots))
 	changed := make([]int, 0, len(sourceSlots))
+	pivotC := pivot.Factor(orientation.CMode)
 	for index, slot := range sourceSlots {
-		source := scheme.terms[slot]
-		outputC, err := addMatrices(source.factors[orientation.CMode], pivot.factors[orientation.CMode])
+		source := scheme.Term(slot)
+		outputC, err := addBinaryMatrices(source.Factor(orientation.CMode), pivotC)
 		if err != nil {
-			return KMCandidate{}, "", err
+			return kmCandidate{}, "", err
 		}
-		if matrixIsZero(outputC) {
-			return KMCandidate{}, "output_c_zero", nil
+		if matrixIsZeroPublic(outputC) {
+			return kmCandidate{}, "output_c_zero", nil
 		}
-		factors := source.factors
+		factors := source.Factors()
 		factors[orientation.CMode] = outputC
-		target, err := NewRankOneTerm(factors[0], factors[1], factors[2])
+		target, err := tensor.NewRankOneTerm(factors[0], factors[1], factors[2])
 		if err != nil {
-			return KMCandidate{}, "", err
+			return kmCandidate{}, "", err
 		}
 		targets[index] = target
-		key := termKey(target)
+		key := termKeyPublic(target)
 		if _, found := targetKeys[key]; found {
-			return KMCandidate{}, "output_not_injective", nil
+			return kmCandidate{}, "output_not_injective", nil
 		}
 		targetKeys[key] = struct{}{}
 		matchesSource := false
 		for _, sourceSlot := range sourceSlots {
-			if equalTerms(target, scheme.terms[sourceSlot]) {
+			if equalTermsPublic(target, scheme.Term(sourceSlot)) {
 				matchesSource = true
 				break
 			}
@@ -252,33 +246,69 @@ func checkKMCandidate(scheme Scheme, orientation KMOrientation, pivotSlot int, s
 		if !matchesSource {
 			changed = append(changed, index)
 		}
-		for contextSlot, contextTerm := range scheme.terms {
+		for contextSlot := range scheme.TermCount() {
 			if _, local := support[contextSlot]; local {
 				continue
 			}
-			if equalTerms(target, contextTerm) {
-				return KMCandidate{}, "context_not_disjoint", nil
+			if equalTermsPublic(target, scheme.Term(contextSlot)) {
+				return kmCandidate{}, "context_not_disjoint", nil
 			}
 		}
 	}
-	return KMCandidate{
+	return kmCandidate{
 		Orientation:    orientation,
 		PivotSlot:      pivotSlot,
 		SourceSlots:    append([]int(nil), sourceSlots...),
 		ChangedIndices: changed,
-		targetTerms:    targets,
+		TargetTerms:    targets,
 	}, "", nil
 }
 
-func termKey(term RankOneTerm) string {
-	return factorKey(term.factors[0]) + "\x00" + factorKey(term.factors[1]) + "\x00" + factorKey(term.factors[2])
+func addBinaryMatrices(first, second tensor.Matrix) (tensor.Matrix, error) {
+	if first.Ring() != ring.Z2 || second.Ring() != ring.Z2 {
+		return tensor.Matrix{}, fmt.Errorf("matrix addition requires Z2")
+	}
+	if first.Rows() != second.Rows() || first.Columns() != second.Columns() {
+		return tensor.Matrix{}, fmt.Errorf("matrix shapes differ")
+	}
+	entries := first.Entries()
+	secondEntries := second.Entries()
+	for i := range entries {
+		entries[i] ^= secondEntries[i]
+	}
+	return tensor.NewMatrix(ring.Z2, first.Rows(), first.Columns(), entries)
 }
 
-func equalTerms(first, second RankOneTerm) bool {
-	for mode := range 3 {
-		if !equalMatrices(first.factors[mode], second.factors[mode]) {
+func matrixIsZeroPublic(matrix tensor.Matrix) bool {
+	for _, entry := range matrix.Entries() {
+		if entry != 0 {
 			return false
 		}
 	}
 	return true
+}
+
+func matrixKey(matrix tensor.Matrix) string {
+	key := make([]byte, len(matrix.Entries()))
+	for i, entry := range matrix.Entries() {
+		key[i] = byte(entry)
+	}
+	return string(key)
+}
+
+func termKeyPublic(term tensor.RankOneTerm) string {
+	return matrixKey(term.Factor(0)) + "\x00" + matrixKey(term.Factor(1)) + "\x00" + matrixKey(term.Factor(2))
+}
+
+func equalTermsPublic(first, second tensor.RankOneTerm) bool {
+	for mode := range 3 {
+		if !equalMatricesPublic(first.Factor(mode), second.Factor(mode)) {
+			return false
+		}
+	}
+	return true
+}
+
+func equalMatricesPublic(first, second tensor.Matrix) bool {
+	return first.Ring() == second.Ring() && first.Rows() == second.Rows() && first.Columns() == second.Columns() && slices.Equal(first.Entries(), second.Entries())
 }
