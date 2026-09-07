@@ -1,4 +1,4 @@
-import Mathlib
+import Enumerative.PalindromeRowsBijection
 
 set_option autoImplicit false
 
@@ -18,11 +18,12 @@ from `s` to `(1 + ⋯ + n) - s`, so it preserves divisibility by `n` exactly whe
 `n ∣ 1 + ⋯ + n`. For odd `n = 2m + 1` the total is `n * (m + 1)`, and the
 symmetry follows — for every `k ≤ n`, in particular on the conjectured range.
 
-The power-of-2 case is only stated (`T_symm_of_two_pow`), with an intended
-`sorry`: for even `n` the total `n * (n+1) / 2` is not divisible by `n`, the
-complement argument fails, and no proof is known. The plausible route is the
-Ramanathan/Barnes formula
-`T n k = (1/n) * ∑_{s ∣ gcd n k} (-1)^(k - k/s) * φ(s) * C(n/s, k/s)`.
+The power-of-2 case (`T_symm_of_two_pow`) is proved by the standalone elementary
+bijection in `PalindromeRowsBijection`. The labels `i+1` for `i ∈ range n` identify
+`{1,...,n}` with `ZMod n`. For `n = 2^j` and `0 < k < n`, choose `t` with
+`k*t = n/2`. Complement followed by translation by `t` preserves zero-sum subsets
+and changes cardinality from `k` to `n-k`; its inverse complements and translates
+by `-t`, using the same chosen `t`. The endpoints are excluded when `n` is even.
 
 Ground truth for all numeric checks: `oeis show A267632`, rows 1–12.
 Vocabulary matches the sibling `Proofs/Enumerative/Zumkeller.lean`: subsets of
@@ -167,27 +168,20 @@ example : [T 5 1, T 5 2, T 5 3, T 5 4] = [T 5 4, T 5 3, T 5 2, T 5 1] := rfl
 example : [T 7 1, T 7 2, T 7 3, T 7 4, T 7 5, T 7 6] =
     [T 7 6, T 7 5, T 7 4, T 7 3, T 7 2, T 7 1] := rfl
 
-/-- **Power-of-2 case of the A267632 palindrome observation** (OPEN). For
-`n = 2 ^ j` and `1 ≤ k < n`, conjecturally `T n k = T n (n - k)`, i.e. the
-truncated row is a palindrome. The complement bijection of
-`T_symm_of_dvd_total` fails here: `n` does not divide `1 + ⋯ + n` for even `n`
-(see the sharpness example above). The bound `k < n` is necessary:
-`T n n = 0 < 1 = T n 0` for even `n`. For `1 ≤ j` the hypotheses are jointly
-satisfiable (e.g. `j = 3`, `k = 2`); for `j = 0` they are contradictory and the
-odd case `T_symm_of_odd` covers `n = 1` instead. Ground-truth instances for
-`j ≤ 3` are verified below. A plausible route is the Ramanathan/Barnes formula
-`T n k = (1/n) * ∑_{s ∣ gcd n k} (-1)^(k - k/s) * φ(s) * C(n/s, k/s)` with
-`s` ranging over powers of `2`, but this is unworked. -/
+/-- **Power-of-2 case of the A267632 palindrome observation.** For `1 ≤ k < 2^j`,
+the truncated row satisfies `T (2^j) k = T (2^j) (2^j-k)`. This is the standalone
+shifted-subset bijection, with only the definitions of `T` and `rowSubsets` unfolded.
+For `j = 0` there is no interior index; the odd case covers the endpoints of row 1.
+For positive `j` both strict endpoint exclusions are necessary. -/
 theorem T_symm_of_two_pow (j : ℕ) {k : ℕ} (hk1 : 1 ≤ k) (hkn : k < 2 ^ j) :
     T (2 ^ j) k = T (2 ^ j) (2 ^ j - k) := by
-  -- INTENDED SORRY: open conjecture (campaign HOLD tier); the complement
-  -- argument fails for even `n` and the Gauss-sum route is unworked.
-  sorry
+  unfold T rowSubsets
+  exact PalindromeBijection.shifted_row_card_symm_two_pow j hk1 hkn
 
 -- Satisfiability of `T_symm_of_two_pow`: both hypotheses hold jointly at
 -- `j = 3`, `k = 2`, and the conclusion instance `T 8 2 = T 8 6` is `3 = 3`.
 example : 1 ≤ 2 ∧ 2 < 2 ^ 3 := by norm_num
-example : T 8 2 = T 8 6 := rfl
+example : T 8 2 = T 8 6 := T_symm_of_two_pow 3 (by norm_num) (by norm_num)
 
 -- Ground truth for `T_symm_of_two_pow` at `j = 1, 2, 3`: every conclusion
 -- instance on the truncated rows 2, 4, 8 holds by computation.
@@ -200,5 +194,55 @@ example : [T 8 1, T 8 2, T 8 3, T 8 4, T 8 5, T 8 6, T 8 7] =
 -- for even `n` (the OEIS row keeps its non-palindromic last entry).
 set_option maxRecDepth 4000 in
 example : T 8 8 = 0 ∧ T 8 0 = 1 := ⟨rfl, rfl⟩
+
+/-- The empty subset is counted once, including at the totalized value `n = 0`. -/
+theorem T_zero (n : ℕ) : T n 0 = 1 := by
+  simp [T, rowSubsets, Finset.filter_singleton]
+
+/-- There are no counted subsets with cardinality larger than the ambient set. -/
+theorem T_eq_zero_of_lt {n k : ℕ} (h : n < k) : T n k = 0 := by
+  have hempty : (Finset.range n).powersetCard k = ∅ :=
+    Finset.powersetCard_eq_empty.mpr (by simpa only [Finset.card_range] using h)
+  simp [T, rowSubsets, hempty]
+
+/-- Positive-exponent power-of-two rows have no full-size zero-sum subset, explaining
+why the symmetry theorem excludes both endpoints. -/
+theorem T_two_pow_self_eq_zero (j : ℕ) (hj : 0 < j) : T (2 ^ j) (2 ^ j) = 0 := by
+  have hn : 2 ^ j ≠ 0 := pow_ne_zero j (by norm_num)
+  letI : NeZero (2 ^ j) := ⟨hn⟩
+  unfold T rowSubsets
+  rw [PalindromeBijection.shifted_row_card_eq_zeroSumSubsets _ _ hn]
+  have hhalf : 2 ^ (j - 1) < 2 ^ j := by
+    have hpos := Nat.two_pow_pos (j - 1)
+    have hpair := Nat.two_pow_pred_add_two_pow_pred hj
+    omega
+  have hnonzero : ((2 ^ (j - 1) : ℕ) : ZMod (2 ^ j)) ≠ 0 := by
+    rw [ne_eq, ZMod.natCast_eq_zero_iff]
+    exact Nat.not_dvd_of_pos_of_lt (Nat.two_pow_pos (j - 1)) hhalf
+  have hcard : (Finset.univ : Finset (ZMod (2 ^ j))).card = 2 ^ j := by
+    rw [Finset.card_univ, ZMod.card]
+  have hpowerset : (Finset.univ : Finset (ZMod (2 ^ j))).powersetCard (2 ^ j) = {univ} := by
+    simpa only [hcard] using Finset.powersetCard_self (Finset.univ : Finset (ZMod (2 ^ j)))
+  unfold PalindromeBijection.zeroSumSubsets
+  rw [hpowerset, Finset.filter_singleton]
+  rw [PalindromeBijection.sum_univ_zmod_two_pow j hj, if_neg hnonzero]
+  rfl
+
+example : T 4 4 = 0 := T_two_pow_self_eq_zero 2 (by norm_num)
+
+/-- The only power-of-two row with exponent zero has two equal endpoint counts;
+its truncated row has no indices, rather than asserting a nontrivial bijection. -/
+theorem T_one_endpoints : T 1 0 = 1 ∧ T 1 1 = 1 := by
+  decide
+
+example (k : ℕ) : ¬ (1 ≤ k ∧ k < 2 ^ 0) := by
+  simp only [pow_zero]
+  omega
+example : T 0 0 = 1 ∧ T 0 1 = 0 := by decide
+example : T 1 2 = 0 := T_eq_zero_of_lt (by norm_num)
+
+#print axioms T_symm_of_two_pow
+#print axioms T_two_pow_self_eq_zero
+#check @T_symm_of_two_pow
 
 end A267632
