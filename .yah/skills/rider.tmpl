@@ -3,17 +3,7 @@
 You **MUST NOT** manually create or modify files under
 `./References`. Those artifacts are immutable inputs.
 
-You **MUST NOT** truncate shell or command output; doing
-so can poison downstream agents and reasoning.
-
 You SHOULD use `leandoc` before other Lean semantic searches.
-
-You SHOULD build Lean targets from the repository root
-under the shared Lake lock:
-
-```bash
-flock .lake/agent.lock lake build <target>
-```
 
 You SHOULD use `tool_wikipedia` in order to ground your
 epistemic state in the discipline you are working in.
