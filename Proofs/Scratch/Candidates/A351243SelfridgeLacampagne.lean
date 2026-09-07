@@ -39,9 +39,9 @@ COMMENTS:
   spanning [-0.5, 0.5] under multiplication by 3. - _Peter Munn_, Jan 31 2022
 ```
 
-## **Correction to `Formalize/CONJECTURE_CANDIDATES.md`**
+## Balanced-ternary correction
 
-The candidates document says of A147991: *"Needs a def for A147991 membership
+The earlier candidate sweep says of A147991: *"Needs a def for A147991 membership
 (base-3 digits in {0,1} — trivial)"*.  **That is wrong.**  A147991 is
 *balanced ternary with no `0` trit*, i.e. digits in `{−1, +1}`, per Hufford's
 comment above.  Ordinary base-3 digits in `{0,1}` is A005836 (the Stanley

@@ -3,10 +3,8 @@ claim:   blomberg-empirical-recurrence
 status:  open
 stmt:    L
 proof:   unknown
-module:  distant relative: Proofs/BilinearComplexity/
-         (multiplicative complexity is the function-
-         level cousin of bilinear rank; NO cross-track
-         inference)
+dependency: no dedicated formal model of straight-line multiplicative
+         complexity; the bilinear-rank modules do not imply this claim
 source:  OEIS A250109: Lars Blomberg empirical
          formulas and order-12 recurrence, 2016-12-04;
          Colin Barker empirical g.f., 2016-12-04;
@@ -28,9 +26,7 @@ LEAN
   function. No circuit-complexity formalization exists
   in Mathlib or packages (audited 2026-07-23; Std.Sat
   AIG is a solver internal, not a complexity measure).
-  Building the model is a genuine novel-formalization
-  campaign; the recurrence is then plausibly a finite
-  + structural argument.
+  Building the model is the first formalization obligation.
 
 ROUTE
   Only via building the circuit layer. Park unless the

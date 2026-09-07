@@ -1,40 +1,8 @@
-seq:     A005245
-claim:   hamilton-ballinger-finiteness
-status:  FORMALIZED 2026-07-30 (NumberComplexity/
-         HamiltonBallinger.lean, commit f499c59; A348262 layer
-         + master equality proved; finiteness comment OPEN,
-         archived verbatim)
-stmt:    M
-proof:   hard
-module:  none
-source:  OEIS A005245 comment, Gordon Hamilton and
-         Brad Ballinger, 2022-05-23
+# A005245 — Hamilton–Ballinger finiteness
 
-CLAIM
-  A005245(n) = integer (Mahler-Popken) complexity:
-  minimal number of 1's needed to build n from 1 using
-  + and *. A348262(n) = same with + and ^ instead.
-  Conjecture: A005245(n) < A348262(n) for only
-  finitely many n.
-
-LEAN
-  Both complexity functions absent from Mathlib;
-  define by well-founded recursion:
-    c(1) = 1, c(n) = min over (a+b=n, a*b=n
-    decompositions) of c(a)+c(b)
-  and analogously with ^ replacing *. Finiteness
-  statement via Set.Finite.
-
-LEAN NOTE
-  Historical context in-entry: Guy's question
-  "c(p) = c(p-1) + 1 for primes p" is REFUTED
-  (Fuller 2008, least counterexample p = 353942783) —
-  do not resurrect it; it is a good sanity target for
-  the def only as a bounded computation.
-
-ROUTE
-  None known; requires comparative growth theory of
-  the two complexity measures.
-
-EVIDENCE
-  In-entry empirical comparison over computed ranges.
+- **Mathematical status:** open conjecture from an OEIS A005245 comment (Gordon Hamilton and Brad Ballinger, 2022-05-23).
+- **Work status:** hard-blocked.
+- **Remaining target:** prove that only finitely many `n` satisfy `integerComplexity n < powerComplexity n`, where the second complexity uses addition and exponentiation rather than addition and multiplication.
+- **Proved prerequisites:** `Proofs/NumberComplexity/HamiltonBallinger.lean` defines both measures and proves their intended optimization characterizations.
+- **Next obligation:** establish a comparative eventual bound strong enough to imply `Set.Finite {n | integerComplexity n < powerComplexity n}`; no such growth argument is presently formalized.
+- **Correction:** the older claim `c(p)=c(p-1)+1` for every prime is refuted (least counterexample `353942783`) and is not this target.

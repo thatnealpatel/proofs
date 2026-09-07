@@ -7,7 +7,8 @@ module:  Proofs/Enumerative/Fubini.lean (special case)
 source:  OEIS A000670 comment, Peter Bala, 2022-07-08
 
 CLAIM
-  Generalization of A000670-bala-mod-k: for every
+  Generalization of the completed Fubini periodicity theorem in
+  `Proofs/Enumerative/FubiniMod.lean`: for every
   integral power series G(x), the integer sequence
   with exponential generating function G(exp(x) - 1)
   is, for every k >= 1, eventually periodic mod k with

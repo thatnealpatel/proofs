@@ -1,6 +1,9 @@
-# Next Proving Targets — Coalesced Action Plan
+# Next Proving Targets — historical, superseded action plan
 
-Updated 2026-08-06 after wave 3 + follow-on lanes.
+This file records the 2026-08-06 target survey and is not a current queue.
+It activates no lane; `Formalize/INDEX` is the current residual-work and
+lifecycle authority. Parked binomial, Fano, Singmaster, and Sylvester entries
+below are historical only.
 
 ## Landed in wave 3 (remove from dispatch consideration)
 
@@ -60,7 +63,7 @@ sorrys, and commit with the intended sorry(s) only.
 | A131646 Sloane bases | OEIS T2 | M | `Nat.digits` | Base-reduction lemma (only 11..18 matter) provable; 20-term certificates. |
 | A141386 Sun quadratic | OEIS T2 | M | none | Bounded-search decidability for the 7 exceptions; GRH-conditional decidability noted in sketch. |
 | A007850 Lava Giuga | OEIS T2 | M | fresh `ad` (arithmetic derivative) — reusable infra | Archive-primary; the provable direction (n′=n+1 → Giuga) is a P2-grade fragment the card should close. |
-| A349044 non-Brauer | OEIS T2 | M | `IsAddChain`, `l` | Brauer-chain def is the natural sibling of the T5 `ShearAdditionChains` stub; certifying 12509 is expensive but bounded. |
+| A349044 non-Brauer | OEIS T2 | M | `IsAddChain`, `l` | Uses the actual `NumberComplexity.AdditionChain` layer. The published `ShearEC.ShearAdditionChain.minimumMonomialShears_eq_l` bridge is narrow fresh-zero-target monomial scope; it does not provide unrestricted circuit complexity, scratch clearing, or Scholz–Brauer. Certifying 12509 remains bounded work. |
 | A293771 Whitney machine | OEIS T2 | M | fresh ~30-line semantics | Quantifier-order trap documented with finite refutation; third computation model beside `complexity` and chains. |
 | A309370 Sidon hypercube | OEIS T3 | M | fresh `IsSidon` — reusable | Promote `IsSidon` out of `Scratch` on landing; trivial upper bound provable. |
 | A390813 Sidon squares | OEIS T3 | M | `IsSidon` from A309370 | Land after A309370; greedy n^(1/3) lower bound provable. |
@@ -156,7 +159,7 @@ calls, corrected by audit where noted.
 |--------|--------|-------|----------------|--------|
 | Erdős #683 Sylvester–Schur | Erdős UC | prover, L | Erdős's elementary proof; not in Mathlib; load-bearing for #699/#1094/#1095 and the #175 remainder. The single most valuable classical target in the BINOM family. | BINOM valuations |
 | Erdős #702 Frankl | Erdős C | prover, M–L | Needs a fresh shifting lemma; would deepen the extremal-set lane beyond sunflowers. | `Erdos20` compression experience |
-| Barker cliques A135908/09 | PLAN gated | prover, S/L | PLAN's gate ("after P5, S_n machinery felt out") is now satisfied: P5 landed and `SubgroupCountSn` exists. Max-abelian-subgroup-of-S_n theorem is where it may stall. | `GroupCount`, `SubgroupCountSn` |
+| ~~Barker cliques A135908/A135909~~ | ~~PLAN gated~~ | | Completed recurrences; A135909 has corrected `n > 9` scope. Retired, not dispatchable. | |
 | Erdős #112 Hunter–Steiner path variant | Erdős C | postdoc, M | Exact k(n,m) = (n−1)(m−1) for the directed-path variant; ~100 lines of tournament infra Mathlib lacks. | new tournament defs |
 | Erdős #130 Anning–Erdős 1945 | Erdős C | postdoc, M–L | Classic self-contained Euclidean argument; opens a `EuclideanSpace` lane the repo has not touched. | none — new lane |
 | Erdős #836 intersection bound | Erdős UA | postdoc, M | Erdős–Lovász r/log r bound, same paper as the landed g(k) work. GATE: verify the claimed 2026 proof of the second question against the live entry first. | `ErdosLovasz`, #901 defs |
@@ -180,7 +183,7 @@ calls, corrected by audit where noted.
 | Excluded-63 re-triage | gaps #6 §1 | Only 8 of 63 upstream files were classified (all stubs); 55 solved problems with unclaimed proofs remain unassessed — #387/#851/#937/#1064 audited this session, all deep or blocked | Dispatch the Tier-A triage over the remaining ~55; highest expected yield per hour of any process item. |
 | Algebraic-complexity lane | gaps #6 §2 | No database indexes the repo's deepest arc; A075099 killed on audit (contested def) | Literature-sourced mining: Bürgisser–Clausen–Shokrollahi problem list + Landsberg open problems. |
 | GreensOpenProblems/ + Kourovka/ | gaps #6 §5 | 53-file Green list and Kourovka group-theory tree unmined | Next mining sweep stage; also align defs with `FormalConjecturesForMathlib`. |
-| A093682 per-row forms | PLAN P7 | Commit `f105bf4` names only A092482; whether the A093682 rows (A004793, A033157, A093678–81) landed is unverified | Check the committed file; unlanded rows are P2-grade follow-ons on `StanleyDigits`. |
+| A092482/A093682 closed forms | PLAN P7 | Completed and retired | `A092482.greedySeq_eq_closedForm` and `greedySeq_add_two` prove A092482; A093682 rows 3–6 also landed. |
 
 ## Cross-cutting notes
 
