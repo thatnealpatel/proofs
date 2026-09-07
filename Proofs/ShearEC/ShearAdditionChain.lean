@@ -377,10 +377,11 @@ theorem exists_optimal_shear_circuit_realization {R : Type*} [CommSemiring R]
       minimumMonomialShears_eq_l n hn]
   · exact fun x => computation.program.run_circuit_eq_pow x
 
-/-- Including the shared empty-infimum convention at `n = 0`, the bridge is an
-equality for every natural exponent.  Use `minimumMonomialShears_eq_l` for the
-nondegenerate mathematical statement. -/
-theorem minimumMonomialShears_eq_l_all (n : ℕ) :
+/-- Extending the equality to all naturals using the empty-`iInf` convention:
+at `n = 0`, both sides are the default value `0` because no computation or
+addition chain exists.  This is bookkeeping at zero, not an operational bridge;
+use `minimumMonomialShears_eq_l` for the nondegenerate claim. -/
+theorem minimumMonomialShears_eq_l_all_with_empty_infimum_at_zero (n : ℕ) :
     minimumMonomialShears n = l n := by
   by_cases hn : n = 0
   · subst n
@@ -396,12 +397,12 @@ example : Nonempty (MonomialShearComputation 2) := by
 example : minimumMonomialShears 0 = 0 := by
   exact Nat.iInf_of_empty _
 example : minimumMonomialShears 1 = 0 := by
-  rw [minimumMonomialShears_eq_l_all, l_one]
+  rw [minimumMonomialShears_eq_l_all_with_empty_infimum_at_zero, l_one]
 example : minimumMonomialShears 2 = 1 := by
-  rw [minimumMonomialShears_eq_l_all, l_two]
+  rw [minimumMonomialShears_eq_l_all_with_empty_infimum_at_zero, l_two]
 
 #check @minimumMonomialShears_eq_l
-#check @minimumMonomialShears_eq_l_all
+#check @minimumMonomialShears_eq_l_all_with_empty_infimum_at_zero
 #print axioms MonomialShearProgram.isAddChain
 #print axioms MonomialShearProgram.shearCount_eq_chainSteps
 #print axioms nonempty_monomialShearProgram_of_isAddChain
@@ -411,6 +412,6 @@ example : minimumMonomialShears 2 = 1 := by
 #print axioms MonomialShearProgram.run_circuit_eq_pow
 #print axioms exists_optimal_shear_circuit_realization
 #print axioms minimumMonomialShears_eq_l
-#print axioms minimumMonomialShears_eq_l_all
+#print axioms minimumMonomialShears_eq_l_all_with_empty_infimum_at_zero
 
 end ShearEC.ShearAdditionChain
