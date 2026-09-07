@@ -41,6 +41,7 @@ namespace BilinearComplexity
 namespace Scheme
 namespace BinaryOneFactorDeformation
 
+/-- The binary field used throughout the deformation construction. -/
 abbrev F2 := ZMod 2
 
 variable {a b c r : ℕ}
@@ -474,22 +475,22 @@ example : FactorCollision .first
 
 /-- Erasing one zero evaluated term gives a strictly shorter scheme representing the same
 fixed target tensor. -/
-theorem exists_shorter_valid_of_eval_eq_zero
-    (T : Tensor F2 a b c) (E : Scheme F2 a b c r) (hE : E.Valid T)
+theorem exists_shorter_exact_of_eval_eq_zero
+    (T : Tensor F2 a b c) (E : Scheme F2 a b c r) (hE : E.sumTensor = T)
     (s : Fin r) (hzero : (E.term s).eval = 0) :
-    ∃ n, n < r ∧ ∃ R : Scheme F2 a b c n, R.Valid T := by
+    ∃ n, n < r ∧ ∃ R : Scheme F2 a b c n, R.sumTensor = T := by
   let C : Replacement.Certificate E :=
     { removed := {s}
       inserted := []
       local_eq := by
-        funext i j k
-        simp [Replacement.selectedTensor, Replacement.insertedTensor, hzero] }
-  refine ⟨C.resultRank, ?_, C.output, ?_⟩
+        rw [Replacement.selectedTensor, Replacement.insertedTensor]
+        simp only [Finset.sum_singleton, List.map_nil, List.sum_nil]
+        exact hzero }
+  refine ⟨C.resultRank, ?_, C.output, C.sumTensor_eq.trans hE⟩
   · change r - ({s} : Finset (Fin r)).card + [].length < r
     simp only [Finset.card_singleton, List.length_nil, Nat.add_zero]
+    have hr : 0 < r := Nat.zero_lt_of_lt s.isLt
     omega
-  · rw [Valid, C.sumTensor_eq]
-    exact hE
 
 /-- A same-mode collision at an exact kernel endpoint has the promised dichotomy: a zero
 term can be erased to a strictly shorter exact decomposition, while otherwise the endpoint
@@ -498,29 +499,29 @@ prescribed factor collision. -/
 theorem collision_deformation_dichotomy
     (T : Tensor F2 a b c) (S : Scheme F2 a b c r)
     (choice : Fin r → ModeChoice) (d : Delta a b c r)
-    (p q : Fin r) (m : ModeChoice) (hpq : p ≠ q)
-    (hp : choice p = m) (hq : choice q = m)
-    (hS : S.Valid T) (hsep : FactorwiseSeparated S)
+    (p q : Fin r) (m : ModeChoice) (_hpq : p ≠ q)
+    (_hp : choice p = m) (_hq : choice q = m)
+    (hExact : S.sumTensor = T) (hsep : FactorwiseSeparated S)
     (hd : d ∈ LinearMap.ker (evaluationDifference S choice))
     (hcollision : FactorCollision m (update S choice d) p q) :
-    (∃ n, n < r ∧ ∃ R : Scheme F2 a b c n, R.Valid T) ∨
+    (∃ n, n < r ∧ ∃ R : Scheme F2 a b c n, R.sumTensor = T) ∨
     ((update S choice d).Valid T ∧
       (∀ s, ((update S choice d).term s).eval ≠ 0) ∧
       Function.Injective (fun s => ((update S choice d).term s).eval) ∧
       FactorCollision m (update S choice d) p q) := by
   have hsum : (update S choice d).sumTensor = S.sumTensor :=
     sumTensor_update_of_mem_ker S choice d hd
-  have hvalid : (update S choice d).Valid T := by
-    rw [Valid, hsum]
-    exact hS
   by_cases hzero : ∃ s, ((update S choice d).term s).eval = 0
   · obtain ⟨s, hs⟩ := hzero
-    exact Or.inl (exists_shorter_valid_of_eval_eq_zero T (update S choice d) hvalid s hs)
+    exact Or.inl (exists_shorter_exact_of_eval_eq_zero T (update S choice d)
+      (hsum.trans hExact) s hs)
   · have hnonzero : ∀ s, ((update S choice d).term s).eval ≠ 0 := by
       push Not at hzero
       exact hzero
-    exact Or.inr ⟨hvalid, hnonzero, update_eval_injective S choice d hsep hnonzero,
-      hcollision⟩
+    have hinjective := update_eval_injective S choice d hsep hnonzero
+    have hvalid : (update S choice d).Valid T :=
+      ⟨hsum.trans hExact, hnonzero, hinjective⟩
+    exact Or.inr ⟨hvalid, hnonzero, hinjective, hcollision⟩
 
 example :
     let S : Scheme F2 3 3 3 7 := ⟨![
@@ -542,11 +543,105 @@ example :
       (![1, 1, 1], z, z),
       (![1, 1, 1], z, z),
       (z, ![1, 0, 0], z)]
-    S.Valid S.sumTensor ∧ FactorwiseSeparated S ∧
+    S.sumTensor = S.sumTensor ∧ FactorwiseSeparated S ∧
       (0 : Fin 7) ≠ 1 ∧ choice 0 = .first ∧ choice 1 = .first ∧
       d ∈ LinearMap.ker (evaluationDifference S choice) ∧
       FactorCollision .first (update S choice d) 0 1 := by
-  decide
+  dsimp
+  refine ⟨rfl, ?_, by decide, rfl, rfl, ?_, ?_⟩
+  · refine ⟨?_, ?_, ?_, ?_⟩
+    · intro s
+      fin_cases s <;> decide
+    · intro s t hst
+      fin_cases s <;> fin_cases t <;> simp_all
+    · intro s t hst
+      fin_cases s <;> fin_cases t <;> simp_all
+    · intro s t hst
+      fin_cases s <;> fin_cases t <;> simp_all
+  · rw [LinearMap.mem_ker]
+    funext i j k
+    fin_cases i <;> fin_cases j <;> fin_cases k <;> decide
+  · change
+      ((update
+        (⟨![
+          (![1, 0, 0], ![1, 1, 0], ![1, 1, 1]),
+          (![0, 1, 1], ![1, 0, 0], ![0, 1, 1]),
+          (![0, 1, 0], ![0, 1, 0], ![1, 1, 0]),
+          (![1, 1, 0], ![1, 0, 1], ![1, 0, 1]),
+          (![0, 0, 1], ![0, 1, 1], ![0, 0, 1]),
+          (![1, 0, 1], ![0, 0, 1], ![1, 0, 0]),
+          (![1, 1, 1], ![1, 1, 1], ![0, 1, 0])]⟩ : Scheme F2 3 3 3 7)
+        ![.first, .first, .first, .first, .first, .first, .second]
+        ![
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![0, 0, 0], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![0, 0, 0], ![1, 0, 0], ![0, 0, 0])]).term 0).1 =
+      ((update
+        (⟨![
+          (![1, 0, 0], ![1, 1, 0], ![1, 1, 1]),
+          (![0, 1, 1], ![1, 0, 0], ![0, 1, 1]),
+          (![0, 1, 0], ![0, 1, 0], ![1, 1, 0]),
+          (![1, 1, 0], ![1, 0, 1], ![1, 0, 1]),
+          (![0, 0, 1], ![0, 1, 1], ![0, 0, 1]),
+          (![1, 0, 1], ![0, 0, 1], ![1, 0, 0]),
+          (![1, 1, 1], ![1, 1, 1], ![0, 1, 0])]⟩ : Scheme F2 3 3 3 7)
+        ![.first, .first, .first, .first, .first, .first, .second]
+        ![
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![0, 0, 0], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![1, 1, 1], ![0, 0, 0], ![0, 0, 0]),
+          (![0, 0, 0], ![1, 0, 0], ![0, 0, 0])]).term 1).1
+    funext i
+    fin_cases i <;> decide
+
+#check @sumTensor_update
+#check @sumTensor_update_of_mem_ker
+#check @add_self_eq_zero_f2_module
+#check @add_eq_add_iff_add_eq_add_f2
+#check @first_collision_feasible_iff_mem_range
+#check @second_collision_feasible_iff_mem_range
+#check @third_collision_feasible_iff_mem_range
+#check @update_retains_unchanged_unequal_factor
+#check @eq_one_of_ne_zero_f2
+#check @factors_eq_of_eval_eq_of_ne_zero
+#check @update_eval_injective
+#check @exists_shorter_exact_of_eval_eq_zero
+#check @collision_deformation_dichotomy
+
+#print axioms ModeChoice
+#print axioms firstChange
+#print axioms secondChange
+#print axioms thirdChange
+#print axioms update
+#print axioms evaluationDifference
+#print axioms sumTensor_update
+#print axioms sumTensor_update_of_mem_ker
+#print axioms firstCoordinate
+#print axioms secondCoordinate
+#print axioms thirdCoordinate
+#print axioms firstKernelDifference
+#print axioms secondKernelDifference
+#print axioms thirdKernelDifference
+#print axioms add_self_eq_zero_f2_module
+#print axioms add_eq_add_iff_add_eq_add_f2
+#print axioms first_collision_feasible_iff_mem_range
+#print axioms second_collision_feasible_iff_mem_range
+#print axioms third_collision_feasible_iff_mem_range
+#print axioms FactorwiseSeparated
+#print axioms update_retains_unchanged_unequal_factor
+#print axioms eq_one_of_ne_zero_f2
+#print axioms factors_eq_of_eval_eq_of_ne_zero
+#print axioms update_eval_injective
+#print axioms FactorCollision
+#print axioms exists_shorter_exact_of_eval_eq_zero
+#print axioms collision_deformation_dichotomy
 
 end BinaryOneFactorDeformation
 end Scheme
