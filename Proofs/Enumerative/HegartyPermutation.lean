@@ -135,20 +135,18 @@ distinguishes them sharply:
 
 * `a(n) < 3n/2` is **proved** — it is display (1), established in the first paragraph of
   the proof of Theorem 3.1 by a counting argument.  Formalized here as `two_mul_a_lt`.
-* `3n/8 ≤ a(n)` is **proved** — it is Theorem 3.3.  **Not formalized here**; see the
-  deviation note below.
+* `3n/8 ≤ a(n)` is **proved** — it is Theorem 3.3, formalized in the companion
+  module `Enumerative.HegartyThreeEighths`.
 * `lim a(n)/n = 1` is **Conjecture 3.2**, explicitly open ("We have no idea how one might
   prove this").  This is the file's single intended `sorry` (`conj_3_2`).
 * "The Hegarty paper shows that this is a permutation" is Theorem 3.1 (surjectivity;
   injectivity is immediate from the greedy rule).  Formalized here as `a_bijOn`.
 
-**Deviation.**  Hegarty's Theorem 3.3 (`3n/8 ≤ a(n)`) is *not* formalized: its proof is a
-three-page parity/counting argument that is not self-contained in places ("By an argument
-similar to the one just presented (note (10)), this implies that …").  It is a published
-theorem, not a conjecture, so archiving it as a second `sorry` would misrepresent it.
-Instead this file proves the weaker lower bound that Hegarty records as the left half of
-his display (4), `n/4 ≤ πg(n)`, which falls out of the surjectivity proof for free
-(`lt_four_mul_a`).  Closing the gap from `1/4` to `3/8` is listed as an open item.
+**Separation of concerns.**  This file proves the weaker lower bound that Hegarty records
+as the left half of his display (4), `n/4 ≤ πg(n)`, which falls out of the surjectivity
+proof for free (`lt_four_mul_a`).  The companion module `Enumerative.HegartyThreeEighths`
+formalizes the paper's full three-page parity/counting proof of Theorem 3.3 rather than
+archiving that published theorem as a second `sorry` here.
 
 ## Indexing
 
@@ -591,8 +589,9 @@ theorem lt_four_mul_a (n : ℕ) : n < 4 * a n := by
 
 /-- **Hegarty's proved bounds in OEIS shape**, over `ℝ` and 0-indexed
 (`a n = A094870(n+1)`, so `(n : ℝ) + 1` is the OEIS index `N`, never `0`):
-`N/4 ≤ a(N) < 3N/2`.  The left bound is display (4); Hegarty's Theorem 3.3 sharpens `1/4`
-to `3/8`, which is not formalized here (see the file header). -/
+`N/4 ≤ a(N) < 3N/2`.  The left bound is display (4); the companion module
+`Enumerative.HegartyThreeEighths` formalizes Hegarty's Theorem 3.3 sharpening `1/4` to
+`3/8`. -/
 theorem hegarty_bounds (n : ℕ) :
     ((n : ℝ) + 1) / 4 ≤ (a n : ℝ) ∧ (a n : ℝ) < 3 * ((n : ℝ) + 1) / 2 := by
   constructor
