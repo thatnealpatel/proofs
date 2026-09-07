@@ -10,6 +10,7 @@ import Enumerative.Fubini
 import Enumerative.FubiniMod
 import Enumerative.FubiniPrimes
 import Enumerative.HegartyPermutation
+import Enumerative.HegartyThreeEighths
 import Enumerative.IdealWaring
 import Enumerative.IsZumkeller
 import Enumerative.MeanDivisors
