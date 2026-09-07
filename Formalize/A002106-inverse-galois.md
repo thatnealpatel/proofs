@@ -3,7 +3,7 @@ claim:   transitive-groups-are-galois-groups
 status:  open (equivalent to inverse Galois over Q)
 stmt:    L
 proof:   hard-open (major)
-module:  none
+dependency: no inverse-Galois realization infrastructure exists in the project
 source:  OEIS A002106 comment, Charles R Greathouse
          IV, 2014-05-28; equivalence to inverse
          Galois noted in-entry (Jianing Song,

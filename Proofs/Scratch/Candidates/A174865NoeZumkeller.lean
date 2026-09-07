@@ -18,7 +18,7 @@ XREFS:
   Cf. A005231, A033880.
 ```
 
-**Provenance correction to `Formalize/CONJECTURE_CANDIDATES.md`.** The candidates
+**Provenance correction.** The earlier candidate sweep
 document attributes the two Noe comments to A174865.  They are *not* there —
 A174865 carries exactly one comment, quoted above.  Both Noe lines live in
 **A083207** (Zumkeller numbers).  `goof oeis show A083207`:

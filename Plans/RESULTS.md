@@ -182,7 +182,10 @@ A072169(0..4) and A061256(0..4) certified by kernel decide.
 ## P7: A092482 closed form — first proof (f105bf4)
 Settles an open OEIS conjecture ("conjectured and checked up to n=512").
 The brief's premise (A093682 family member) was false; corrected.
-Two OEIS formula typos documented and worked around.
+Two OEIS formula typos documented and worked around. For the companion
+A093682 rows, the printed A093680 periodic residual `19` is corrected to `18`
+(failure at `n ≡ 8 mod 16`); OEIS credits rows 1–5 to Lawrence Sze and the
+general structure to Odlyzko–Stanley, with a published proof by Rolnick.
 
 ## P8.1: Knuth–Stolarsky conjecture archive (3010ba5)
 One sorry. Proved: v(n) ≤ 2 family, kernel exhaustion n ≤ 16,
@@ -216,9 +219,12 @@ One sorry. Found and documented the convention gap (OEIS sunflower vs
 IsSunflowerWith nonempty petals). Both thresholds defined, relationship
 proved sorry-free. Consumes P5's Erdős–Rado for finiteness.
 
-## P8.8: Hegarty AP-avoiding permutation (f8e1f81)
-One sorry on lim a(n)/n = 1. Proved sorry-free: permutation property (Thm 3.1),
-upper bound a(n) < 3n/2, AP-avoidance. Fetched and grounded against the paper.
+## P8.8: Hegarty AP-avoiding permutation (f8e1f81; lower bound completed on accepted main)
+One sorry remains on `lim a(n)/n = 1`. Proved sorry-free: permutation property
+(Thm 3.1), upper bound `a(n) < 3n/2`, and AP-avoidance. Accepted main
+`ce7ab453d8530cbfdd65c41eeb8ea71072f3fc94` additionally publishes
+`A094870.hegarty_three_eighths : ∀ n, 3*(n+1) ≤ 8*A094870.a n` in
+Proofs/Enumerative/HegartyThreeEighths.lean. The limit alone remains open.
 
 ## P8.9: Pyber subgroup count of S_n (2dce7f7)
 One sorry. Discovered the conjecture was proved in 2025 (Roney-Dougal–Tracey).

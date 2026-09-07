@@ -37,7 +37,7 @@ COMMENTS:
   - _David Radcliffe_, Oct 28 2019
 ```
 
-**Correction to `Formalize/CONJECTURE_CANDIDATES.md`.** The candidates document
+**Indexing correction.** The earlier candidate sweep
 attributes the quoted conjecture line to "comment in A085692" — correct — but
 then labels the whole card "A146968".  The two entries are cofinal (Sloane's
 own xref says so); this file states the claim in the A146968 indexing

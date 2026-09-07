@@ -3,7 +3,7 @@ claim:   group-perfect-uniqueness
 status:  open
 stmt:    M
 proof:   hard
-module:  Proofs/GroupTPP/ layer
+module:  Proofs/GroupCount/GroupPerfect.lean
 source:  OEIS A090052 comments (unattributed
          "seems fairly certain")
 

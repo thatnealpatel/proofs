@@ -1,60 +1,7 @@
-seq:     A007691
-claim:   coleman-multiperfect-practical
-status:  def layer BUILT, conjecture ARCHIVED as the
-         module's single intended sorry (2026-07-30,
-         commit 6b4d720); conjecture itself open
-stmt:    S-M
-proof:   hard (odd part OPN-hard, see LEAN note)
-module:  Proofs/Enumerative/Practical.lean
-         (Enumerative.Practical)
-source:  OEIS A007691 comment, Jaycob Coleman,
-         2013-10-15
+# A007691 — Coleman practical-number conjecture
 
-CLAIM
-  Every multiply-perfect number (n ∣ sigma(n)) is a
-  practical number: every m <= sigma(n) — classically
-  every m <= n suffices — is a sum of distinct
-  divisors of n.
-
-LEAN (landed 2026-07-30, commit 6b4d720)
-  Nat.Practical n := 0 < n ∧ forall m <= n, exists
-  S ∈ n.divisors.powerset, sum S = m — the card's
-  original guard-free def was rejected by the writer:
-  0 would be vacuously practical (divisors 0 = ∅ only
-  reaches m = 0, but m ≤ 0 forces m = 0). Landed
-  sorry-free: decidability + A005153 prefix checks,
-  Practical.two_dvd, Srinivasan 2n ≤ 1 + σ(n),
-  interval-extension engine, strong-σ iff, and the
-  Stewart step Practical.mul_prime_pow (unordered —
-  strictly stronger than the ascending-order step);
-  Nat.IsMultiperfect + A007691 checks; Coleman
-  archived as the single intended sorry; first ten
-  A007691 terms certified sorry-free. Vacuity audit
-  SOUND (2026-07-30). Novelty: first practical-number
-  formalization in ANY proof assistant; all proved
-  math classical — .tasks/main/docs/novelty-Practical.md.
-  HARDNESS (unrecorded observation, 2026-07-30) —
-  LANDED d84bcbc: the conditional reduction is now
-  machine-checked (two_dvd_of_isMultiperfect_of_coleman,
-  not_isMultiperfect_of_odd_of_coleman,
-  not_perfect_of_odd_of_coleman; H explicit, ZTS-genre
-  disclosure; vacuity SOUND). Weak Coleman also landed
-  sorry-free (Perfect.practical_of_even, with Euler's
-  direction re-proved locally — Archive not a dep).
-  Stewart's full iff landed 55a8a97
-  (Enumerative/StewartCriterion.lean, both directions).
-  Remaining open: the archived sorry itself — odd part
-  OPN-hard, attackable fragment "every even multiperfect
-  is practical". OEIS note candidate: an A007691 comment
-  recording the OPN implication.
-
-ROUTE
-  Stewart's criterion (p_{i+1} <= sigma(prod so far)+1
-  characterization of practical numbers) is the known
-  tool; proving Stewart in Lean is a self-contained
-  campaign that would make this conjecture verifiable
-  per-instance and possibly provable for abundancy 2.
-
-EVIDENCE
-  Verified by Coleman for the first 5261 terms with
-  abundancy > 2 (Flammenkamp data).
+- **Mathematical status:** open conjecture (Jaycob Coleman, OEIS A007691).
+- **Work status:** hard-blocked: its odd case would rule out odd perfect numbers.
+- **Remaining target:** prove that every positive multiply-perfect number is practical.
+- **Proved prerequisites:** `Proofs/Enumerative/Practical.lean` defines `Nat.Practical` and `Nat.IsMultiperfect`, proves the Stewart step and standard practical-number infrastructure, proves the even-perfect case, and states the full target with an intentional `sorry`. `Proofs/Enumerative/StewartCriterion.lean` proves Stewart's criterion in both directions.
+- **Next obligation:** prove the claim for odd multiply-perfect numbers (or first prove the still-useful even multiply-perfect case beyond abundancy two). Bounded certificates and the formal conditional implication to nonexistence of odd perfect numbers do not discharge this obligation.

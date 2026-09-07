@@ -39,9 +39,9 @@ Raw-pull lines that `goof oeis show` strips
            enough n. - _Charles R Greathouse IV_, Oct 03 2025
 ```
 
-## Offset correction to `Formalize/CONJECTURE_CANDIDATES.md`
+## Offset correction
 
-The candidates document says "exact values 1, 2, 3, 5, 7, 12, 15 for `n ≤ 7`".
+The earlier candidate sweep says "exact values 1, 2, 3, 5, 7, 12, 15 for `n ≤ 7`".
 That is **off by one**: there are 7 terms and the first `a(7)` line is a *lower
 bound* (`a(7) ≥ 23`), so the offset is `0` and the exact values run `n = 0..6`:
 `a(0) = 1, a(1) = 2, a(2) = 3, a(3) = 5, a(4) = 7, a(5) = 12, a(6) = 15`.

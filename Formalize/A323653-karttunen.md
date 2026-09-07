@@ -3,7 +3,7 @@ claim:   karttunen-1-2-3-4
 status:  open
 stmt:    M
 proof:   hard
-module:  none
+module:  Proofs/Enumerative/MultiperfectCongruence.lean
 source:  OEIS A323653 comments, Antti Karttunen,
          2021-03-20 and 2022-02-18
 
