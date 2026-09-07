@@ -81,9 +81,9 @@
   space is a zero locus), the wrap adds nothing, and the sources make
   no claim; none is made here.
 
-  Provenance: CHL = Conner–Harper–Landsberg, arXiv:1911.07981 (digest:
-  Formalize/arXiv-1911-07981.md); BB = Buczyńska–Buczyński,
-  arXiv:1910.01944 (digest: Formalize/arXiv-1910-01944.md).
+  Provenance: CHL = Conner–Harper–Landsberg, arXiv:1911.07981; BB =
+  Buczyńska–Buczyński, arXiv:1910.01944. The source digest for both is
+  `Documents/BorderApolarity.md`.
 
   AI disclosure: produced with AI assistance (see Proofs/README).
 -/

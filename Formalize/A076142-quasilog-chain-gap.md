@@ -1,37 +1,7 @@
-seq:     A076142
-claim:   gap-sum-constant
-status:  nonnegativity PROVED 2026-07-30 (NumberComplexity/
-         QuasilogChainGap.lean, commit bf57463; Scholz-Brauer
-         ingredients, first recorded proof of the comparison);
-         the c-constant limit stays OPEN (intended sorry)
-stmt:    M
-proof:   hard
-module:  none (shares defs with A003313 and A064097
-         files)
-source:  OEIS A076142 formulas (unattributed
-         "it seems")
+# A076142 — mean quasi-log/addition-chain gap
 
-CLAIM
-  a(n) = A064097(n) - A003313(n): the gap between
-  the factor-method quasi-log upper bound and the
-  true shortest-addition-chain length. Conjecture:
-    (sum_{k<=n} a(k)) * log(n) / n^2 -> c
-  with 0.006 < c < 0.01 — i.e. the average gap grows
-  like c' * n / log n.
-
-LEAN
-  Needs BOTH the AdditionChain layer (A003313 file)
-  and the quasi-log def (A064097 file); then a
-  Tendsto statement over reals. Pure wiring once
-  those exist.
-
-ROUTE
-  Open (averages of l(n) are hard; even the mean of
-  l(n) - log2 n is delicate mathematics). Statement-
-  archive; its role is to justify a(n) >= 0
-  (quasi-log dominates chain length: PROVABLE — each
-  factor-method decomposition yields a chain; good
-  sanity theorem linking the two new def layers).
-
-EVIDENCE
-  Numeric fit in-entry.
+- **Mathematical status:** open empirical asymptotic from OEIS A076142.
+- **Work status:** hard-blocked by addition-chain average estimates.
+- **Remaining target:** prove existence of the asserted positive constant governing `(∑ k≤n, (quasilog k - NumberComplexity.l k)) * log n / n^2`, including the claimed numerical range if stated.
+- **Proved prerequisites:** `Proofs/NumberComplexity/QuasilogChainGap.lean` proves the gap is nonnegative and contains the intended asymptotic statement with `sorry`; `Proofs/NumberComplexity/Quasilog.lean` and `Proofs/NumberComplexity/AdditionChain.lean` provide `quasilog`, `NumberComplexity.IsAddChain`, `NumberComplexity.AdditionChain`, and `NumberComplexity.l`.
+- **Next obligation:** establish a genuine average-order theorem for shortest addition chains. Pointwise comparison and a stated limit are not such a theorem.

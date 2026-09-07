@@ -13,8 +13,7 @@
     Blogging Seminar link) it appears that a(n) = number of conjugacy classes
     of commutative ordered pairs in Symm(n)."
 
-  Provenance correction vs. the campaign card
-  (`Formalize/A061256-adams-watters.md`): the ordered-PAIRS claim is recorded
+  Provenance correction: the ordered-PAIRS claim is recorded
   in the entry as a blog comment by "Allan", not as a statement by Franklin T.
   Adams-Watters; Adams-Watters conjectured the commuting-TRIPLES statement
   (a(n) = |{(f,g,h) : all commute}| / n!), which J. R. Britnell proved in 2012.

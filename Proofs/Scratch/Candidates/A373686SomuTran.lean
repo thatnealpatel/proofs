@@ -26,9 +26,9 @@ counted **unordered** (`x ≤ y`).  The card below pins this convention explicit
 in `numRepsA373686`, because getting it wrong would silently change the DATA
 cross-check even though the `a(n) > 0` conjecture itself is insensitive to it.
 
-## Status — **corrected relative to `Formalize/CONJECTURE_CANDIDATES.md`**
+## Status correction
 
-The candidates document rates this "potentially completable, which puts it above
+The earlier candidate sweep rates this "potentially completable, which puts it above
 every other Tier 2 item in expected value", on the theory that Somu–Tran's
 threshold might be small enough to finish by computation.  **It is not.**
 

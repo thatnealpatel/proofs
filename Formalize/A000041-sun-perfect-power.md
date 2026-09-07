@@ -3,7 +3,7 @@ claim:   sun-no-perfect-power
 status:  open
 stmt:    S
 proof:   hard
-module:  none
+module:  Proofs/Enumerative/PartitionPerfectPower.lean
 source:  OEIS A000041 comment, Zhi-Wei Sun,
          2013-12-02
 

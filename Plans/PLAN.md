@@ -1,15 +1,13 @@
-# PLAN — campaign dispatch plan
+# PLAN — historical campaign dispatch record
 
-This file is the forward dispatch plan for ALL active arcs. It supersedes
-its previous covering-arc-only scope and re-absorbs the dispatchable
-remainder of `Formalize/INDEX`'s burndown queue. `INDEX` stays the ledger
-of landed work and card metadata but is NO LONGER the dispatch state of
-record — it is stale (chore X2); trust git and the tree over both
-documents.
+This file is a superseded record of the 2026-08-05 campaign waves. It is not
+current dispatch authority and none of its queues activates a lane.
+`Formalize/INDEX` is the current authority for residual work and lifecycle
+status. Historical entries below are retained only as a record, with completed
+items corrected where needed.
 
-Correction history is in `git log -p PLAN.md`, not in this file. Several
-claims here have been wrong before; when one moves, move it and let the
-commit record why.
+Correction history predating this snapshot is in version control. Several
+claims here have been wrong before; `Formalize/INDEX` controls current state.
 
 
 ## PROTOCOL — deltas of 2026-08-05
@@ -43,23 +41,16 @@ commit record why.
       after parity is demonstrated by planting both a native_decide
       proof and a `sorry` and watching the new tool fire. Measured facts
       behind this are under AXIOM HYGIENE below.
-  X2  Refresh `Formalize/INDEX`: record the landed-but-unrecorded files
-      — FixedDivisor/Sierpinski/Riesel/Erdos1950Instance (9d873d7,
-      5157ca8), RankOfApparition (3c7d4ef), ZumkellerSigmaHalf +
-      MultiperfectZumkeller + nine A083207 instances (3e593ab), the
-      NederGap stub state, and the ShearEC arc — CORRECTED 2026-08-05:
-      T1–T4 are fully covered and sorry-free (T1 =
-      TotalDegreeAeval + ShearCircuit, T2 = ShearInversionLB +
-      Secp256k1Prime, T3 = ShearQuadraticRank + ShearAddition, T4 =
-      ShearAdditionEC + ShortCurveScaling + VariableChangePointEquiv),
-      but `ShearAdditionChains.lean` (T5) is a THREE-LINE EMPTY STUB —
-      the min-shears-for-x^n = l(n) bridge does not exist; it joins the
-      A003313 lane (P8) as the natural sibling. Strike the STATEMENTS
-      rows that landed; mark queue items 2–5 follow-ons accurately
-      (Sierpinski/Riesel follow-on is DONE). Two spec files INDEX
-      cites do not exist anywhere (review-vacuity-SlizkovDoubling.md,
-      review-vacuity-ErdosLovasz.md) — note the citations as dead.
-
+  X2  [DONE] `Formalize/INDEX` was refreshed and is now the current
+      residual-work and lifecycle authority. The historical audit recorded
+      FixedDivisor/Sierpinski/Riesel/Erdos1950Instance, RankOfApparition,
+      ZumkellerSigmaHalf, MultiperfectZumkeller, A083207 instances, NederGap,
+      and the ShearEC arc. The fresh-zero-target monomial bridge is published
+      in singular `Proofs/ShearEC/ShearAdditionChain.lean`, theorem
+      `ShearEC.ShearAdditionChain.minimumMonomialShears_eq_l`. Its scope is
+      the explicit fresh-zero-target monomial model only; it does not claim
+      unrestricted exact circuit complexity, scratch clearing, or
+      Scholz–Brauer.
 
 ## WAVE 1 — dispatched 2026-08-05
 
@@ -106,14 +97,11 @@ commit record why.
                `MulAction.sum_card_fixedBy_eq_card_orbits_mul_card_group`
                (verified live, GroupTheory/GroupAction/Quotient.lean) —
                pin it, do not let the lane reprove it.
-  P7  postdoc  A092482/A093682 per-row closed forms. Verified
-               2026-08-05: every formula on both entries is explicitly
-               unproved ("conjectured and checked up to n=512" /
-               "None of these formulas have been proved") — genuine
-               open targets. Row 0 of A093682 IS A003278, already
-               formalized in `Enumerative/StanleyDigits.lean` — start
-               from that layer; rows are A003278, A004793, A033157,
-               A093678–A093681.
+  P7  postdoc  A092482/A093682 per-row closed forms. [COMPLETED]
+               `A092482.greedySeq_eq_closedForm` and `greedySeq_add_two`
+               prove the A092482 formula in `No3APGreedy.lean`; A093682
+               rows 3–6 are also complete. The scope is retired and must not
+               be dispatched.
   P8  postdoc  Statement-archive batch, one dedicated lane, sequential,
                one file/commit each, claims pinned 2026-08-05 (quote
                them verbatim in file headers from `oeis show`):
@@ -431,10 +419,9 @@ Each absence names the enumeration it was checked against.
     USER decision 2.
   * Hough 2015 minimum-modulus (was G) [XXL]: recorded for completeness,
     not dispatch.
-  * Barker cliques (A135908/09) [S/L]: the max-abelian-subgroup-of-S_n
-    theorem underneath is the one queued item where a lane may stall.
-    Dispatch to prover only after P5 lands and the S_n machinery has
-    been felt out.
+  * Barker cliques (A135908/A135909) [COMPLETED]: the recurrences are
+    proved; A135909 has the corrected `n > 9` scope. They are retired and
+    must not be dispatched.
   * A000670-egf-family: needs an EGF layer designed first (Mathlib
     gap) — infrastructure arc of its own, not a lane here.
 
@@ -456,8 +443,9 @@ Each absence names the enumeration it was checked against.
     sorry'd `mientka_weitzenkamp` needs q = 37 and ~60x the current
     sweep; memory-bound on this box. Not a lane until that changes.
   * Attack on HOLD archives stays on hold: A064097 2.5·log upper,
-    A267632 2^j case, A000001 non-coprime submultiplicativity, A250109
-    (circuit model). Shelved by ruling: A031507, A060748 (no MW layer).
+    A000001 non-coprime submultiplicativity, A250109 (circuit model).
+    A267632's power-of-two case is completed and retired. Shelved by ruling:
+    A031507, A060748 (no MW layer).
 
 
 ## USER DECISIONS PENDING

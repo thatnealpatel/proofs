@@ -58,7 +58,7 @@ The proof runs both ways through the same decomposition
 * upper bound: the binary expansion `n + 1 = 2 ^ (t+1) + R` is realised by a walk
   of `t + 1 + popCount R` steps (doublings are shifts, keeps are the `1`-bits).
 
-Route deviation from the card (`Formalize/A014701-rebert-steps.md`): the planned
+Route note: the initially considered
 interval-with-congruence reachable-set family was not needed — the scalar
 potential `binCost` with the single exchange lemma above is already an inductive
 invariant of the `Reach` derivation, collapsing the optimality direction to one

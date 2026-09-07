@@ -3,7 +3,7 @@ claim:   infinitude
 status:  open
 stmt:    S
 proof:   hard
-module:  none
+module:  Proofs/Enumerative/PrimesNotCubeMinusSquare.lean
 source:  OEIS A161682 comment (unattributed
          conjecture); search bound Daniel
          Starodubtsev, 2020-01-22

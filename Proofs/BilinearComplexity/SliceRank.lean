@@ -3,7 +3,7 @@
   the definition layer and the elementary structural results.
 
   Slice rank is the hinge invariant of the barrier literature
-  (BCCGU Cor 2.11, `Formalize/arXiv-1712-02302.md`): it is how that
+  (BCCGU Corollary 2.11, arXiv:1712.02302): it is how that
   literature formally rules out group families as routes to ω = 2, and
   it is the prototype "leave the degree-2 paradigm" invariant. A slice
   is a tensor of the form (a vector in one mode) ⊗ (a matrix in the
